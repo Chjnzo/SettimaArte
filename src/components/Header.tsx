@@ -36,10 +36,11 @@ export default function Header() {
             ? 'bg-transparent border-b border-transparent'
             : 'bg-white/96 backdrop-blur-md border-b border-black/6 shadow-sm'
         }`}
+        style={atTop ? { mixBlendMode: 'difference' } : undefined}
       >
         <div className="container mx-auto px-6 h-16 flex items-center justify-between max-w-6xl">
 
-          {/* Logo — filter brightness-0 invert rende bianco qualsiasi logo */}
+          {/* Logo — brightness-0 invert + mix-blend-mode gestisce adattamento colore */}
           <NavLink to="/" aria-label="SettimaArte — Home" className="shrink-0">
             <img
               src="/logo/7arte-oriocenter_logo_2024.png"
@@ -48,7 +49,7 @@ export default function Header() {
             />
           </NavLink>
 
-          {/* Desktop nav — link senza container, underline fucsia animato */}
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map(({ label, to }) => (
               <NavLink
@@ -61,9 +62,9 @@ export default function Header() {
                   <span className="relative flex flex-col items-center px-4 py-2">
                     <span
                       className={`text-sm font-funnel font-semibold whitespace-nowrap transition-colors duration-300 ${
-                        isActive
-                          ? atTop ? 'text-white' : 'text-blu'
-                          : atTop ? 'text-white/65 hover:text-white' : 'text-blu/55 hover:text-blu'
+                        atTop
+                          ? 'text-white'
+                          : isActive ? 'text-blu' : 'text-blu/55 hover:text-blu'
                       }`}
                     >
                       {label}
@@ -72,8 +73,8 @@ export default function Header() {
                     {isActive && (
                       <motion.span
                         layoutId="nav-underline"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full"
-                        style={{ backgroundColor: atTop ? 'white' : 'var(--color-fucsia)' }}
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full bg-white"
+                        style={atTop ? undefined : { backgroundColor: 'var(--color-fucsia)' }}
                         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                       />
                     )}
@@ -88,7 +89,7 @@ export default function Header() {
             to="/contattaci"
             className={`hidden md:inline-flex items-center text-sm font-funnel font-semibold px-5 py-2 rounded-full border transition-all duration-300 shrink-0 ${
               atTop
-                ? 'border-white/60 text-white hover:bg-white hover:text-blu'
+                ? 'border-white text-white'
                 : 'border-azzurro text-azzurro hover:bg-azzurro hover:text-white'
             }`}
           >
@@ -98,7 +99,7 @@ export default function Header() {
           {/* Mobile hamburger */}
           <button
             className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
-              atTop ? 'text-white hover:bg-white/10' : 'text-blu hover:bg-azzurro-light/60'
+              atTop ? 'text-white' : 'text-blu hover:bg-azzurro-light/60'
             }`}
             onClick={() => setMobileOpen(true)}
             aria-label="Apri menu"
