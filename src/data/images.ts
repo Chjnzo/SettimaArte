@@ -97,21 +97,21 @@ export const galleryFSLBackstage: GalleryItem[] = [
     type: 'video',
     src: '/images/placeholder-video.jpg',
     alt: 'Backstage ragazzi FSL evento giugno 2024',
-    videoId: '', // TODO: aggiungere quando caricato su YouTube
+    videoId: 'FMGOLg6BOmc',
     platform: 'youtube',
   },
   {
     type: 'video',
     src: '/images/placeholder-video.jpg',
     alt: 'Backstage ragazzi FSL evento maggio 2023',
-    videoId: '', // TODO: aggiungere quando caricato su YouTube
+    videoId: 'U4fizT-LahE',
     platform: 'youtube',
   },
   {
     type: 'video',
     src: '/images/placeholder-video.jpg',
     alt: 'Backstage ragazzi FSL evento maggio 2025',
-    videoId: '', // TODO: aggiungere quando caricato su YouTube
+    videoId: 'FYgQfZxdEFs',
     platform: 'youtube',
   },
 ]
@@ -142,7 +142,7 @@ export const locandinePerEdizione: Record<string, EdizioneFSL[]> = {
         { titolo: 'Leggere tra le righe', locandina: `${_loc2223}/Leggere tra le righe.jpg`, videoYT: 'https://youtu.be/bs4xJJiiC_8' },
         { titolo: 'Trouble making/smoking', locandina: `${_loc2223}/Trouble making_smoking .png`, videoYT: 'https://youtu.be/ZsqmnE2NkD8' },
         { titolo: 'La musica unisce', locandina: `${_loc2223}/La musica unisce.jpg`, videoYT: 'https://youtu.be/nWhMYIA5-oI' },
-        { titolo: 'Uno scatto nel caffè', locandina: `${_loc2223}/Uno scatto nel caffè.png`, videoYT: 'https://youtu.be/K0IaCGi30Fc' },
+        { titolo: 'Uno scatto nel caffè', locandina: `${_loc2223}/Uno scatto nel caffe.png`, videoYT: 'https://youtu.be/K0IaCGi30Fc' },
       ],
     },
   ],
@@ -154,7 +154,7 @@ export const locandinePerEdizione: Record<string, EdizioneFSL[]> = {
         { titolo: 'Lo stand di Amelie', locandina: `${_loc2324}/Lo stand di Amelie.jpg`, videoYT: 'https://youtu.be/4szoirbSHgY' },
         { titolo: 'Like a boss', locandina: `${_loc2324}/Like a boss.jpg`, videoYT: 'https://youtu.be/ELDsoEqh-78', premi: ['miglior cortometraggio'] },
         { titolo: 'Amore a prima vetrina', locandina: `${_loc2324}/Amore a prima vetrina.jpg`, videoYT: 'https://youtu.be/QhYrJxRzyjI' },
-        { titolo: 'La via della diversità', locandina: `${_loc2324}/La via della diversità.jpg`, videoYT: 'https://youtu.be/N-8KB8ENnwM', premi: ['premio giuria', 'miglior locandina'] },
+        { titolo: 'La via della diversità', locandina: `${_loc2324}/La via della diversita.jpg`, videoYT: 'https://youtu.be/N-8KB8ENnwM', premi: ['premio giuria', 'miglior locandina'] },
         { titolo: 'Le faremo sapere', locandina: `${_loc2324}/Le faremo sapere.png`, videoYT: 'https://youtu.be/flf5mJy5gGc' },
       ],
     },

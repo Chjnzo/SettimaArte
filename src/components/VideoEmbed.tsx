@@ -9,6 +9,7 @@ interface VideoEmbedProps {
 }
 
 function getYouTubeId(url: string): string | null {
+  if (/^[A-Za-z0-9_-]{11}$/.test(url)) return url
   const m = url.match(
     /(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
   )

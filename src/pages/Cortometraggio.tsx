@@ -218,6 +218,7 @@ function CitazioneFinale() {
 
   return (
     <section
+      data-header-dark
       ref={ref}
       className="relative w-full py-28 md:py-36 overflow-hidden"
       style={{ backgroundColor: 'var(--color-blu)' }}
@@ -270,7 +271,7 @@ export default function Cortometraggio() {
       <main>
         {/* 1. Hero */}
         <HeroSlider
-          slides={[]}
+          slides={[{ type: 'video', videoId: 'l9zSUCoaUw4', alt: 'BTS cortometraggio Oriocenter' }]}
           subtitle="Cortometraggio Professionale"
           title="Produzione cinematografica professionale estiva per alcuni studenti del progetto educational Settima Arte"
         />

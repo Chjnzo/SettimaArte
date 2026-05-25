@@ -50,6 +50,7 @@ export default function ContactForm() {
 
   return (
     <section
+      data-header-dark
       ref={ref}
       style={{ backgroundColor: 'var(--color-blu)' }}
       className="w-full py-16 md:py-24"

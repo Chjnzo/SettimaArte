@@ -29,7 +29,7 @@ export const edizioniData: EdizioneCorto[] = [
       "La prima edizione di questo percorso ha dato vita al cortometraggio Le Faremo Sapere, diretto da Beppe Tufarulo e interpretato da Giorgio Marchesi e Antonia Fotaras. Il progetto ha ottenuto importanti riconoscimenti nel circuito festivaliero, tra cui due premi al Cortinametraggio, i premi per Miglior Sceneggiatura e Miglior Attore Protagonista al E Fu Cinema Festival di Pomarance, il Premio Troisi Videocorto Nettuno e due riconoscimenti come Miglior Attore e Miglior Attrice al Movievalley Festival Bologna. Il cortometraggio è inoltre entrato nella shortlist dei David di Donatello e successivamente selezionato tra i finalisti dei Nastri d'Argento.",
     trama:
       'Un giovane aspirante attore si presenta a quello che crede sia un normale colloquio di lavoro. Ben presto scopre che la stanza, i selezionatori e persino le domande sono qualcosa di molto diverso da ciò che si aspettava: quello che sembrava un colloquio è in realtà uno screen test.',
-    trailerSrc: '',
+    trailerSrc: 'jAWTBDdikig',
     premi: [
       'Due premi — Cortinametraggio',
       'Miglior Sceneggiatura + Miglior Attore Protagonista — E Fu Cinema Festival, Pomarance',

@@ -19,7 +19,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: 'var(--color-blu)' }} className="text-white">
+    <footer data-header-dark style={{ backgroundColor: 'var(--color-blu)' }} className="text-white">
       <div className="container mx-auto px-4 pt-16 pb-8 max-w-6xl">
 
         {/* Main grid */}

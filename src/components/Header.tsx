@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,13 +11,33 @@ const navLinks = [
 ]
 
 export default function Header() {
-  const [scrolled, setScrolled]     = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled]       = useState(false)
+  const [overDark, setOverDark]       = useState(false)
+  const [mobileOpen, setMobileOpen]   = useState(false)
+
+  const checkDark = () => {
+    const darkSections = document.querySelectorAll('[data-header-dark]')
+    let dark = false
+    darkSections.forEach((el) => {
+      const rect = (el as HTMLElement).getBoundingClientRect()
+      if (rect.top < 64 && rect.bottom > 0) dark = true
+    })
+    return dark
+  }
+
+  // Legge lo stato prima che il browser dipinga → nessun flash al cambio pagina
+  useLayoutEffect(() => {
+    setScrolled(window.scrollY > 40)
+    setOverDark(checkDark())
+  }, [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const check = () => {
+      setScrolled(window.scrollY > 40)
+      setOverDark(checkDark())
+    }
+    window.addEventListener('scroll', check, { passive: true })
+    return () => window.removeEventListener('scroll', check)
   }, [])
 
   useEffect(() => {
@@ -25,8 +45,10 @@ export default function Header() {
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
-  // Trasparente finché non si scrolla (over hero)
   const atTop = !scrolled
+  // In cima → sempre bianco (evita flash al cambio pagina + look pulito su hero)
+  // Scrollato → bianco solo su sezioni scure rilevate
+  const lightText = atTop || overDark
 
   return (
     <>
@@ -36,20 +58,17 @@ export default function Header() {
             ? 'bg-transparent border-b border-transparent'
             : 'bg-white/96 backdrop-blur-md border-b border-black/6 shadow-sm'
         }`}
-        style={atTop ? { mixBlendMode: 'difference' } : undefined}
       >
         <div className="container mx-auto px-6 h-16 flex items-center justify-between max-w-6xl">
 
-          {/* Logo — brightness-0 invert + mix-blend-mode gestisce adattamento colore */}
           <NavLink to="/" aria-label="SettimaArte — Home" className="shrink-0">
             <img
               src="/logo/7arte-oriocenter_logo_2024.png"
               alt="SettimaArte"
-              className={`h-9 w-auto object-contain transition-all duration-500 ${atTop ? 'brightness-0 invert' : ''}`}
+              className={`h-9 w-auto object-contain transition-all duration-500 ${lightText ? 'brightness-0 invert' : ''}`}
             />
           </NavLink>
 
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map(({ label, to }) => (
               <NavLink
@@ -62,7 +81,7 @@ export default function Header() {
                   <span className="relative flex flex-col items-center px-4 py-2">
                     <span
                       className={`text-sm font-funnel font-semibold whitespace-nowrap transition-colors duration-300 ${
-                        atTop
+                        lightText
                           ? 'text-white'
                           : isActive ? 'text-blu' : 'text-blu/55 hover:text-blu'
                       }`}
@@ -70,36 +89,42 @@ export default function Header() {
                       {label}
                     </span>
 
-                    {isActive && (
+                    {isActive && atTop ? (
                       <motion.span
                         layoutId="nav-underline"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full bg-white"
-                        style={atTop ? undefined : { backgroundColor: 'var(--color-fucsia)' }}
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full"
+                        style={{ backgroundColor: 'white' }}
                         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
                       />
-                    )}
+                    ) : isActive ? (
+                      <motion.span
+                        initial={{ scaleX: 0, opacity: 0 }}
+                        animate={{ scaleX: 1, opacity: 1 }}
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full origin-center"
+                        style={{ backgroundColor: 'var(--color-fucsia)' }}
+                        transition={{ duration: 0.18 }}
+                      />
+                    ) : null}
                   </span>
                 )}
               </NavLink>
             ))}
           </nav>
 
-          {/* Desktop CTA */}
           <Link
             to="/contattaci"
             className={`hidden md:inline-flex items-center text-sm font-funnel font-semibold px-5 py-2 rounded-full border transition-all duration-300 shrink-0 ${
-              atTop
-                ? 'border-white text-white'
+              lightText
+                ? 'border-white text-white hover:bg-white/10'
                 : 'border-azzurro text-azzurro hover:bg-azzurro hover:text-white'
             }`}
           >
             Contattaci
           </Link>
 
-          {/* Mobile hamburger */}
           <button
             className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
-              atTop ? 'text-white' : 'text-blu hover:bg-azzurro-light/60'
+              lightText ? 'text-white' : 'text-blu hover:bg-azzurro-light/60'
             }`}
             onClick={() => setMobileOpen(true)}
             aria-label="Apri menu"

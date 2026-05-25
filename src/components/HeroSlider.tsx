@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { HeroSlide } from '@/data/images'
 
@@ -27,7 +27,7 @@ export default function HeroSlider({
 
   if (slides.length === 0) {
     return (
-      <section className="relative w-full h-[calc(100dvh+4rem)] -mt-16 overflow-hidden">
+      <section data-header-dark className="relative w-full h-[calc(100dvh+4rem)] -mt-16 overflow-hidden">
         <div className="absolute inset-0 bg-blu" />
         {(title || subtitle) && <HeroText title={title} subtitle={subtitle} />}
       </section>
@@ -37,7 +37,7 @@ export default function HeroSlider({
   const slide = slides[current]
 
   return (
-    <section className="relative w-full h-[calc(100dvh+4rem)] -mt-16 overflow-hidden">
+    <section data-header-dark className="relative w-full h-[calc(100dvh+4rem)] -mt-16 overflow-hidden">
       {/* Slides */}
       <AnimatePresence initial={false}>
         <motion.div
@@ -49,13 +49,7 @@ export default function HeroSlider({
           className="absolute inset-0"
         >
           {slide.type === 'video' && slide.videoId ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${slide.videoId}?autoplay=1&mute=1&loop=1&playlist=${slide.videoId}&controls=0&rel=0&playsinline=1`}
-              title={slide.alt ?? 'Video hero'}
-              allow="autoplay; encrypted-media"
-              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.3]"
-              style={{ border: 'none' }}
-            />
+            <VideoSlide videoId={slide.videoId} alt={slide.alt} />
           ) : (
             <img
               src={slide.src}
@@ -90,6 +84,52 @@ export default function HeroSlider({
         </div>
       )}
     </section>
+  )
+}
+
+function VideoSlide({ videoId, alt }: { videoId: string; alt?: string }) {
+  const [playing, setPlaying] = useState(false)
+
+  useEffect(() => {
+    setPlaying(false)
+
+    // YouTube manda playerState via postMessage quando enablejsapi=1
+    const handler = (e: MessageEvent) => {
+      if (e.origin !== 'https://www.youtube.com') return
+      try {
+        const data = JSON.parse(e.data as string)
+        // playerState 1 = playing, 3 = buffering con frame visibile
+        if (data.event === 'infoDelivery' && data.info?.playerState >= 1) {
+          setPlaying(true)
+        }
+      } catch { /* ignora messaggi non JSON */ }
+    }
+    window.addEventListener('message', handler)
+
+    // Fallback: se postMessage non arriva (es. restrizioni browser) mostra dopo 3s
+    const fallback = setTimeout(() => setPlaying(true), 3000)
+
+    return () => {
+      window.removeEventListener('message', handler)
+      clearTimeout(fallback)
+    }
+  }, [videoId])
+
+  return (
+    <>
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&rel=0&playsinline=1&modestbranding=1&enablejsapi=1`}
+        title={alt ?? 'Video hero'}
+        allow="autoplay; encrypted-media"
+        className="absolute inset-0 w-full h-full pointer-events-none scale-[1.3] transition-opacity duration-700"
+        style={{ border: 'none', opacity: playing ? 1 : 0 }}
+      />
+      {/* Sfondo scuro che copre il buffering — scompare quando il video inizia */}
+      <div
+        className="absolute inset-0 bg-[#111] transition-opacity duration-700 pointer-events-none"
+        style={{ opacity: playing ? 0 : 1 }}
+      />
+    </>
   )
 }
 

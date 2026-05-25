@@ -42,7 +42,7 @@ function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-20 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
+    <section data-header-dark ref={ref} className="w-full py-20 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Award badge */}
         <motion.div
