@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ChevronLeft, ChevronRight, Play, Grid2x2 } from 'lucide-react'
+import { X, ChevronLeft, ChevronRight, Play } from 'lucide-react'
 import VideoEmbed from './VideoEmbed'
 
 const loadedUrls = new Set<string>()
@@ -125,7 +125,7 @@ export default function Gallery({
   initialVisible = 6,
 }: GalleryProps) {
   const [lightbox, setLightbox] = useState<number | null>(null)
-  const [galleryOpen, setGalleryOpen] = useState(false)
+  const [expanded, setExpanded] = useState(false)
 
   const imageItems = items.filter((it) => it.type !== 'video')
 
@@ -142,27 +142,21 @@ export default function Gallery({
     [imageItems.length],
   )
 
-  // Keyboard nav — ESC chiude prima il lightbox, poi il gallery modal
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (lightbox !== null) { setLightbox(null); return }
-        if (galleryOpen) setGalleryOpen(false)
-      }
+      if (e.key === 'Escape' && lightbox !== null) setLightbox(null)
       if (lightbox === null) return
       if (e.key === 'ArrowLeft') prev()
       if (e.key === 'ArrowRight') next()
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [lightbox, galleryOpen, prev, next])
+  }, [lightbox, prev, next])
 
-  // Lock scroll quando gallery modal o lightbox sono aperti
   useEffect(() => {
-    const locked = galleryOpen || lightbox !== null
-    document.body.style.overflow = locked ? 'hidden' : ''
+    document.body.style.overflow = lightbox !== null ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [galleryOpen, lightbox])
+  }, [lightbox])
 
   const colClass: Record<number, string> = {
     2: 'grid-cols-2',
@@ -173,20 +167,16 @@ export default function Gallery({
   if (items.length === 0 && !showPlaceholders) return null
 
   const limit = initialVisible === 0 ? items.length : initialVisible
-  const previewItems = items.slice(0, limit)
-  const hasMore = items.length > limit
-
-  const photoCount = imageItems.length
-  const countLabel = photoCount === items.length
-    ? `${photoCount} foto`
-    : `${photoCount} foto · ${items.length - photoCount} video`
+  const alwaysVisible = items.slice(0, limit)
+  const hiddenItems = items.slice(limit)
+  const hasMore = hiddenItems.length > 0
 
   return (
     <>
-      {/* ── Griglia preview ── */}
+      {/* ── Griglia ── */}
       <div className={`grid gap-4 ${colClass[columns]}`}>
         {items.length > 0
-          ? previewItems.map((item, i) => (
+          ? alwaysVisible.map((item, i) => (
               <div key={i}>{renderItem(item, i, openLightbox)}</div>
             ))
           : Array.from({ length: placeholderCount }).map((_, i) => (
@@ -194,66 +184,42 @@ export default function Gallery({
                 <div className="w-full h-full bg-gradient-to-r from-azzurro-light via-white/60 to-azzurro-light animate-[shimmer_1.4s_ease-in-out_infinite] bg-[length:200%_100%]" />
               </div>
             ))}
+
+        {/* Item nascosti — reveal inline con stagger */}
+        <AnimatePresence>
+          {expanded && hiddenItems.map((item, i) => {
+            const globalIndex = limit + i
+            return (
+              <motion.div
+                key={`exp-${i}`}
+                initial={{ opacity: 0, y: 20, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.3, delay: i * 0.04, ease: 'easeOut' }}
+              >
+                {renderItem(item, globalIndex, openLightbox)}
+              </motion.div>
+            )
+          })}
+        </AnimatePresence>
       </div>
 
-      {/* ── Pulsante "Vedi tutta la gallery" ── */}
-      {hasMore && (
+      {/* ── Pulsante expand ── */}
+      {hasMore && !expanded && (
         <div className="flex justify-center mt-8">
           <button
-            onClick={() => setGalleryOpen(true)}
+            onClick={() => setExpanded(true)}
             className="group flex items-center gap-3 px-6 py-3 rounded-squircle border border-azzurro text-azzurro font-funnel font-semibold text-sm hover:bg-azzurro hover:text-white transition-all duration-200"
           >
-            <Grid2x2 size={16} className="shrink-0" />
-            <span>Vedi tutta la gallery</span>
+            <span>Guarda tutte le foto</span>
             <span className="bg-azzurro/10 group-hover:bg-white/20 text-azzurro group-hover:text-white text-xs font-bold px-2 py-0.5 rounded-full tabular-nums transition-colors duration-200">
-              +{items.length - limit}
+              +{hiddenItems.length}
             </span>
           </button>
         </div>
       )}
 
-      {/* ── Gallery Modal (fullscreen) ── */}
-      <AnimatePresence>
-        {galleryOpen && (
-          <motion.div
-            key="gallery-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-40 bg-[#0d0d0d] overflow-y-auto"
-          >
-            {/* Header sticky */}
-            <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-[#0d0d0d]/90 backdrop-blur-sm border-b border-white/8">
-              <div>
-                <p className="text-white font-funnel font-bold text-base leading-none">Tutta la gallery</p>
-                <p className="text-white/40 text-xs font-funnel mt-1">{countLabel}</p>
-              </div>
-              <button
-                onClick={() => setGalleryOpen(false)}
-                aria-label="Chiudi gallery"
-                className="bg-white/8 hover:bg-white/16 text-white rounded-full p-2.5 transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Grid completa */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="p-4 md:p-6 grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-            >
-              {items.map((item, i) => (
-                <div key={i}>{renderItem(item, i, (idx) => { openLightbox(idx) })}</div>
-              ))}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Lightbox (z sopra il gallery modal) ── */}
+      {/* ── Lightbox ── */}
       <AnimatePresence>
         {lightbox !== null && imageItems[lightbox] && (
           <motion.div

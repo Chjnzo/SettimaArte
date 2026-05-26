@@ -92,16 +92,14 @@ export default function VotazioniSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const now = new Date()
-  const month = now.getMonth() // 5=giu, 11=dic
-  const isVisible = month === 5 || month === 11
-
   const { data: corti, isLoading } = useVotazioni()
 
-  if (!isVisible) return null
+  // Visibile solo se l'admin ha attivato almeno un corto
+  if (isLoading || !corti?.length) return null
 
   return (
     <section
+      data-header-dark
       ref={ref}
       className="w-full py-20 md:py-28"
       style={{ backgroundColor: 'var(--color-blu)' }}

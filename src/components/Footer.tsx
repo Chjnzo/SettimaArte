@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, Youtube } from 'lucide-react'
+import { Mail, Youtube, Lock } from 'lucide-react'
 
 const navLinks = [
   { label: 'Home', to: '/' },
@@ -99,7 +99,16 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40">
           <p>© {new Date().getFullYear()} SettimaArte. Tutti i diritti riservati.</p>
-          <p>Un progetto <span className="text-white/60">Oriocenter</span> realizzato da <span className="text-white/60">Skillherz</span></p>
+          <div className="flex items-center gap-4">
+            <p>Un progetto <span className="text-white/60">Oriocenter</span> realizzato da <span className="text-white/60">Skillherz</span></p>
+            <Link
+              to="/admin"
+              aria-label="Area riservata"
+              className="text-white/15 hover:text-white/40 transition-colors duration-300"
+            >
+              <Lock size={12} />
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

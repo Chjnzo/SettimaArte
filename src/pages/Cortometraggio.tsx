@@ -271,7 +271,7 @@ export default function Cortometraggio() {
       <main>
         {/* 1. Hero */}
         <HeroSlider
-          slides={[{ type: 'video', videoId: 'l9zSUCoaUw4', alt: 'BTS cortometraggio Oriocenter' }]}
+          slides={[{ type: 'video', src: '', videoId: 'l9zSUCoaUw4', alt: 'BTS cortometraggio Oriocenter' }]}
           subtitle="Cortometraggio Professionale"
           title="Produzione cinematografica professionale estiva per alcuni studenti del progetto educational Settima Arte"
         />
