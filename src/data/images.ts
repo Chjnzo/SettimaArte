@@ -8,6 +8,7 @@ export interface HeroSlide {
   alt?: string
   videoId?: string
   platform?: 'youtube' | 'vimeo'
+  cta?: { label: string; href: string }
 }
 
 export interface CortoEdizione {

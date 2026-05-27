@@ -32,7 +32,7 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
               <AccordionItem key={i} value={`item-${i}`}>
                 <AccordionTrigger>{item.question}</AccordionTrigger>
                 <AccordionContent>
-                  <p className="text-blu/75 leading-relaxed">{item.answer}</p>
+                  <p className="text-blu/80 leading-relaxed text-base">{item.answer}</p>
                 </AccordionContent>
               </AccordionItem>
             ))}

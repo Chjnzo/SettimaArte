@@ -1,6 +1,5 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -65,7 +64,7 @@
   body {
     background-color: var(--color-white);
     color: var(--color-blu);
-    font-family: system-ui, sans-serif;
+    font-family: 'Funnel Display', system-ui, sans-serif;
     @apply bg-background text-foreground;
   }
   h1, h2, h3, h4, h5, h6 {
@@ -73,7 +72,7 @@
   }
   .theme {
     --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-sans: 'Funnel Display', system-ui, sans-serif;
   }
   :root {
     --background: oklch(1 0 0);

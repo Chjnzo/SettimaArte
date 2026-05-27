@@ -29,6 +29,7 @@ const config: Config = {
         ring: 'var(--ring)',
       },
       fontFamily: {
+        sans: ['"Funnel Display"', 'system-ui', 'sans-serif'],
         funnel: ['"Funnel Display"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { X, ExternalLink } from 'lucide-react'
+import { X, ExternalLink, Trophy } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Gallery from '@/components/Gallery'
@@ -44,20 +44,8 @@ function StatsSection() {
   return (
     <section data-header-dark ref={ref} className="w-full py-20 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
       <div className="container mx-auto px-4 max-w-6xl">
-        {/* Award badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="flex justify-center mb-16"
-        >
-          <span className="inline-flex items-center gap-2 border border-white/30 text-white/80 text-sm font-funnel font-medium px-5 py-2 rounded-full">
-            🏆 Certificate of Merit CNCC 2023
-          </span>
-        </motion.div>
-
         {/* Numbers */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6 text-center mb-16">
           {stats.map(({ value, label }, i) => (
             <motion.div
               key={label}
@@ -72,6 +60,29 @@ function StatsSection() {
             </motion.div>
           ))}
         </div>
+
+        {/* Certificate of Merit — featured */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="border border-yellow-400/40 rounded-squircle p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 bg-yellow-400/5"
+        >
+          <div className="w-16 h-16 rounded-2xl bg-yellow-400/15 flex items-center justify-center shrink-0">
+            <Trophy size={32} className="text-yellow-400" />
+          </div>
+          <div className="text-center md:text-left">
+            <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-yellow-400/80 mb-1">
+              Riconoscimento
+            </p>
+            <p className="font-funnel font-bold text-xl md:text-2xl text-white leading-tight">
+              Certificate of Merit — CNCC 2023
+            </p>
+            <p className="text-white/50 text-sm font-funnel mt-1">
+              Consiglio Nazionale dei Centri Commerciali — premio per l'eccellenza nei progetti educational
+            </p>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
@@ -83,25 +94,23 @@ function CopySection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const paragraphs = [
-    'Negli ultimi anni, i percorsi di Formazione Scuola-Lavoro sono diventati un passaggio obbligato per gli studenti delle scuole superiori. Spesso, però, docenti e ragazzi temono che queste esperienze si traducano in attività ripetitive e poco formative, come fare fotocopie o gestire semplici pratiche amministrative.',
-    "Oriocenter ha scelto un approccio diverso: investire in un progetto educational pensato per valorizzare davvero il potenziale degli studenti. All'interno degli spazi del mall, i partecipanti sono coinvolti in un'esperienza creativa che li sfida a raccontare un tema attraverso il linguaggio cinematografico. I ragazzi portano prospettive nuove, capacità di lettura del presente e una sensibilità comunicativa che spesso anticipa i cambiamenti.",
-    'Nel concreto, gli studenti vivono un percorso immersivo che riproduce dinamiche, tempi e responsabilità di un vero contesto professionale. Affiancati da videomaker ed educatori, sperimentano tutte le fasi di realizzazione di un cortometraggio, assumendo ruoli diversi – dalla regia alla produzione, fino alla recitazione - mettendo in gioco la propria creatività.',
-    "L'obiettivo non è formarli come registi o attori, ma offrire loro l'opportunità di far emergere competenze trasversali spesso invisibili finché non vengono messe alla prova. Collaborazione, gestione dello stress, capacità decisionale e ascolto reciproco diventano elementi concreti, che prendono forma attraverso l'esperienza diretta.",
-  ]
-
   return (
     <section ref={ref} className="w-full py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 max-w-3xl space-y-8">
-        {paragraphs.map((text, i) => (
+        {[
+          <>Negli ultimi anni, i percorsi di <strong>Formazione Scuola-Lavoro</strong> sono diventati un passaggio obbligato per gli studenti delle scuole superiori. Spesso, però, docenti e ragazzi temono che queste esperienze si traducano in attività ripetitive e poco formative, come fare fotocopie o gestire semplici pratiche amministrative.</>,
+          <>Oriocenter ha scelto un approccio diverso: investire in un <strong>progetto educational</strong> pensato per valorizzare davvero il potenziale degli studenti. All'interno degli spazi del mall, i partecipanti sono coinvolti in un'esperienza creativa che li sfida a raccontare un tema attraverso il <strong>linguaggio cinematografico</strong>. I ragazzi portano prospettive nuove, capacità di lettura del presente e una sensibilità comunicativa che spesso anticipa i cambiamenti.</>,
+          <>Nel concreto, gli studenti vivono un percorso immersivo che riproduce dinamiche, tempi e responsabilità di un vero contesto professionale. Affiancati da <strong>videomaker ed educatori</strong>, sperimentano tutte le fasi di realizzazione di un cortometraggio, assumendo ruoli diversi — dalla regia alla produzione, fino alla recitazione — mettendo in gioco la propria creatività.</>,
+          <>L'obiettivo non è formarli come registi o attori, ma offrire loro l'opportunità di far emergere <strong>competenze trasversali</strong> spesso invisibili finché non vengono messe alla prova. Collaborazione, gestione dello stress, capacità decisionale e ascolto reciproco diventano elementi concreti, che prendono forma attraverso l'esperienza diretta.</>,
+        ].map((content, i) => (
           <motion.p
             key={i}
             initial={{ opacity: 0, y: 32 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: i * 0.08 }}
-            className="text-blu/75 leading-relaxed text-lg"
+            className="text-blu/80 leading-relaxed text-lg font-funnel"
           >
-            {text}
+            {content}
           </motion.p>
         ))}
       </div>
@@ -113,23 +122,21 @@ function CopyMidSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const paragraphs = [
-    'Queste esperienze raccontano qualcosa di più ampio del cinema. Raccontano cosa accade quando le aziende decidono di aprire spazi reali ai giovani, permettendo loro di osservare, provare, sbagliare e contribuire. Non si tratta di offrire opportunità a parole, ma di creare contesti in cui il valore dei ragazzi si vede davvero - e spesso sorprende sia chi li osserva, sia chi lo conosce in circostanze differenti.',
-    'Per molte imprese, lavorare con la Generazione Z può sembrare complesso: linguaggi diversi, aspettative nuove, modalità relazionali in evoluzione. Ma proprio per questo diventa strategico costruire esperienze concrete e guidate, dove l\'incontro avviene in modo strutturato e significativo. Oriocenter ha permesso che questo accadesse, rendendo il risultato non solo educativo ma culturale.',
-  ]
-
   return (
     <section ref={ref} className="w-full py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 max-w-3xl space-y-8">
-        {paragraphs.map((text, i) => (
+        {[
+          <>Queste esperienze raccontano qualcosa di più ampio del cinema. Raccontano cosa accade quando le aziende decidono di <strong>aprire spazi reali ai giovani</strong>, permettendo loro di osservare, provare, sbagliare e contribuire. Non si tratta di offrire opportunità a parole, ma di creare contesti in cui il valore dei ragazzi si vede davvero — e spesso sorprende sia chi li osserva, sia chi lo conosce in circostanze differenti.</>,
+          <>Per molte imprese, lavorare con la <strong>Generazione Z</strong> può sembrare complesso: linguaggi diversi, aspettative nuove, modalità relazionali in evoluzione. Ma proprio per questo diventa strategico costruire esperienze concrete e guidate, dove l'incontro avviene in modo strutturato e significativo. <strong>Oriocenter</strong> ha permesso che questo accadesse, rendendo il risultato non solo educativo ma culturale.</>,
+        ].map((content, i) => (
           <motion.p
             key={i}
             initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, delay: i * 0.12 }}
-            className="text-blu/75 leading-relaxed text-lg"
+            className="text-blu/80 leading-relaxed text-lg font-funnel"
           >
-            {text}
+            {content}
           </motion.p>
         ))}
       </div>
@@ -271,12 +278,7 @@ function VideoModal({ corto, onClose }: VideoModalProps) {
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/50">
                   <p className="font-funnel text-sm">Video non ancora disponibile</p>
                   {corto.videoYT && (
-                    <a
-                      href={corto.videoYT}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-azzurro underline text-xs"
-                    >
+                    <a href={corto.videoYT} target="_blank" rel="noopener noreferrer" className="text-azzurro underline text-xs">
                       Apri il link
                     </a>
                   )}
@@ -318,11 +320,9 @@ function CortoLocandina({ corto, onClick }: { corto: CortoEdizione; onClick: () 
             </span>
           </div>
         )}
-        {/* Overlay play button on hover */}
         {hasVideo && (
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200
-              bg-white rounded-full p-3 shadow-lg scale-90 group-hover:scale-100 transition-transform">
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white rounded-full p-3 shadow-lg scale-90 group-hover:scale-100">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-blu ml-0.5">
                 <path d="M8 5v14l11-7z" />
               </svg>
@@ -356,7 +356,7 @@ function LocandineSection() {
   return (
     <section
       ref={ref}
-      className="w-full py-16 md:py-20 border-t border-azzurro-light"
+      className="w-full py-20 md:py-28 border-t border-azzurro-light"
       style={{ backgroundColor: 'var(--color-azzurro-light)' }}
     >
       <div className="container mx-auto px-4 max-w-6xl">
@@ -375,7 +375,7 @@ function LocandineSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap gap-2 mb-10"
+          className="flex flex-wrap gap-2 mb-12"
         >
           {anni.map((anno) => (
             <button
@@ -392,20 +392,20 @@ function LocandineSection() {
           ))}
         </motion.div>
 
-        {/* Edizioni active year */}
+        {/* Edizioni anno attivo */}
         <motion.div
           key={annoAttivo}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="space-y-12"
+          className="space-y-14"
         >
           {locandinePerEdizione[annoAttivo].map((edizione) => (
             <div key={edizione.label}>
-              <h3 className="font-funnel font-semibold text-xl text-blu mb-6">
+              <h3 className="font-funnel font-bold text-2xl text-blu mb-8">
                 {edizione.label}
               </h3>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                 {edizione.corti.map((corto) => (
                   <CortoLocandina
                     key={corto.titolo}
@@ -420,44 +420,6 @@ function LocandineSection() {
       </div>
 
       <VideoModal corto={selectedCorto} onClose={() => setSelectedCorto(null)} />
-    </section>
-  )
-}
-
-// ─── YouTube CTA ──────────────────────────────────────────────────────────────
-
-function YouTubeCTA() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-
-  return (
-    <section
-      ref={ref}
-      className="w-full py-16"
-      style={{ backgroundColor: 'var(--color-azzurro-light)' }}
-    >
-      <div className="container mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          <p className="text-blu text-lg mb-6 font-funnel">
-            Per vedere tutti i video visita il canale YouTube di Oriocenter
-          </p>
-          <a
-            href="https://www.youtube.com/@oriocenter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blu text-white font-funnel font-semibold px-8 py-4 rounded-squircle hover:bg-blu/90 transition-colors"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-            </svg>
-            Vai al canale YouTube
-          </a>
-        </motion.div>
-      </div>
     </section>
   )
 }
@@ -482,17 +444,17 @@ export default function FSL() {
         {/* 1. Hero */}
         <HeroSlider
           slides={[heroFSLImage]}
-          subtitle="Formazione Scuola-Lavoro"
-          title="Un'esperienza di Formazione Scuola-Lavoro unica nel suo genere"
+          subtitle="FSL — Formazione Scuola-Lavoro"
+          title="Cinema come strumento educativo, Oriocenter come set"
         />
 
-        {/* 2. Copy descrittivo — 4 paragrafi */}
+        {/* 2. Copy descrittivo */}
         <CopySection />
 
-        {/* 3. Risultati numerici */}
+        {/* 3. Risultati numerici + Certificato */}
         <StatsSection />
 
-        {/* 4. Copy intermedio — 3 paragrafi */}
+        {/* 4. Copy intermedio */}
         <CopyMidSection />
 
         {/* 5. Gallery mista backstage */}
@@ -504,11 +466,8 @@ export default function FSL() {
           bg="bg-white"
         />
 
-        {/* 6–8. Locandine per anno/edizione */}
+        {/* 6. Locandine per anno/edizione */}
         <LocandineSection />
-
-        {/* 9. Footer YouTube */}
-        <YouTubeCTA />
       </main>
 
       <Footer />

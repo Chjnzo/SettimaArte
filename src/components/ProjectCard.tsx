@@ -62,7 +62,7 @@ export default function ProjectCard({
             <h2 className="font-funnel font-bold text-3xl md:text-4xl text-blu leading-tight">
               {title}
             </h2>
-            <p className="text-blu/75 leading-relaxed">{description}</p>
+            <p className="text-blu/80 leading-relaxed text-lg">{description}</p>
             <div>
               <Link
                 to={ctaHref}

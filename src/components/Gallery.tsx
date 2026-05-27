@@ -18,7 +18,7 @@ interface GalleryProps {
   columns?: 2 | 3 | 4
   showPlaceholders?: boolean
   placeholderCount?: number
-  /** Quanti item mostrare prima del pulsante "Vedi tutto". 0 = mostra tutto. Default: 6 */
+  /** Quanti item mostrare prima del pulsante "Vedi tutto". 0 = mostra tutto. Default: 3 */
   initialVisible?: number
 }
 
@@ -122,7 +122,7 @@ export default function Gallery({
   columns = 3,
   showPlaceholders = true,
   placeholderCount = PLACEHOLDER_COLS,
-  initialVisible = 6,
+  initialVisible = 3,
 }: GalleryProps) {
   const [lightbox, setLightbox] = useState<number | null>(null)
   const [expanded, setExpanded] = useState(false)
@@ -204,7 +204,7 @@ export default function Gallery({
         </AnimatePresence>
       </div>
 
-      {/* ── Pulsante expand ── */}
+      {/* ── Pulsante expand / collapse ── */}
       {hasMore && !expanded && (
         <div className="flex justify-center mt-8">
           <button
@@ -215,6 +215,16 @@ export default function Gallery({
             <span className="bg-azzurro/10 group-hover:bg-white/20 text-azzurro group-hover:text-white text-xs font-bold px-2 py-0.5 rounded-full tabular-nums transition-colors duration-200">
               +{hiddenItems.length}
             </span>
+          </button>
+        </div>
+      )}
+      {expanded && hasMore && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => setExpanded(false)}
+            className="flex items-center gap-2 px-6 py-3 rounded-squircle border border-black/15 text-blu/50 font-funnel font-semibold text-sm hover:border-blu/30 hover:text-blu transition-all duration-200"
+          >
+            <span>Mostra meno</span>
           </button>
         </div>
       )}

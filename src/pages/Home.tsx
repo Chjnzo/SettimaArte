@@ -1,5 +1,6 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { Toaster } from 'sonner'
 import Header from '@/components/Header'
@@ -17,21 +18,29 @@ function IntroSection() {
 
   return (
     <section ref={ref} className="w-full py-16 md:py-24 bg-white">
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="flex flex-col gap-6"
+          className="flex flex-col md:flex-row gap-10 md:gap-20 items-start"
         >
-          <h2 className="font-funnel font-bold text-3xl md:text-4xl lg:text-5xl text-blu leading-tight max-w-3xl">
+          <h2 className="font-funnel font-bold text-3xl md:text-4xl lg:text-5xl text-blu leading-tight md:flex-1">
             Settima Arte è il progetto educational di Oriocenter, un'occasione educativa per
             sperimentare il mondo del lavoro utilizzando il linguaggio a loro più noto: il video.
           </h2>
-          <p className="text-sm text-blu/60 leading-relaxed max-w-2xl">
-            Nel 1911 Ricciotto Canudo introdusse il concetto di settima arte, riconoscendo nel cinema
-            una nuova forma d'arte in grado di fondere le arti dello spazio con quelle del tempo.
-          </p>
+          <div className="md:flex-1 flex flex-col gap-4">
+            <p className="text-base text-blu/70 leading-relaxed">
+              Nel <strong>1911</strong> Ricciotto Canudo introdusse il concetto di settima arte,
+              riconoscendo nel cinema una nuova forma d'arte in grado di fondere le arti dello
+              spazio con quelle del tempo.
+            </p>
+            <p className="text-base text-blu/70 leading-relaxed">
+              Oggi SettimaArte porta questa visione dentro i corridoi di{' '}
+              <strong>Oriocenter</strong>, trasformando un centro commerciale in un set
+              cinematografico vivo, dove gli studenti diventano i protagonisti.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -46,26 +55,44 @@ function GeoSection() {
     <section
       ref={ref}
       style={{ backgroundColor: 'var(--color-azzurro-light)' }}
-      className="w-full py-16"
+      className="w-full py-16 md:py-20"
     >
-      <div className="container mx-auto px-4 max-w-3xl text-center">
-        <motion.p
+      <div className="container mx-auto px-4 max-w-4xl">
+        <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-blu text-lg leading-relaxed"
+          className="flex flex-col gap-4"
         >
-          La partecipazione a questo progetto educational di Oriocenter è aperto a tutte le scuole
-          secondarie di II° grado della provincia di Bergamo e non solo! L'ultima edizione ha visto
-          infatti partecipare istituti delle province di{' '}
-          <strong>Brescia, Lecco, Como e Monza Brianza</strong>.
-        </motion.p>
+          <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro">
+            Chi può partecipare
+          </p>
+          <p className="text-blu text-xl md:text-2xl leading-relaxed font-funnel font-medium">
+            La partecipazione a questo progetto educational di Oriocenter è aperto a tutte le scuole
+            secondarie di II° grado della provincia di Bergamo e non solo! L'ultima edizione ha visto
+            infatti partecipare istituti delle province di{' '}
+            <strong className="font-bold">Brescia, Lecco, Como e Monza Brianza</strong>.
+          </p>
+        </motion.div>
       </div>
     </section>
   )
 }
 
 export default function Home() {
+  const [searchParams] = useSearchParams()
+
+  useEffect(() => {
+    const scrollTarget = searchParams.get('scroll')
+    if (scrollTarget) {
+      // Small delay to let the page render first
+      const timer = setTimeout(() => {
+        document.getElementById(scrollTarget)?.scrollIntoView({ behavior: 'smooth' })
+      }, 300)
+      return () => clearTimeout(timer)
+    }
+  }, [searchParams])
+
   return (
     <>
       <Helmet>
@@ -86,6 +113,11 @@ export default function Home() {
           slides={heroHomeSlides}
           title="Il progetto educational di Oriocenter"
           subtitle="SettimaArte"
+          ctas={[
+            { label: 'Scopri FSL', href: '/fsl' },
+            { label: 'Scopri il Festival', href: '/festival' },
+            { label: 'Scopri il Cortometraggio', href: '/cortometraggio' },
+          ]}
         />
 
         {/* 2. Intro */}

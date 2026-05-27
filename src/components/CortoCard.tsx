@@ -38,35 +38,37 @@ export default function CortoCard({ edizione }: CortoCardProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="text-blu/75 leading-relaxed text-lg mb-10 max-w-3xl"
+            className="text-blu/80 leading-relaxed text-lg mb-10 max-w-3xl"
           >
             {edizione.descrizione}
           </motion.p>
         )}
 
         {/* ── Layout: locandina + info ── */}
-        <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start mb-12">
+        <div className={`flex gap-10 md:gap-16 items-start mb-12 ${edizione.compact ? 'flex-col' : 'flex-col md:flex-row'}`}>
 
-          {/* Locandina */}
-          <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="w-full md:w-72 shrink-0"
-          >
-            {edizione.locandina ? (
-              <img
-                src={edizione.locandina}
-                alt={`Locandina ${edizione.titolo}`}
-                loading="lazy"
-                className="w-full rounded-squircle shadow-xl object-cover"
-              />
-            ) : (
-              <div className="w-full aspect-[2/3] rounded-squircle bg-azzurro-light flex items-center justify-center">
-                <Film size={48} className="text-blu/20" />
-              </div>
-            )}
-          </motion.div>
+          {/* Locandina — nascosta in modalità compact */}
+          {!edizione.compact && (
+            <motion.div
+              initial={{ opacity: 0, x: -32 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="w-full max-w-[220px] mx-auto md:mx-0 md:max-w-none md:w-72 shrink-0"
+            >
+              {edizione.locandina ? (
+                <img
+                  src={edizione.locandina}
+                  alt={`Locandina ${edizione.titolo}`}
+                  loading="lazy"
+                  className="w-full rounded-squircle shadow-xl object-cover"
+                />
+              ) : (
+                <div className="w-full aspect-[2/3] rounded-squircle bg-azzurro-light flex items-center justify-center">
+                  <Film size={48} className="text-blu/20" />
+                </div>
+              )}
+            </motion.div>
+          )}
 
           {/* Info */}
           <motion.div
@@ -92,7 +94,7 @@ export default function CortoCard({ edizione }: CortoCardProps) {
               <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
                 Trama
               </p>
-              <p className="text-blu/75 leading-relaxed text-lg">{edizione.trama}</p>
+              <p className="text-blu/80 leading-relaxed text-lg">{edizione.trama}</p>
             </div>
 
             {/* Premi */}
@@ -136,7 +138,7 @@ export default function CortoCard({ edizione }: CortoCardProps) {
         )}
 
         {/* ── Gallery backstage ── */}
-        {edizione.backstagePhotos.length > 0 && (
+        {!edizione.compact && edizione.backstagePhotos.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
@@ -149,8 +151,8 @@ export default function CortoCard({ edizione }: CortoCardProps) {
           </motion.div>
         )}
 
-        {/* Placeholder gallery quando non ci sono foto */}
-        {edizione.backstagePhotos.length === 0 && (
+        {/* Placeholder gallery quando non ci sono foto (solo per edizioni non-compact) */}
+        {!edizione.compact && edizione.backstagePhotos.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}

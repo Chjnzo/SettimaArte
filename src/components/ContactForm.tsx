@@ -50,6 +50,7 @@ export default function ContactForm() {
 
   return (
     <section
+      id="contattaci"
       data-header-dark
       ref={ref}
       style={{ backgroundColor: 'var(--color-blu)' }}
@@ -64,7 +65,7 @@ export default function ContactForm() {
           <h2 className="font-funnel font-bold text-4xl md:text-5xl text-white mb-4">
             Contattaci
           </h2>
-          <p className="text-white/75 mb-10 leading-relaxed">
+          <p className="text-white/85 mb-10 leading-relaxed text-lg">
             Vuoi parlare con noi o hai altre curiosità? Scrivici a{' '}
             <a
               href="mailto:info@skillherz.com"

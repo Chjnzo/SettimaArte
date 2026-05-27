@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -11,9 +11,12 @@ const navLinks = [
 ]
 
 export default function Header() {
-  const [scrolled, setScrolled]       = useState(false)
-  const [overDark, setOverDark]       = useState(false)
-  const [mobileOpen, setMobileOpen]   = useState(false)
+  const [scrolled, setScrolled]     = useState(false)
+  const [overDark, setOverDark]     = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const checkDark = () => {
     const darkSections = document.querySelectorAll('[data-header-dark]')
@@ -25,7 +28,6 @@ export default function Header() {
     return dark
   }
 
-  // Legge lo stato prima che il browser dipinga → nessun flash al cambio pagina
   useLayoutEffect(() => {
     setScrolled(window.scrollY > 40)
     setOverDark(checkDark())
@@ -45,9 +47,19 @@ export default function Header() {
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
+  function handleContattaci(e: React.MouseEvent) {
+    e.preventDefault()
+    setMobileOpen(false)
+    if (location.pathname === '/') {
+      document.getElementById('contattaci')?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/?scroll=contattaci')
+    }
+  }
+
   const atTop = !scrolled
-  // In cima → sempre bianco (evita flash al cambio pagina + look pulito su hero)
-  // Scrollato → bianco solo su sezioni scure rilevate
+  // In cima: sempre sfondo scuro semitrasparente (leggibile su qualsiasi hero)
+  // Scrollato: sfondo bianco, testo bianco/blu in base a sezione
   const lightText = atTop || overDark
 
   return (
@@ -55,7 +67,7 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           atTop
-            ? 'bg-transparent border-b border-transparent'
+            ? 'bg-blu/75 backdrop-blur-sm border-b border-white/10'
             : 'bg-white/96 backdrop-blur-md border-b border-black/6 shadow-sm'
         }`}
       >
@@ -63,9 +75,11 @@ export default function Header() {
 
           <NavLink to="/" aria-label="SettimaArte — Home" className="shrink-0">
             <img
-              src="/logo/7arte-oriocenter_logo_2024.png"
+              src={lightText
+                ? '/logo/7arte-oriocenter_logo_2024_negativo.png'
+                : '/logo/7arte-oriocenter_logo_2024.png'}
               alt="SettimaArte"
-              className={`h-9 w-auto object-contain transition-all duration-500 ${lightText ? 'brightness-0 invert' : ''}`}
+              className="h-11 w-auto object-contain transition-all duration-300"
             />
           </NavLink>
 
@@ -80,47 +94,39 @@ export default function Header() {
                 {({ isActive }) => (
                   <span className="relative flex flex-col items-center px-4 py-2">
                     <span
-                      className={`text-sm font-funnel font-semibold whitespace-nowrap transition-colors duration-300 ${
+                      className={`text-[15px] font-funnel font-semibold whitespace-nowrap transition-colors duration-300 ${
                         lightText
-                          ? 'text-white'
+                          ? isActive ? 'text-white' : 'text-white/70 hover:text-white'
                           : isActive ? 'text-blu' : 'text-blu/55 hover:text-blu'
                       }`}
                     >
                       {label}
                     </span>
-
-                    {isActive && atTop ? (
+                    {isActive && (
                       <motion.span
-                        layoutId="nav-underline"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full"
-                        style={{ backgroundColor: 'white' }}
-                        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                        layoutId="nav-indicator"
+                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full ${
+                          lightText ? 'bg-fucsia' : 'bg-fucsia'
+                        }`}
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
-                    ) : isActive ? (
-                      <motion.span
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ scaleX: 1, opacity: 1 }}
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full origin-center"
-                        style={{ backgroundColor: 'var(--color-fucsia)' }}
-                        transition={{ duration: 0.18 }}
-                      />
-                    ) : null}
+                    )}
                   </span>
                 )}
               </NavLink>
             ))}
           </nav>
 
-          <Link
-            to="/contattaci"
-            className={`hidden md:inline-flex items-center text-sm font-funnel font-semibold px-5 py-2 rounded-full border transition-all duration-300 shrink-0 ${
+          <button
+            onClick={handleContattaci}
+            className={`hidden md:inline-flex items-center text-[15px] font-funnel font-semibold px-5 py-2 rounded-full border transition-all duration-300 shrink-0 cursor-pointer ${
               lightText
-                ? 'border-white text-white hover:bg-white/10'
+                ? 'border-white text-white hover:bg-white hover:text-blu'
                 : 'border-azzurro text-azzurro hover:bg-azzurro hover:text-white'
             }`}
           >
             Contattaci
-          </Link>
+          </button>
 
           <button
             className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
@@ -151,7 +157,7 @@ export default function Header() {
               <img
                 src="/logo/7arte-oriocenter_logo_2024_negativo.png"
                 alt="SettimaArte"
-                className="h-8 w-auto"
+                className="h-10 w-auto"
               />
               <button
                 onClick={() => setMobileOpen(false)}
@@ -182,21 +188,16 @@ export default function Header() {
                           isActive ? 'border-fucsia/40' : 'border-white/8 hover:border-white/20'
                         }`}
                       >
-                        {/* Numero */}
                         <span className="text-xs font-funnel font-bold text-fucsia tabular-nums w-5 shrink-0 leading-none mt-1">
                           {num ?? ''}
                         </span>
-
-                        {/* Label */}
                         <span
-                          className={`font-funnel font-bold leading-none transition-colors duration-200 ${
-                            isActive ? 'text-white text-4xl' : 'text-white/40 group-hover:text-white/70 text-4xl'
+                          className={`font-funnel font-bold leading-none transition-colors duration-200 text-4xl ${
+                            isActive ? 'text-white' : 'text-white/40 group-hover:text-white/70'
                           }`}
                         >
                           {label}
                         </span>
-
-                        {/* Freccia attivo */}
                         {isActive && (
                           <motion.span
                             initial={{ opacity: 0, x: -8 }}
@@ -215,13 +216,12 @@ export default function Header() {
 
             {/* Footer mobile */}
             <div className="px-8 pb-10 pt-5 border-t border-white/10 shrink-0">
-              <Link
-                to="/contattaci"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center font-funnel font-semibold text-sm text-blu bg-white hover:bg-white/90 rounded-squircle py-3.5 px-6 transition-colors"
+              <button
+                onClick={handleContattaci}
+                className="w-full flex items-center justify-center font-funnel font-semibold text-sm text-blu bg-white hover:bg-white/90 rounded-squircle py-3.5 px-6 transition-colors cursor-pointer"
               >
                 Contattaci
-              </Link>
+              </button>
               <p className="text-center text-white/25 text-xs font-funnel mt-4">
                 settimaartefestival.it
               </p>

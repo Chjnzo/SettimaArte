@@ -12,6 +12,7 @@ export interface EdizioneCorto {
   premi?: string[]
   locandina?: string
   backstagePhotos: GalleryItem[]
+  compact?: boolean
 }
 
 export const cortoBackstageStudenti: GalleryItem[] = galleryCortoBackstage
@@ -54,5 +55,6 @@ export const edizioniData: EdizioneCorto[] = [
     trailerSrc: '',
     locandina: '',
     backstagePhotos: [],
+    compact: true,
   },
 ]

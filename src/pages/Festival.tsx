@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
@@ -33,28 +33,27 @@ function SectionHeading({ children, white = false }: { children: React.ReactNode
 function CopyEvento() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
-
-  const paragraphs = [
-    "Operare su un set cinematografico è un'esperienza intensa, coinvolgente, capace di mettere davvero alla prova ogni competenza. Ed è proprio per questo che il percorso non si conclude semplicemente con la fine delle attività. Si trasforma in un evento.",
-    "Al termine delle settimane di Formazione Scuola-Lavoro, Oriocenter celebra il lavoro degli studenti con una vera e propria giornata-evento aperta al pubblico: genitori, insegnanti, amici e visitatori diventano parte di un momento collettivo, pensato per dare visibilità e riconoscimento ai progetti realizzati.",
-    "L'esperienza inizia già nelle settimane precedenti: le locandine e i cortometraggi vengono pubblicati online e si aprono le votazioni da casa. Il pubblico può guardare, scegliere e sostenere i lavori preferiti. In questa fase, i ragazzi sono chiamati ad un ruolo attivo, mobilitando la propria rete e promuovendo il proprio progetto attraverso tutti i canali possibili per raccogliere voti e visibilità. Si crea così attesa, confronto e partecipazione.",
-    "Due volte l'anno, a Dicembre e a Giugno, le classi si ritrovano nella sala 14 di UCI Orio a Oriocenter. I cortometraggi vengono proiettati sul grande schermo, trasformando il lavoro svolto in un'esperienza cinematografica completa, condivisa con gli altri partecipanti e con il pubblico.",
-    "Ma non è solo una proiezione: è un vero format. Durante la mattinata, gli studenti tornano a mettersi in gioco con nuove sfide dal vivo, mentre una giuria d'eccezione osserva, valuta e assegna i premi. Tra gli ospiti delle diverse edizioni ci sono stati volti noti come Frank Matano e i Pampers, affiancati da registi e professionisti della casa di produzione Oki Doki Film, partner del progetto. La giuria assegna riconoscimenti come miglior attore, miglior locandina e miglior storia. Ma il premio più importante resta nelle mani del pubblico: è il voto da casa a decretare il vincitore assoluto di ogni edizione.",
-    "E per alcuni ragazzi, questo non è il punto di arrivo. Nel corso dell'anno, infatti, vengono selezionati gli studenti che avranno l'opportunità di prendere parte a una produzione cinematografica estiva realizzata insieme a Oki Doki Film. Un'esperienza ancora più avanzata, che porta i ragazzi a confrontarsi con un set professionale reale. Un percorso che continua, cresce e si evolve.",
+  const paragraphs: ReactNode[] = [
+    <>Operare su un set cinematografico è un'esperienza intensa, coinvolgente, capace di mettere davvero alla prova ogni competenza. Ed è proprio per questo che il percorso non si conclude semplicemente con la fine delle attività. <strong>Si trasforma in un evento.</strong></>,
+    <>Al termine delle settimane di Formazione Scuola-Lavoro, <strong>Oriocenter</strong> celebra il lavoro degli studenti con una vera e propria giornata-evento aperta al pubblico: genitori, insegnanti, amici e visitatori diventano parte di un momento collettivo, pensato per dare visibilità e riconoscimento ai progetti realizzati.</>,
+    <>L'esperienza inizia già nelle settimane precedenti: le locandine e i cortometraggi vengono pubblicati online e si aprono le <strong>votazioni da casa</strong>. Il pubblico può guardare, scegliere e sostenere i lavori preferiti. In questa fase, i ragazzi sono chiamati ad un ruolo attivo, mobilitando la propria rete e promuovendo il proprio progetto attraverso tutti i canali possibili per raccogliere voti e visibilità. Si crea così attesa, confronto e partecipazione.</>,
+    <>Due volte l'anno, a <strong>Dicembre e a Giugno</strong>, le classi si ritrovano nella <strong>sala 14 di UCI Orio</strong> a Oriocenter. I cortometraggi vengono proiettati sul grande schermo, trasformando il lavoro svolto in un'esperienza cinematografica completa, condivisa con gli altri partecipanti e con il pubblico.</>,
+    <>Ma non è solo una proiezione: è un <strong>vero format</strong>. Durante la mattinata, gli studenti tornano a mettersi in gioco con nuove sfide dal vivo, mentre una giuria d'eccezione osserva, valuta e assegna i premi. Tra gli ospiti delle diverse edizioni ci sono stati volti noti come <strong>Frank Matano</strong> e <strong>i Pampers</strong>, affiancati da registi e professionisti della casa di produzione <strong>Oki Doki Film</strong>, partner del progetto. La giuria assegna riconoscimenti come miglior attore, miglior locandina e miglior storia. Ma il premio più importante resta nelle mani del pubblico: è il voto da casa a decretare il vincitore assoluto di ogni edizione.</>,
+    <>E per alcuni ragazzi, questo non è il punto di arrivo. Nel corso dell'anno, infatti, vengono selezionati gli studenti che avranno l'opportunità di prendere parte a una <strong>produzione cinematografica estiva</strong> realizzata insieme a Oki Doki Film. Un'esperienza ancora più avanzata, che porta i ragazzi a confrontarsi con un set professionale reale. Un percorso che continua, cresce e si evolve.</>,
   ]
 
   return (
     <section ref={ref} className="w-full py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 max-w-3xl space-y-8">
-        {paragraphs.map((text, i) => (
+        {paragraphs.map((content, i) => (
           <motion.p
             key={i}
             initial={{ opacity: 0, y: 32 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: i * 0.07 }}
-            className="text-blu/75 leading-relaxed text-lg"
+            className="text-blu/80 leading-relaxed text-lg font-funnel"
           >
-            {text}
+            {content}
           </motion.p>
         ))}
       </div>
@@ -80,7 +79,20 @@ function StatsSection() {
       className="w-full py-20 md:py-28"
       style={{ backgroundColor: 'var(--color-azzurro-light)' }}
     >
-      <div className="container mx-auto px-4 max-w-5xl">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-12 text-center"
+        >
+          <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-3">
+            I numeri del Festival
+          </p>
+          <h2 className="font-funnel font-bold text-4xl md:text-5xl text-blu leading-tight">
+            I risultati del Festival
+          </h2>
+        </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {stats.map(({ value, label }, i) => (
             <motion.div
@@ -92,7 +104,7 @@ function StatsSection() {
               <p className="font-funnel font-bold text-6xl md:text-7xl text-blu leading-none">
                 {value}
               </p>
-              <p className="mt-3 text-blu/60 font-funnel text-base">{label}</p>
+              <p className="mt-3 text-blu/75 font-funnel text-base">{label}</p>
             </motion.div>
           ))}
         </div>
@@ -108,8 +120,8 @@ function CortoLink() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-16 bg-white">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section ref={ref} className="w-full py-16 md:py-24 bg-white">
+      <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -121,7 +133,7 @@ function CortoLink() {
             <h3 className="font-funnel font-bold text-2xl md:text-3xl text-blu">
               Scopri la produzione cinematografica estiva
             </h3>
-            <p className="text-blu/65 leading-relaxed">
+            <p className="text-blu/80 leading-relaxed text-base">
               I ragazzi più meritevoli vengono selezionati per affiancare una troupe professionale
               nella realizzazione di un cortometraggio vero, candidato ai principali festival
               nazionali italiani.
@@ -199,7 +211,7 @@ export default function Festival() {
         <HeroSlider
           slides={[heroFestivalImage]}
           subtitle="Settima Arte Festival"
-          title="In occasione del Festival i corti degli studenti sono proiettati sul maxischermo di UCI Orio a Oriocenter"
+          title="I cortometraggi degli studenti sul grande schermo di UCI Orio"
         />
 
         {/* 2. Copy evento + come funziona */}
