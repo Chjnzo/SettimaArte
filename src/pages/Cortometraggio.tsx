@@ -290,11 +290,21 @@ function CitazioneFinale() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <p className="font-funnel font-bold italic text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed mb-6">
+          {/* Parte 1 — citazione vera e propria: bold italic, grande */}
+          <p className="font-funnel font-bold italic text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed">
             "Investire sui giovani non dovrebbe essere un gesto simbolico, ma una scelta strategica
             capace di generare valore nel tempo."
           </p>
-          <p className="font-funnel text-white/70 italic text-lg md:text-xl leading-relaxed">
+
+          {/* Separatore visivo */}
+          <div className="my-8 flex items-center justify-center gap-4">
+            <span className="flex-1 h-px bg-white/15 max-w-[80px]" />
+            <span className="text-fucsia text-lg font-funnel font-bold">—</span>
+            <span className="flex-1 h-px bg-white/15 max-w-[80px]" />
+          </div>
+
+          {/* Parte 2 — elaborazione: font leggero, non italic, più piccolo */}
+          <p className="font-funnel font-light text-white/55 text-base md:text-lg leading-relaxed">
             Le esperienze sviluppate per Oriocenter attorno al linguaggio cinematografico mostrano
             come, quando l'incontro tra impresa e nuove generazioni è progettato con cura, possa
             dare vita a risultati inattesi — e talvolta straordinari.
@@ -325,8 +335,6 @@ export default function Cortometraggio() {
         {/* 1. Hero */}
         <HeroSlider
           slides={[{ type: 'video', src: '', videoId: 'l9zSUCoaUw4', alt: 'BTS cortometraggio Oriocenter' }]}
-          subtitle="Cortometraggio Professionale"
-          title="Un set vero, una troupe vera, un'esperienza unica"
         />
 
         {/* 2. Copy introduttivo */}

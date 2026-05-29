@@ -17,30 +17,57 @@ function IntroSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-16 md:py-24 bg-white">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <motion.div
+    <section ref={ref} className="w-full py-20 md:py-28 bg-white">
+      <div className="container mx-auto px-6 md:px-16 max-w-4xl text-center">
+        <motion.h2
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="flex flex-col md:flex-row gap-10 md:gap-20 items-start"
+          className="font-funnel font-bold text-2xl md:text-3xl lg:text-4xl text-blu leading-snug"
         >
-          <h2 className="font-funnel font-bold text-3xl md:text-4xl lg:text-5xl text-blu leading-tight md:flex-1">
-            Settima Arte è il progetto educational di Oriocenter, un'occasione educativa per
-            sperimentare il mondo del lavoro utilizzando il linguaggio a loro più noto: il video.
-          </h2>
-          <div className="md:flex-1 flex flex-col gap-4">
-            <p className="text-base text-blu/70 leading-relaxed">
-              Nel <strong>1911</strong> Ricciotto Canudo introdusse il concetto di settima arte,
-              riconoscendo nel cinema una nuova forma d'arte in grado di fondere le arti dello
-              spazio con quelle del tempo.
-            </p>
-            <p className="text-base text-blu/70 leading-relaxed">
-              Oggi SettimaArte porta questa visione dentro i corridoi di{' '}
-              <strong>Oriocenter</strong>, trasformando un centro commerciale in un set
-              cinematografico vivo, dove gli studenti diventano i protagonisti.
-            </p>
+          Settima Arte è il progetto educational di Oriocenter, un'occasione educativa per
+          sperimentare il mondo del lavoro utilizzando il linguaggio a loro più noto: il video.
+        </motion.h2>
+      </div>
+    </section>
+  )
+}
+
+function CanudoBridge() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  return (
+    <section ref={ref} className="w-full py-16 md:py-24 bg-white">
+      <div className="container mx-auto px-6 max-w-xl text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center gap-6"
+        >
+          {/* Anno come ancora visiva */}
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 inline-block" style={{ backgroundColor: 'var(--color-fucsia)' }} />
+            <span className="font-funnel font-bold text-sm tracking-[0.2em]" style={{ color: 'var(--color-fucsia)' }}>
+              1911
+            </span>
+            <span className="h-px w-10 inline-block" style={{ backgroundColor: 'var(--color-fucsia)' }} />
           </div>
+
+          <p className="text-base md:text-lg leading-relaxed font-funnel text-blu/65">
+            Ricciotto Canudo riconobbe nel cinema una nuova forma d'arte capace di fondere
+            le arti dello spazio con quelle del tempo. Oggi <strong className="text-blu font-semibold">SettimaArte</strong> porta
+            questa visione dentro i corridoi di <strong className="text-blu font-semibold">Oriocenter</strong>,
+            trasformando un centro commerciale in un set cinematografico vivo dove gli studenti
+            diventano i protagonisti.
+          </p>
+
+          {/* Freccia verso il basso — invita a scoprire le sezioni */}
+          <svg aria-hidden viewBox="0 0 24 24" className="w-5 h-5 mt-2 opacity-30" fill="none" stroke="var(--color-blu)" strokeWidth="2" strokeLinecap="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <polyline points="19 12 12 19 5 12" />
+          </svg>
         </motion.div>
       </div>
     </section>
@@ -52,27 +79,61 @@ function GeoSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section
-      ref={ref}
-      style={{ backgroundColor: 'var(--color-azzurro-light)' }}
-      className="w-full py-16 md:py-20"
-    >
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section ref={ref} className="w-full py-16 md:py-24 bg-white overflow-x-clip">
+      <div className="container mx-auto px-6 md:px-16 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="flex flex-col gap-4"
+          className="relative"
         >
-          <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro">
-            Chi può partecipare
-          </p>
-          <p className="text-blu text-xl md:text-2xl leading-relaxed font-funnel font-medium">
-            La partecipazione a questo progetto educational di Oriocenter è aperto a tutte le scuole
-            secondarie di II° grado della provincia di Bergamo e non solo! L'ultima edizione ha visto
-            infatti partecipare istituti delle province di{' '}
-            <strong className="font-bold">Brescia, Lecco, Como e Monza Brianza</strong>.
-          </p>
+          {/* Parentesi aperta */}
+          <svg
+            aria-hidden
+            viewBox="0 0 40 120"
+            className="absolute -left-8 md:-left-14 top-0 bottom-0 w-6 md:w-9 h-full"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            <path
+              d="M32 4 L8 4 L8 116 L32 116"
+              stroke="var(--color-fucsia)"
+              strokeWidth="6"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          {/* Parentesi chiusa */}
+          <svg
+            aria-hidden
+            viewBox="0 0 40 120"
+            className="absolute -right-8 md:-right-14 top-0 bottom-0 w-6 md:w-9 h-full"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            <path
+              d="M8 4 L32 4 L32 116 L8 116"
+              stroke="var(--color-fucsia)"
+              strokeWidth="6"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          <div className="px-4 md:px-6 py-6 md:py-8 flex flex-col gap-4">
+            <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro">
+              Chi può partecipare
+            </p>
+            <p className="text-blu text-xl md:text-2xl leading-relaxed font-funnel font-medium">
+              La partecipazione a questo progetto educational di Oriocenter è aperto a tutte le scuole
+              secondarie di II° grado della provincia di Bergamo e non solo! L'ultima edizione ha visto
+              infatti partecipare istituti delle province di{' '}
+              <strong className="font-bold">Brescia, Lecco, Como e Monza Brianza</strong>.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -111,17 +172,14 @@ export default function Home() {
         {/* 1. Hero */}
         <HeroSlider
           slides={heroHomeSlides}
-          title="Il progetto educational di Oriocenter"
-          subtitle="SettimaArte"
-          ctas={[
-            { label: 'Scopri FSL', href: '/fsl' },
-            { label: 'Scopri il Festival', href: '/festival' },
-            { label: 'Scopri il Cortometraggio', href: '/cortometraggio' },
-          ]}
+          tagline="Settima Arte è il progetto educational di Oriocenter per sperimentare il mondo del lavoro attraverso il linguaggio video."
         />
 
         {/* 2. Intro */}
         <IntroSection />
+
+        {/* 2b. Canudo bridge */}
+        <CanudoBridge />
 
         {/* 3. FSL */}
         <ProjectCard

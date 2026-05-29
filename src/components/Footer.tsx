@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { Mail, Lock, Instagram, Youtube } from 'lucide-react'
 
 const navLinks = [
-  { label: 'Home', to: '/' },
   { label: 'FSL', to: '/fsl' },
   { label: 'Festival', to: '/festival' },
   { label: 'Cortometraggio', to: '/cortometraggio' },
@@ -88,6 +87,7 @@ export default function Footer() {
                 >
                   <Icon size={15} className="text-azzurro shrink-0" />
                   {label}
+                  <span className="sr-only"> (apre in nuova scheda)</span>
                 </a>
               ))}
             </div>
@@ -104,13 +104,6 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40 font-funnel">
           <p className="text-center sm:text-left">© {new Date().getFullYear()} SettimaArte. Tutti i diritti riservati.</p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-            <Link
-              to="/privacy"
-              className="text-white/40 hover:text-white/70 transition-colors duration-200"
-            >
-              Privacy Policy
-            </Link>
-            <span className="text-white/15 hidden sm:inline">·</span>
             <p className="text-center">Un progetto <span className="text-white/60">Oriocenter</span> realizzato da <span className="text-white/60">Skillherz</span></p>
             <Link
               to="/admin"

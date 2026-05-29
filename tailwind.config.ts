@@ -14,6 +14,8 @@ const config: Config = {
         blu: '#20244c',
         fucsia: '#e50576',
         'azzurro-light': '#dbdbdb',
+        'neutral-bg': '#f4f4f4',
+        'video-fallback': '#111111',
         // shadcn/ui semantic tokens
         background: 'var(--background)',
         foreground: 'var(--foreground)',

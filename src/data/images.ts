@@ -9,6 +9,7 @@ export interface HeroSlide {
   videoId?: string
   platform?: 'youtube' | 'vimeo'
   cta?: { label: string; href: string }
+  slideTitle?: string
 }
 
 export interface CortoEdizione {
@@ -28,18 +29,24 @@ export interface EdizioneFSL {
 export const heroHomeSlides: HeroSlide[] = [
   {
     type: 'image',
-    src: '/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg',
-    alt: 'Ragazzi in esultanza alla premiazione',
+    src: '/images/Home/Hero/ragazzo-ciack-camera-set-riprese.jpg',
+    alt: 'Ragazzo con ciack su set di riprese',
+    slideTitle: "Un'esperienza di Formazione Scuola-Lavoro unica nel suo genere",
+    cta: { label: 'Scopri di più', href: '/fsl' },
   },
   {
     type: 'image',
-    src: '/images/Home/Hero/ragazzo-ciack-camera-set-riprese.jpg',
-    alt: 'Ragazzo con ciack su set di riprese',
+    src: '/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg',
+    alt: 'Ragazzi in esultanza alla premiazione',
+    slideTitle: 'I corti degli studenti sul maxischermo di UCI Orio a Oriocenter',
+    cta: { label: 'Scopri di più', href: '/festival' },
   },
   {
     type: 'image',
     src: '/images/Home/Hero/studentessa-take-fsl.JPG',
     alt: 'Studentessa durante il take FSL',
+    slideTitle: 'Produzione cinematografica professionale estiva con una troupe vera',
+    cta: { label: 'Scopri di più', href: '/cortometraggio' },
   },
 ]
 
@@ -163,7 +170,7 @@ export const locandinePerEdizione: Record<string, EdizioneFSL[]> = {
       label: 'Edizione estiva',
       corti: [
         { titolo: 'La gavetta', locandina: `${_loc2324}/La gavetta.png`, videoYT: 'https://youtu.be/CeTrMja-BkA' },
-        { titolo: '...quella giusta', locandina: '', videoYT: 'https://youtu.be/0eDSev_U4-c' },
+        { titolo: '...quella giusta', locandina: `${_loc2324}/quella giusta.jpg`, videoYT: 'https://youtu.be/0eDSev_U4-c' },
         { titolo: 'CVuole coscienza', locandina: `${_loc2324}/CVuole coscienza.jpg`, videoYT: 'https://youtu.be/JxjLLSWxvFA', premi: ['premio giuria'] },
         { titolo: 'Il giusto compromesso', locandina: `${_loc2324}/Il giusto compromesso.jpg`, videoYT: 'https://youtu.be/4buprTNcjuU' },
         { titolo: 'Gli uomini sono tutti buoni', locandina: `${_loc2324}/Gli uomini sono tutti buoni.jpg`, videoYT: 'https://youtu.be/KTKDAHK5A5M', premi: ['miglior cortometraggio'] },
@@ -187,9 +194,9 @@ export const locandinePerEdizione: Record<string, EdizioneFSL[]> = {
       corti: [
         { titolo: 'AIChef', locandina: `${_loc2425}/AIChef.jpg`, videoYT: 'https://youtu.be/uMZmK5fJdPw', premi: ['miglior cortometraggio'] },
         { titolo: 'Cupid-IA', locandina: `${_loc2425}/CupidIA.jpg`, videoYT: 'https://youtu.be/SIyrSg3RZeM', premi: ['miglior locandina', 'premio giuria'] },
-        { titolo: 'FreestAIle battle', locandina: `${_loc2425}/FreestAlle Battle.png`, videoYT: 'https://youtu.be/Zl1EDyVhFQQ' },
+        { titolo: 'FreestAIle battle', locandina: `${_loc2425}/FreestAIle Battle.png`, videoYT: 'https://youtu.be/Zl1EDyVhFQQ' },
         { titolo: 'Io LibrAIo', locandina: `${_loc2425}/Io, LibrAIo.jpg`, videoYT: 'https://youtu.be/GaoPCuNgMDI' },
-        { titolo: 'Buddy, le CopAIn parfAIt', locandina: `${_loc2425}/Buddy, Le CopAIn parfAlt.jpg`, videoYT: 'https://youtu.be/vgnQ4bvJfHU' },
+        { titolo: 'Buddy, le CopAIn parfAIt', locandina: `${_loc2425}/Buddy, Le CopAIn parfAIt.jpg`, videoYT: 'https://youtu.be/vgnQ4bvJfHU' },
       ],
     },
   ],

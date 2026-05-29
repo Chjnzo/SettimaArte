@@ -11,7 +11,7 @@ export default function Admin() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="min-h-screen bg-[#f4f4f4] flex items-center justify-center px-4">
+      <div className="min-h-[100dvh] bg-neutral-bg flex items-center justify-center px-4">
         <div className="w-full max-w-md bg-white rounded-squircle shadow-lg p-8 space-y-6">
           <img
             src="/logo/7arte-oriocenter_logo_2024.png"

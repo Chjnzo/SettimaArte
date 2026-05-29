@@ -90,7 +90,7 @@ function StatsSection() {
             I numeri del Festival
           </p>
           <h2 className="font-funnel font-bold text-4xl md:text-5xl text-blu leading-tight">
-            I risultati del Festival
+            Risultati raggiunti
           </h2>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
@@ -208,11 +208,7 @@ export default function Festival() {
 
       <main>
         {/* 1. Hero */}
-        <HeroSlider
-          slides={[heroFestivalImage]}
-          subtitle="Settima Arte Festival"
-          title="I cortometraggi degli studenti sul grande schermo di UCI Orio"
-        />
+        <HeroSlider slides={[heroFestivalImage]} />
 
         {/* 2. Copy evento + come funziona */}
         <CopyEvento />

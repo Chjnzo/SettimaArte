@@ -18,11 +18,11 @@ export async function submitHubSpotForm(data: ContactFormData): Promise<void> {
     fields: [
       { name: 'firstname', value: data.nome },
       { name: 'lastname', value: data.cognome },
-      { name: 'sono_uno', value: data.sono_uno },
+      { name: 'tipologia_profilo', value: data.sono_uno },
       { name: 'email', value: data.email },
       { name: 'phone', value: data.cellulare ?? '' },
       { name: 'state', value: data.provincia },
-      { name: 'message', value: data.messaggio ?? '' },
+      { name: 'indica_il_motivo_della_richiesta_', value: data.messaggio ?? '' },
     ],
   }
 

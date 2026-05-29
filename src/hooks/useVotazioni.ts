@@ -55,7 +55,11 @@ async function fetchCorti(): Promise<CortoCorrente[]> {
   const sheetId = import.meta.env.VITE_GSHEET_ID
   if (!sheetId) return []
 
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`
+  // Accetta sia l'URL completa pubblicata che il solo ID del foglio
+  const url = sheetId.startsWith('https://')
+    ? sheetId
+    : `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`
+
   const res = await fetch(url)
   if (!res.ok) throw new Error('Impossibile caricare i dati delle votazioni')
 

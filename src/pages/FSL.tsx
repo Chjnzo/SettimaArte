@@ -44,45 +44,49 @@ function StatsSection() {
   return (
     <section data-header-dark ref={ref} className="w-full py-20 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
       <div className="container mx-auto px-4 max-w-6xl">
-        {/* Numbers */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6 text-center mb-16">
-          {stats.map(({ value, label }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 32 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, delay: i * 0.1 }}
-            >
-              <p className="font-funnel font-bold text-5xl md:text-7xl text-white leading-none">
-                {value}
-              </p>
-              <p className="mt-3 text-white/60 text-sm md:text-base font-funnel">{label}</p>
-            </motion.div>
-          ))}
-        </div>
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
 
-        {/* Certificate of Merit — featured */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="border border-yellow-400/40 rounded-squircle p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 bg-yellow-400/5"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-yellow-400/15 flex items-center justify-center shrink-0">
-            <Trophy size={32} className="text-yellow-400" />
+          {/* Sinistra: Certificate of Merit — grande e prominente */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="border border-yellow-400/40 rounded-squircle p-8 md:p-10 flex flex-col gap-6 bg-yellow-400/5"
+          >
+            <div className="w-20 h-20 rounded-2xl bg-yellow-400/15 flex items-center justify-center">
+              <Trophy size={40} className="text-yellow-400" />
+            </div>
+            <div>
+              <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-yellow-400/80 mb-2">
+                Riconoscimento
+              </p>
+              <p className="font-funnel font-bold text-2xl md:text-3xl text-white leading-tight mb-3">
+                Certificate of Merit — CNCC 2023
+              </p>
+              <p className="text-white/50 text-base font-funnel leading-relaxed">
+                Consiglio Nazionale dei Centri Commerciali — premio per l'eccellenza nei progetti educational
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Destra: 4 numeri in griglia 2×2, centrati */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 place-items-center">
+            {stats.map(({ value, label }, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, x: 24 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
+              >
+                <p className="font-funnel font-bold text-5xl md:text-6xl text-white leading-none">
+                  {value}
+                </p>
+                <p className="mt-2 text-white/60 text-base font-funnel">{label}</p>
+              </motion.div>
+            ))}
           </div>
-          <div className="text-center md:text-left">
-            <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-yellow-400/80 mb-1">
-              Riconoscimento
-            </p>
-            <p className="font-funnel font-bold text-xl md:text-2xl text-white leading-tight">
-              Certificate of Merit — CNCC 2023
-            </p>
-            <p className="text-white/50 text-sm font-funnel mt-1">
-              Consiglio Nazionale dei Centri Commerciali — premio per l'eccellenza nei progetti educational
-            </p>
-          </div>
-        </motion.div>
+
+        </div>
       </div>
     </section>
   )
@@ -353,6 +357,9 @@ function LocandineSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
+  // Appiattisce tutte le edizioni dell'anno selezionato in un unico array
+  const cortiAttivi = locandinePerEdizione[annoAttivo].flatMap((ed) => ed.corti)
+
   return (
     <section
       ref={ref}
@@ -375,7 +382,7 @@ function LocandineSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap gap-2 mb-12"
+          className="flex flex-wrap gap-2 mb-10"
         >
           {anni.map((anno) => (
             <button
@@ -392,30 +399,25 @@ function LocandineSection() {
           ))}
         </motion.div>
 
-        {/* Edizioni anno attivo */}
+        {/* Scroll orizzontale — tutte le locandine dell'anno */}
         <motion.div
           key={annoAttivo}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="space-y-14"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.35 }}
+          className="overflow-x-auto pb-4 -mx-4 px-4"
+          style={{ scrollbarWidth: 'thin', scrollbarColor: '#0597de transparent' }}
         >
-          {locandinePerEdizione[annoAttivo].map((edizione) => (
-            <div key={edizione.label}>
-              <h3 className="font-funnel font-bold text-2xl text-blu mb-8">
-                {edizione.label}
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                {edizione.corti.map((corto) => (
-                  <CortoLocandina
-                    key={corto.titolo}
-                    corto={corto}
-                    onClick={() => setSelectedCorto(corto)}
-                  />
-                ))}
+          <div className="flex gap-4 w-max">
+            {cortiAttivi.map((corto) => (
+              <div key={corto.titolo} className="w-36 md:w-44 shrink-0">
+                <CortoLocandina
+                  corto={corto}
+                  onClick={() => setSelectedCorto(corto)}
+                />
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </motion.div>
       </div>
 
@@ -442,11 +444,7 @@ export default function FSL() {
 
       <main>
         {/* 1. Hero */}
-        <HeroSlider
-          slides={[heroFSLImage]}
-          subtitle="FSL — Formazione Scuola-Lavoro"
-          title="Cinema come strumento educativo, Oriocenter come set"
-        />
+        <HeroSlider slides={[heroFSLImage]} />
 
         {/* 2. Copy descrittivo */}
         <CopySection />

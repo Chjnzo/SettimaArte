@@ -22,10 +22,10 @@ type FormValues = z.infer<typeof schema>
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="text-red-400 text-xs mt-1">{message}</p>
+  return <p className="text-red-400 text-xs mt-1" role="alert">{message}</p>
 }
 
-const inputCls = 'w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-azzurro focus:border-azzurro transition text-sm'
+const inputCls = 'w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-azzurro focus:border-azzurro transition text-base md:text-sm'
 
 export default function ContactForm() {
   const ref = useRef(null)
@@ -78,11 +78,15 @@ export default function ContactForm() {
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
               {/* Nome */}
               <div>
+                <label htmlFor="nome" className="sr-only">Nome</label>
                 <input
+                  id="nome"
                   {...register('nome')}
                   placeholder="Nome *"
+                  autoComplete="given-name"
                   className={inputCls}
                 />
                 <FieldError message={errors.nome?.message} />
@@ -90,9 +94,12 @@ export default function ContactForm() {
 
               {/* Cognome */}
               <div>
+                <label htmlFor="cognome" className="sr-only">Cognome</label>
                 <input
+                  id="cognome"
                   {...register('cognome')}
                   placeholder="Cognome *"
+                  autoComplete="family-name"
                   className={inputCls}
                 />
                 <FieldError message={errors.cognome?.message} />
@@ -100,7 +107,9 @@ export default function ContactForm() {
 
               {/* Sono uno */}
               <div>
+                <label htmlFor="sono_uno" className="sr-only">Sono uno</label>
                 <select
+                  id="sono_uno"
                   {...register('sono_uno')}
                   defaultValue=""
                   className={`${inputCls} appearance-none`}
@@ -116,10 +125,13 @@ export default function ContactForm() {
 
               {/* Email */}
               <div>
+                <label htmlFor="email" className="sr-only">Email</label>
                 <input
+                  id="email"
                   {...register('email')}
                   type="email"
                   placeholder="Email *"
+                  autoComplete="email"
                   className={inputCls}
                 />
                 <FieldError message={errors.email?.message} />
@@ -127,17 +139,22 @@ export default function ContactForm() {
 
               {/* Cellulare */}
               <div>
+                <label htmlFor="cellulare" className="sr-only">Cellulare</label>
                 <input
+                  id="cellulare"
                   {...register('cellulare')}
                   type="tel"
                   placeholder="Cellulare"
+                  autoComplete="tel"
                   className={inputCls}
                 />
               </div>
 
               {/* Provincia */}
               <div>
+                <label htmlFor="provincia" className="sr-only">Provincia</label>
                 <input
+                  id="provincia"
                   {...register('provincia')}
                   placeholder="Provincia *"
                   className={inputCls}
@@ -147,7 +164,9 @@ export default function ContactForm() {
 
               {/* Messaggio full width */}
               <div className="md:col-span-2">
+                <label htmlFor="messaggio" className="sr-only">Messaggio</label>
                 <textarea
+                  id="messaggio"
                   {...register('messaggio')}
                   placeholder="Messaggio"
                   rows={5}
@@ -160,7 +179,7 @@ export default function ContactForm() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-azzurro hover:bg-azzurro/90 disabled:opacity-60 text-white font-funnel font-semibold px-8 py-4 rounded-squircle transition-colors duration-200"
+                  className="w-full bg-azzurro hover:bg-azzurro/90 disabled:opacity-60 disabled:cursor-not-allowed text-white font-funnel font-semibold px-8 py-4 rounded-squircle transition-colors duration-200"
                 >
                   {isSubmitting ? 'Invio in corso...' : 'Invia messaggio'}
                 </button>

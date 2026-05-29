@@ -58,17 +58,15 @@ export default function Header() {
   }
 
   const atTop = !scrolled
-  // In cima: sempre sfondo scuro semitrasparente (leggibile su qualsiasi hero)
-  // Scrollato: sfondo bianco, testo bianco/blu in base a sezione
-  const lightText = atTop || overDark
+  const lightText = true
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           atTop
-            ? 'bg-blu/75 backdrop-blur-sm border-b border-white/10'
-            : 'bg-white/96 backdrop-blur-md border-b border-black/6 shadow-sm'
+            ? 'bg-transparent border-b border-transparent'
+            : 'bg-blu/90 backdrop-blur-md border-b border-white/10'
         }`}
       >
         <div className="container mx-auto px-6 h-16 flex items-center justify-between max-w-6xl">
