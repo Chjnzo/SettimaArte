@@ -44,11 +44,62 @@ export default function CortoCard({ edizione }: CortoCardProps) {
           </motion.p>
         )}
 
-        {/* ── Layout: locandina + info ── */}
-        <div className={`flex gap-10 md:gap-16 items-start mb-12 ${edizione.compact ? 'flex-col' : 'flex-col md:flex-row'}`}>
+        {edizione.compact ? (
+          /* ── Edizione compact (2025): trama + badge "in distribuzione" ── */
+          <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start mb-12">
+            {/* Placeholder locandina */}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="w-full max-w-[180px] mx-auto md:mx-0 shrink-0"
+            >
+              <div
+                className="w-full aspect-[2/3] rounded-squircle flex flex-col items-center justify-center gap-3"
+                style={{ backgroundColor: 'var(--color-azzurro-light)' }}
+              >
+                <Film size={36} className="text-blu/25" />
+                <span className="text-[11px] font-funnel font-semibold text-blu/40 text-center px-2 leading-snug">
+                  In distribuzione nei festival
+                </span>
+              </div>
+            </motion.div>
 
-          {/* Locandina — nascosta in modalità compact */}
-          {!edizione.compact && (
+            {/* Info compact */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex-1 space-y-5"
+            >
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 text-sm text-blu/70">
+                  <Clapperboard size={15} className="text-azzurro shrink-0" />
+                  <span>Regia: <strong className="text-blu">{edizione.regia}</strong></span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-blu/70">
+                  <Users size={15} className="text-azzurro shrink-0 mt-0.5" />
+                  <span>Con: <strong className="text-blu">{edizione.attori.join(', ')}</strong></span>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
+                  Trama
+                </p>
+                <p className="text-blu/80 leading-relaxed text-lg">{edizione.trama}</p>
+              </div>
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-funnel font-semibold"
+                style={{ backgroundColor: 'var(--color-azzurro-light)', color: 'var(--color-blu)' }}
+              >
+                <span className="w-2 h-2 rounded-full bg-azzurro inline-block" />
+                In distribuzione nei festival nazionali
+              </div>
+            </motion.div>
+          </div>
+        ) : (
+          /* ── Edizione completa: locandina + info ── */
+          <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start mb-12">
             <motion.div
               initial={{ opacity: 0, x: -32 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -68,59 +119,55 @@ export default function CortoCard({ edizione }: CortoCardProps) {
                 </div>
               )}
             </motion.div>
-          )}
 
-          {/* Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex-1 space-y-6"
-          >
-            {/* Scheda tecnica */}
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 text-sm text-blu/70">
-                <Clapperboard size={15} className="text-azzurro shrink-0" />
-                <span>Regia: <strong className="text-blu">{edizione.regia}</strong></span>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex-1 space-y-6"
+            >
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 text-sm text-blu/70">
+                  <Clapperboard size={15} className="text-azzurro shrink-0" />
+                  <span>Regia: <strong className="text-blu">{edizione.regia}</strong></span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-blu/70">
+                  <Users size={15} className="text-azzurro shrink-0 mt-0.5" />
+                  <span>Con: <strong className="text-blu">{edizione.attori.join(', ')}</strong></span>
+                </div>
               </div>
-              <div className="flex items-start gap-2 text-sm text-blu/70">
-                <Users size={15} className="text-azzurro shrink-0 mt-0.5" />
-                <span>Con: <strong className="text-blu">{edizione.attori.join(', ')}</strong></span>
-              </div>
-            </div>
 
-            {/* Trama */}
-            <div>
-              <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
-                Trama
-              </p>
-              <p className="text-blu/80 leading-relaxed text-lg">{edizione.trama}</p>
-            </div>
-
-            {/* Premi */}
-            {edizione.premi && edizione.premi.length > 0 && (
               <div>
-                <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-3">
-                  Riconoscimenti
+                <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
+                  Trama
                 </p>
-                <ul className="space-y-2">
-                  {edizione.premi.map((premio, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: 16 }}
-                      animate={inView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.4, delay: 0.3 + i * 0.07 }}
-                      className="flex items-start gap-3 text-sm text-blu/80"
-                    >
-                      <Trophy size={14} className="text-fucsia shrink-0 mt-0.5" />
-                      <span>{premio}</span>
-                    </motion.li>
-                  ))}
-                </ul>
+                <p className="text-blu/80 leading-relaxed text-lg">{edizione.trama}</p>
               </div>
-            )}
-          </motion.div>
-        </div>
+
+              {edizione.premi && edizione.premi.length > 0 && (
+                <div>
+                  <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-3">
+                    Riconoscimenti
+                  </p>
+                  <ul className="space-y-2">
+                    {edizione.premi.map((premio, i) => (
+                      <motion.li
+                        key={i}
+                        initial={{ opacity: 0, x: 16 }}
+                        animate={inView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ duration: 0.4, delay: 0.3 + i * 0.07 }}
+                        className="flex items-start gap-3 text-sm text-blu/80"
+                      >
+                        <Trophy size={14} className="text-fucsia shrink-0 mt-0.5" />
+                        <span>{premio}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
 
         {/* ── Trailer ── */}
         {edizione.trailerSrc && (

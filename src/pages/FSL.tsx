@@ -399,28 +399,31 @@ function LocandineSection() {
           ))}
         </motion.div>
 
-        {/* Scroll orizzontale — tutte le locandine dell'anno */}
-        <div className="relative">
-          <motion.div
-            key={annoAttivo}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.35 }}
-            className="overflow-x-auto pb-4 -mx-4 px-4"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--color-azzurro) transparent' }}
-          >
-            <div className="flex gap-4 w-max">
+        {/* Grid / scroll — tutte le locandine dell'anno */}
+        <motion.div
+          key={annoAttivo}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.35 }}
+        >
+          {cortiAttivi.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
               {cortiAttivi.map((corto) => (
-                <div key={corto.titolo} className="w-36 md:w-44 shrink-0">
-                  <CortoLocandina
-                    corto={corto}
-                    onClick={() => setSelectedCorto(corto)}
-                  />
-                </div>
+                <CortoLocandina
+                  key={corto.titolo}
+                  corto={corto}
+                  onClick={() => setSelectedCorto(corto)}
+                />
               ))}
             </div>
-          </motion.div>
-        </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="aspect-[2/3] rounded-squircle bg-white/40 animate-pulse" />
+              ))}
+            </div>
+          )}
+        </motion.div>
       </div>
 
       <VideoModal corto={selectedCorto} onClose={() => setSelectedCorto(null)} />
@@ -448,7 +451,8 @@ export default function FSL() {
         {/* 1. Hero */}
         <HeroSlider
           slides={[heroFSLImage]}
-          title="Un'esperienza di Formazione Scuola-Lavoro unica nel suo genere"
+          subtitle="FSL — Formazione Scuola-Lavoro"
+          title="Un'esperienza unica nel suo genere"
         />
 
         {/* 2. Copy descrittivo */}

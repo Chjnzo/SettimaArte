@@ -70,7 +70,7 @@ export default function HeroSlider({
       {isHomeLayout ? (
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
       ) : (
-        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0 bg-black/55" />
       )}
 
       {isHomeLayout ? (
@@ -249,45 +249,49 @@ function HeroText({
   ctas?: { label: string; href: string }[]
 }) {
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-      {subtitle && (
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-white/80 text-base md:text-lg mb-4 font-funnel tracking-wide uppercase"
-        >
-          {subtitle}
-        </motion.p>
-      )}
-      {title && (
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-white font-funnel font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-[32ch] leading-tight mb-8"
-        >
-          {title}
-        </motion.h1>
-      )}
-      {ctas && ctas.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-          className="flex flex-wrap items-center justify-center gap-3"
-        >
-          {ctas.map(({ label, href }) => (
-            <Link
-              key={href}
-              to={href}
-              className="inline-flex items-center font-funnel font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-white/60 text-white hover:bg-white hover:text-blu transition-all duration-200 backdrop-blur-sm bg-white/10"
-            >
-              {label}
-            </Link>
-          ))}
-        </motion.div>
-      )}
+    <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-16 pb-16 md:pb-24 pt-24">
+      <div className="max-w-6xl mx-auto w-full">
+        {subtitle && (
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="font-funnel font-semibold text-sm md:text-base mb-3 tracking-widest uppercase"
+            style={{ color: 'var(--color-fucsia)' }}
+          >
+            {subtitle}
+          </motion.p>
+        )}
+        {title && (
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.6 }}
+            className="text-white font-funnel font-bold leading-tight mb-6"
+            style={{ fontSize: 'clamp(1.9rem, 4.5vw, 3.5rem)', maxWidth: '20ch' }}
+          >
+            {title}
+          </motion.h1>
+        )}
+        {ctas && ctas.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="flex flex-wrap items-center gap-3"
+          >
+            {ctas.map(({ label, href }) => (
+              <Link
+                key={href}
+                to={href}
+                className="inline-flex items-center font-funnel font-semibold text-sm px-5 py-2.5 rounded-full border border-white/60 text-white hover:bg-white hover:text-blu transition-all duration-200 backdrop-blur-sm bg-white/10"
+              >
+                {label}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </div>
     </div>
   )
 }

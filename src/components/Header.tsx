@@ -52,9 +52,10 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           atTop
-            ? 'bg-transparent border-b border-transparent'
+            ? 'border-b border-transparent'
             : 'bg-blu/90 backdrop-blur-md border-b border-white/10'
         }`}
+        style={atTop ? { background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 100%)' } : undefined}
       >
         <div className="container mx-auto px-6 h-16 flex items-center justify-between max-w-6xl">
 
@@ -64,7 +65,7 @@ export default function Header() {
                 ? '/logo/7arte-oriocenter_logo_2024_negativo.png'
                 : '/logo/7arte-oriocenter_logo_2024.png'}
               alt="SettimaArte"
-              className="h-14 w-auto object-contain transition-all duration-300"
+              className="h-12 md:h-14 w-auto object-contain transition-all duration-300"
             />
           </NavLink>
 
@@ -79,10 +80,10 @@ export default function Header() {
                 {({ isActive }) => (
                   <span className="relative flex flex-col items-center px-4 py-2">
                     <span
-                      className={`text-[15px] font-funnel font-semibold whitespace-nowrap transition-colors duration-300 ${
+                      className={`text-base font-funnel font-semibold whitespace-nowrap transition-colors duration-200 ${
                         lightText
-                          ? isActive ? 'text-white' : 'text-white/70 hover:text-white'
-                          : isActive ? 'text-blu' : 'text-blu/55 hover:text-blu'
+                          ? isActive ? 'text-white' : 'text-white/65 hover:text-fucsia'
+                          : isActive ? 'text-fucsia' : 'text-blu/55 hover:text-fucsia'
                       }`}
                     >
                       {label}
@@ -90,9 +91,8 @@ export default function Header() {
                     {isActive && (
                       <motion.span
                         layoutId="nav-indicator"
-                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full ${
-                          lightText ? 'bg-fucsia' : 'bg-fucsia'
-                        }`}
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] rounded-full bg-fucsia"
+                        style={{ width: '1.5rem' }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       />
                     )}

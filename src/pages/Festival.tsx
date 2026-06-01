@@ -217,7 +217,8 @@ export default function Festival() {
         {/* 1. Hero */}
         <HeroSlider
           slides={[heroFestivalImage]}
-          title="Evento conclusivo con proiezione dei corti degli studenti dentro UCI Orio a Oriocenter"
+          subtitle="Il Settima Arte Festival"
+          title="I corti degli studenti sul grande schermo di UCI Orio"
         />
 
         {/* 2. Copy evento + come funziona */}

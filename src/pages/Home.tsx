@@ -38,8 +38,8 @@ function CanudoBridge() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-16 md:py-24 bg-white">
-      <div className="container mx-auto px-6 max-w-xl text-center">
+    <section ref={ref} className="w-full py-16 md:py-24" style={{ backgroundColor: 'var(--color-azzurro-light)' }}>
+      <div className="container mx-auto px-6 max-w-2xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -55,16 +55,11 @@ function CanudoBridge() {
             <span className="h-px w-10 inline-block" style={{ backgroundColor: 'var(--color-fucsia)' }} />
           </div>
 
-          <p className="text-base md:text-lg leading-relaxed font-funnel text-blu/65">
-            Nel 1911 Ricciotto Canudo introdusse il concetto di settima arte, riconoscendo nel cinema
-            una nuova forma d'arte in grado di fondere le arti dello spazio con quelle del tempo.
+          <p className="text-lg md:text-xl leading-relaxed font-funnel font-medium text-blu/80">
+            Nel 1911 <strong className="text-blu font-bold">Ricciotto Canudo</strong> introdusse il concetto di settima arte,
+            riconoscendo nel cinema una nuova forma d'arte in grado di fondere le arti dello spazio
+            con quelle del tempo.
           </p>
-
-          {/* Freccia verso il basso — invita a scoprire le sezioni */}
-          <svg aria-hidden viewBox="0 0 24 24" className="w-5 h-5 mt-2 opacity-30" fill="none" stroke="var(--color-blu)" strokeWidth="2" strokeLinecap="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
-          </svg>
         </motion.div>
       </div>
     </section>

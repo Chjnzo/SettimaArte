@@ -47,6 +47,7 @@ function GalleryImage({
   onHover?: () => void
 }) {
   const [loaded, setLoaded] = useState(() => loadedUrls.has(src))
+  const [errored, setErrored] = useState(false)
 
   return (
     <button
@@ -56,17 +57,24 @@ function GalleryImage({
       className="group relative overflow-hidden rounded-squircle aspect-[4/3] w-full bg-azzurro-light focus:outline-none focus:ring-2 focus:ring-azzurro"
       aria-label={`Apri foto: ${alt}`}
     >
-      {!loaded && (
+      {!loaded && !errored && (
         <div className="absolute inset-0 bg-gradient-to-r from-azzurro-light via-white/60 to-azzurro-light animate-[shimmer_1.4s_ease-in-out_infinite] bg-[length:200%_100%]" />
       )}
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => { loadedUrls.add(src); setLoaded(true) }}
-        className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-      />
+      {errored ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-azzurro-light/60">
+          <span className="text-xs text-blu/30 font-funnel text-center px-2">{alt}</span>
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => { loadedUrls.add(src); setLoaded(true) }}
+          onError={() => setErrored(true)}
+          className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        />
+      )}
       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 rounded-squircle" />
     </button>
   )
@@ -77,7 +85,7 @@ function GalleryImage({
 function VideoGalleryItem({ item }: { item: GalleryItem }) {
   if (item.videoId === undefined) {
     return (
-      <div className="rounded-squircle overflow-hidden w-full">
+      <div className="rounded-squircle overflow-hidden w-full aspect-[4/3]">
         <VideoEmbed src={item.src} title={item.alt} />
       </div>
     )
@@ -85,7 +93,7 @@ function VideoGalleryItem({ item }: { item: GalleryItem }) {
 
   if (!item.videoId) {
     return (
-      <div className="relative overflow-hidden rounded-squircle aspect-video w-full bg-azzurro-light cursor-not-allowed">
+      <div className="relative overflow-hidden rounded-squircle aspect-[4/3] w-full bg-azzurro-light cursor-not-allowed">
         <img src={item.src} alt="" aria-hidden className="w-full h-full object-cover opacity-40" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
           <div className="bg-white/50 rounded-full p-4">
@@ -108,7 +116,7 @@ function VideoGalleryItem({ item }: { item: GalleryItem }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Guarda su YouTube: ${item.alt}`}
-      className="group relative overflow-hidden rounded-squircle aspect-video w-full bg-black block focus:outline-none focus:ring-2 focus:ring-azzurro"
+      className="group relative overflow-hidden rounded-squircle aspect-[4/3] w-full bg-black block focus:outline-none focus:ring-2 focus:ring-azzurro"
     >
       <img src={thumb} alt={item.alt} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/20 group-hover:from-fucsia/40 group-hover:via-black/20 group-hover:to-black/20 transition-colors duration-300" />
