@@ -76,8 +76,8 @@ function GeoSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-16 md:py-24 bg-white overflow-x-clip">
-      <div className="container mx-auto px-6 md:px-16 max-w-4xl">
+    <section ref={ref} className="w-full py-16 md:py-24 bg-white">
+      <div className="container mx-auto px-12 md:px-16 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}

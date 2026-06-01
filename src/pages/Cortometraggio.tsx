@@ -106,16 +106,6 @@ function IterSection() {
 
         {/* Steps grid */}
         <div className="relative">
-          {/* Horizontal connector — desktop only */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
-            style={{ transformOrigin: 'left center' }}
-            className="hidden md:block absolute top-10 left-0 right-0 h-px bg-blu/20"
-            aria-hidden
-          />
-
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-8">
             {iterSteps.map(({ num, title, text }, i) => (
               <motion.div
@@ -123,35 +113,19 @@ function IterSection() {
                 initial={{ opacity: 0, y: 32 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.55, delay: 0.1 + i * 0.12, ease: 'easeOut' }}
-                className="relative flex flex-col gap-4 md:gap-5"
+                className="flex flex-col gap-4 md:gap-5"
               >
-                {/* Vertical connector — mobile only, between steps */}
-                {i < iterSteps.length - 1 && (
-                  <span
-                    className="sm:hidden absolute left-7 top-16 h-10 w-px bg-blu/20"
-                    aria-hidden
-                  />
-                )}
-
                 {/* Number */}
-                <div className="relative">
-                  <span
-                    className="font-funnel font-bold leading-none select-none block"
-                    style={{
-                      fontSize: 'clamp(2.8rem, 5.5vw, 5rem)',
-                      color: 'var(--color-fucsia)',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {num}
-                  </span>
-                  {/* Dot on the horizontal line — desktop */}
-                  <span
-                    className="hidden md:block absolute left-0 w-3 h-3 rounded-full bg-fucsia border-2 border-white"
-                    style={{ top: '2.55rem', transform: 'translateY(-50%)' }}
-                    aria-hidden
-                  />
-                </div>
+                <span
+                  className="font-funnel font-bold leading-none select-none block"
+                  style={{
+                    fontSize: 'clamp(2.8rem, 5.5vw, 5rem)',
+                    color: 'var(--color-fucsia)',
+                    lineHeight: 1,
+                  }}
+                >
+                  {num}
+                </span>
 
                 {/* Title */}
                 <h3 className="font-funnel font-bold text-lg md:text-xl text-blu leading-snug min-h-[3.5rem]">

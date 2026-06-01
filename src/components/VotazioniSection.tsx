@@ -274,7 +274,7 @@ export default function VotazioniSection() {
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(false)
 
-  const { data: corti, isLoading } = useVotazioni()
+  const { data: corti, isLoading, isError, refetch } = useVotazioni()
 
   const handleClose = useCallback(() => setSelectedIndex(null), [])
 
@@ -301,7 +301,21 @@ export default function VotazioniSection() {
     el.scrollBy({ left: (CARD_W + GAP) * (dir === 'next' ? 1 : -1), behavior: 'smooth' })
   }
 
-  if (isLoading || !corti?.length) return null
+  if (isLoading) return null
+  if (isError) return (
+    <section data-header-dark className="w-full py-14 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
+      <div className="container mx-auto px-4 max-w-6xl text-center">
+        <p className="text-white/60 font-funnel mb-4">Impossibile caricare i cortometraggi.</p>
+        <button
+          onClick={() => refetch()}
+          className="font-funnel font-semibold text-white px-6 py-2 rounded-full border border-white/30 hover:bg-white/10 transition-colors"
+        >
+          Riprova
+        </button>
+      </div>
+    </section>
+  )
+  if (!corti?.length) return null
 
   return (
     <section
@@ -382,13 +396,6 @@ export default function VotazioniSection() {
               ))}
             </div>
           </div>
-          {/* Gradiente fade-right — indica contenuto scrollabile */}
-          {canNext && (
-            <div
-              className="absolute top-0 right-0 bottom-4 w-16 pointer-events-none"
-              style={{ background: 'linear-gradient(to left, var(--color-blu), transparent)' }}
-            />
-          )}
         </motion.div>
       </div>
 

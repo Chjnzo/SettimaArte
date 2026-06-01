@@ -305,7 +305,7 @@ function CortoLocandina({ corto, onClick }: { corto: CortoEdizione; onClick: () 
     <button
       onClick={onClick}
       disabled={!hasVideo}
-      className="group flex flex-col gap-2 text-left focus:outline-none focus:ring-2 focus:ring-azzurro rounded-squircle disabled:cursor-default"
+      className="group w-full flex flex-col gap-2 text-left focus:outline-none focus:ring-2 focus:ring-azzurro rounded-squircle disabled:cursor-default"
       aria-label={hasVideo ? `Guarda: ${corto.titolo}` : corto.titolo}
     >
       <div className="relative overflow-hidden rounded-squircle aspect-[2/3] bg-azzurro-light">
@@ -420,11 +420,6 @@ function LocandineSection() {
               ))}
             </div>
           </motion.div>
-          {/* Gradiente fade-right — indica contenuto scrollabile su mobile */}
-          <div
-            className="absolute top-0 right-0 bottom-4 w-14 pointer-events-none md:hidden"
-            style={{ background: 'linear-gradient(to left, var(--color-azzurro-light), transparent)' }}
-          />
         </div>
       </div>
 
