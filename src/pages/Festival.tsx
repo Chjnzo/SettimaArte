@@ -74,12 +74,8 @@ function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section
-      ref={ref}
-      className="w-full py-20 md:py-28"
-      style={{ backgroundColor: 'var(--color-azzurro-light)' }}
-    >
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section ref={ref} className="w-full py-20 md:py-28 bg-white overflow-x-clip">
+      <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -93,20 +89,31 @@ function StatsSection() {
             Risultati raggiunti
           </h2>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-          {stats.map(({ value, label }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 32 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, delay: i * 0.12 }}
-            >
-              <p className="font-funnel font-bold text-6xl md:text-7xl text-blu leading-none">
-                {value}
-              </p>
-              <p className="mt-3 text-blu/75 font-funnel text-base">{label}</p>
-            </motion.div>
-          ))}
+
+        {/* Parentesi fucsia */}
+        <div className="relative px-10 md:px-16">
+          <svg aria-hidden viewBox="0 0 40 120" className="absolute -left-2 md:left-0 top-0 bottom-0 w-6 md:w-9 h-full" preserveAspectRatio="none" fill="none">
+            <path d="M32 4 L8 4 L8 116 L32 116" stroke="var(--color-fucsia)" strokeWidth="6" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <svg aria-hidden viewBox="0 0 40 120" className="absolute -right-2 md:right-0 top-0 bottom-0 w-6 md:w-9 h-full" preserveAspectRatio="none" fill="none">
+            <path d="M8 4 L32 4 L32 116 L8 116" stroke="var(--color-fucsia)" strokeWidth="6" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+          </svg>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center py-6 md:py-8">
+            {stats.map(({ value, label }, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, y: 32 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.55, delay: i * 0.12 }}
+              >
+                <p className="font-funnel font-bold text-6xl md:text-7xl text-blu leading-none">
+                  {value}
+                </p>
+                <p className="mt-3 text-blu/75 font-funnel text-base">{label}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -208,7 +215,10 @@ export default function Festival() {
 
       <main>
         {/* 1. Hero */}
-        <HeroSlider slides={[heroFestivalImage]} />
+        <HeroSlider
+          slides={[heroFestivalImage]}
+          title="Evento conclusivo con proiezione dei corti degli studenti dentro UCI Orio a Oriocenter"
+        />
 
         {/* 2. Copy evento + come funziona */}
         <CopyEvento />

@@ -7,6 +7,7 @@ export interface HeroSlide {
   src: string
   alt?: string
   videoId?: string
+  poster?: string
   platform?: 'youtube' | 'vimeo'
   cta?: { label: string; href: string }
   slideTitle?: string

@@ -54,7 +54,7 @@ export default function HeroSlider({
           className="absolute inset-0"
         >
           {slide.type === 'video' && slide.videoId ? (
-            <VideoSlide videoId={slide.videoId} alt={slide.alt} />
+            <VideoSlide videoId={slide.videoId} alt={slide.alt} poster={slide.poster} />
           ) : (
             <img
               src={slide.src}
@@ -121,33 +121,11 @@ function HomeHeroContent({
   onDotClick: (i: number) => void
 }) {
   return (
-    <div className="absolute inset-0 flex flex-col z-10">
-      {/* Spacer: spinge il contenuto in basso ma non oltre il 45% dello schermo */}
-      <div className="flex-1 max-h-[45vh]" />
-
-      <div className="px-6 md:px-16 pb-12 md:pb-16 w-full max-w-6xl mx-auto">
-
-        {/* Tagline — leggibile */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-white/70 font-funnel text-sm md:text-base font-medium mb-5 md:mb-6 max-w-md leading-snug"
-        >
-          {tagline}
-        </motion.p>
-
-        {/* Fucsia separator */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.55, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
-          className="w-10 h-[2px] mb-6 md:mb-8"
-          style={{ backgroundColor: 'var(--color-fucsia)', transformOrigin: 'left' }}
-        />
+    <div className="absolute inset-0 flex flex-col justify-center z-10 pt-16">
+      <div className="px-6 md:px-16 py-8 w-full max-w-6xl mx-auto">
 
         {/* Titolo animato — altezza FISSA così CTA e dots non si spostano mai */}
-        <div className="h-36 md:h-40 flex items-end overflow-hidden mb-7 md:mb-8">
+        <div className="h-28 md:h-32 flex items-end overflow-hidden mb-5 md:mb-6">
           <AnimatePresence mode="wait">
             <motion.h1
               key={current}
@@ -155,12 +133,32 @@ function HomeHeroContent({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="font-funnel font-bold text-white leading-[1.1] max-w-[30ch] text-xl md:text-2xl lg:text-3xl"
+              className="font-funnel font-bold text-white leading-[1.1] max-w-[30ch] text-2xl md:text-3xl lg:text-4xl"
             >
               {slide.slideTitle}
             </motion.h1>
           </AnimatePresence>
         </div>
+
+        {/* Fucsia separator */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="w-10 h-[2px] mb-5 md:mb-6"
+          style={{ backgroundColor: 'var(--color-fucsia)', transformOrigin: 'left' }}
+        />
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="font-funnel font-normal text-white/90 text-base md:text-lg leading-relaxed max-w-lg mb-8 md:mb-10"
+          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
+        >
+          {tagline}
+        </motion.p>
 
         {/* CTA + navigazione — sempre montati */}
         <div className="flex items-center gap-6">
@@ -173,20 +171,20 @@ function HomeHeroContent({
           </Link>
 
           {total > 1 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {Array.from({ length: total }).map((_, i) => (
                 <button
                   key={i}
                   onClick={() => onDotClick(i)}
                   aria-label={`Slide ${i + 1}`}
                   aria-pressed={i === current}
-                  className="py-2 px-1 cursor-pointer group"
+                  className="p-1.5 cursor-pointer group focus:outline-none"
                 >
                   <span
-                    className={`block rounded-full transition-all duration-350 ${
+                    className={`block w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                       i === current
-                        ? 'bg-white w-10 h-[3px]'
-                        : 'bg-white/40 w-5 h-[3px] group-hover:bg-white/70 group-hover:w-7'
+                        ? 'bg-white scale-110'
+                        : 'bg-white/35 group-hover:bg-white/65'
                     }`}
                   />
                 </button>
@@ -199,8 +197,9 @@ function HomeHeroContent({
   )
 }
 
-function VideoSlide({ videoId, alt }: { videoId: string; alt?: string }) {
+function VideoSlide({ videoId, alt, poster }: { videoId: string; alt?: string; poster?: string }) {
   const [playing, setPlaying] = useState(false)
+  const posterSrc = poster ?? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
 
   useEffect(() => {
     setPlaying(false)
@@ -208,11 +207,12 @@ function VideoSlide({ videoId, alt }: { videoId: string; alt?: string }) {
       if (e.origin !== 'https://www.youtube.com') return
       try {
         const data = JSON.parse(e.data as string)
-        if (data.event === 'infoDelivery' && data.info?.playerState >= 1) setPlaying(true)
+        // playerState 1 = playing (not buffering/cued which still show YT UI)
+        if (data.event === 'infoDelivery' && data.info?.playerState === 1) setPlaying(true)
       } catch { /* non-JSON */ }
     }
     window.addEventListener('message', handler)
-    const fallback = setTimeout(() => setPlaying(true), 3000)
+    const fallback = setTimeout(() => setPlaying(true), 4000)
     return () => {
       window.removeEventListener('message', handler)
       clearTimeout(fallback)
@@ -222,15 +222,18 @@ function VideoSlide({ videoId, alt }: { videoId: string; alt?: string }) {
   return (
     <>
       <iframe
-        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&rel=0&playsinline=1&modestbranding=1&enablejsapi=1`}
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&rel=0&playsinline=1&modestbranding=1&enablejsapi=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0`}
         title={alt ?? 'Video hero'}
         allow="autoplay; encrypted-media"
         className="absolute inset-0 w-full h-full pointer-events-none scale-[1.3] transition-opacity duration-700"
         style={{ border: 'none', opacity: playing ? 1 : 0 }}
       />
-      <div
-        className="absolute inset-0 bg-video-fallback transition-opacity duration-700 pointer-events-none"
-        style={{ opacity: playing ? 0 : 1 }}
+      <img
+        src={posterSrc}
+        alt={alt ?? ''}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 pointer-events-none"
+        style={{ opacity: playing ? 0 : 1, transitionDelay: playing ? '500ms' : '0ms' }}
+        fetchPriority="high"
       />
     </>
   )

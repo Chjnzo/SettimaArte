@@ -1,7 +1,6 @@
 import { useRef, type ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion, useInView } from 'framer-motion'
-import { Users, Star, Film, Award } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Gallery from '@/components/Gallery'
@@ -91,7 +90,7 @@ function IterSection() {
     <section
       ref={ref}
       className="w-full py-20 md:py-28"
-      style={{ backgroundColor: 'var(--color-azzurro-light)' }}
+      style={{ backgroundColor: '#ffffff' }}
     >
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Heading */}
@@ -148,14 +147,14 @@ function IterSection() {
                   </span>
                   {/* Dot on the horizontal line — desktop */}
                   <span
-                    className="hidden md:block absolute left-0 w-3 h-3 rounded-full bg-fucsia border-2 border-azzurro-light"
+                    className="hidden md:block absolute left-0 w-3 h-3 rounded-full bg-fucsia border-2 border-white"
                     style={{ top: '2.55rem', transform: 'translateY(-50%)' }}
                     aria-hidden
                   />
                 </div>
 
                 {/* Title */}
-                <h3 className="font-funnel font-bold text-lg md:text-xl text-blu leading-snug">
+                <h3 className="font-funnel font-bold text-lg md:text-xl text-blu leading-snug min-h-[3.5rem] md:min-h-[3.5rem]">
                   {title}
                 </h3>
 
@@ -175,10 +174,10 @@ function IterSection() {
 // ─── Aspetti chiave ───────────────────────────────────────────────────────────
 
 const aspetti = [
-  { icon: Users,  title: 'Selezione di 10 studenti' },
-  { icon: Star,   title: 'Supporto Delta Index' },
-  { icon: Film,   title: 'Produzione professionale' },
-  { icon: Award,  title: 'Festival nazionali' },
+  { n: '01', title: 'Selezione di 10 studenti' },
+  { n: '02', title: 'Supporto Delta Index' },
+  { n: '03', title: 'Produzione professionale' },
+  { n: '04', title: 'Candidatura ai festival nazionali' },
 ]
 
 function AspettiChiave() {
@@ -186,31 +185,45 @@ function AspettiChiave() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-16 md:py-24 bg-white">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section
+      data-header-dark
+      ref={ref}
+      className="w-full py-16 md:py-24"
+      style={{ backgroundColor: 'var(--color-blu)' }}
+    >
+      <div className="container mx-auto px-4 max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-10"
+          className="mb-12"
         >
-          <SectionLabel>In sintesi</SectionLabel>
-          <SectionHeading>Gli aspetti chiave</SectionHeading>
+          <p className="text-xs font-funnel font-semibold tracking-widest uppercase mb-3 text-azzurro">
+            In sintesi
+          </p>
+          <h2 className="font-funnel font-bold text-3xl md:text-5xl text-white leading-tight">
+            Gli aspetti chiave
+          </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {aspetti.map(({ icon: Icon, title }, i) => (
+        <div className="flex flex-col divide-y" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+          {aspetti.map(({ n, title }, i) => (
             <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 32 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
+              key={n}
+              initial={{ opacity: 0, x: -24 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.1 + i * 0.09 }}
-              className="rounded-squircle border border-azzurro-light p-5 md:p-7 flex flex-col gap-4 hover:border-azzurro/40 hover:shadow-sm transition-all duration-200"
+              className="flex items-center gap-6 md:gap-10 py-6 md:py-8 group"
             >
-              <div className="w-12 h-12 rounded-2xl bg-azzurro/10 flex items-center justify-center shrink-0">
-                <Icon size={24} className="text-azzurro" />
-              </div>
-              <p className="font-funnel font-bold text-blu text-base md:text-lg leading-snug">{title}</p>
+              <span
+                className="font-funnel font-bold text-4xl md:text-6xl leading-none tabular-nums shrink-0 transition-opacity duration-300 group-hover:opacity-100 opacity-80"
+                style={{ color: 'var(--color-fucsia)' }}
+              >
+                {n}
+              </span>
+              <p className="font-funnel font-bold text-white text-xl md:text-3xl leading-snug">
+                {title}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -335,6 +348,7 @@ export default function Cortometraggio() {
         {/* 1. Hero */}
         <HeroSlider
           slides={[{ type: 'video', src: '', videoId: 'l9zSUCoaUw4', alt: 'BTS cortometraggio Oriocenter' }]}
+          title="Produzione cinematografica estiva professionale per gli studenti di Settima Arte"
         />
 
         {/* 2. Copy introduttivo */}

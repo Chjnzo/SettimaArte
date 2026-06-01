@@ -444,7 +444,10 @@ export default function FSL() {
 
       <main>
         {/* 1. Hero */}
-        <HeroSlider slides={[heroFSLImage]} />
+        <HeroSlider
+          slides={[heroFSLImage]}
+          title="Un'esperienza di Formazione Scuola-Lavoro unica nel suo genere"
+        />
 
         {/* 2. Copy descrittivo */}
         <CopySection />

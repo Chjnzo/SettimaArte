@@ -12,31 +12,18 @@ const navLinks = [
 
 export default function Header() {
   const [scrolled, setScrolled]     = useState(false)
-  const [overDark, setOverDark]     = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
 
-  const checkDark = () => {
-    const darkSections = document.querySelectorAll('[data-header-dark]')
-    let dark = false
-    darkSections.forEach((el) => {
-      const rect = (el as HTMLElement).getBoundingClientRect()
-      if (rect.top < 64 && rect.bottom > 0) dark = true
-    })
-    return dark
-  }
-
   useLayoutEffect(() => {
     setScrolled(window.scrollY > 40)
-    setOverDark(checkDark())
   }, [])
 
   useEffect(() => {
     const check = () => {
       setScrolled(window.scrollY > 40)
-      setOverDark(checkDark())
     }
     window.addEventListener('scroll', check, { passive: true })
     return () => window.removeEventListener('scroll', check)
@@ -77,7 +64,7 @@ export default function Header() {
                 ? '/logo/7arte-oriocenter_logo_2024_negativo.png'
                 : '/logo/7arte-oriocenter_logo_2024.png'}
               alt="SettimaArte"
-              className="h-11 w-auto object-contain transition-all duration-300"
+              className="h-14 w-auto object-contain transition-all duration-300"
             />
           </NavLink>
 
