@@ -68,7 +68,7 @@ const iterSteps = [
   {
     num: '02',
     title: "L'ecosistema di competenze",
-    text: 'Oriocenter coordina il progetto: Delta Index contribuisce alla base scientifica, educatori validano il valore formativo, Oki Doki Film garantisce la qualità cinematografica.',
+    text: 'Oriocenter coordina il progetto: Delta Index contribuisce alla base scientifica, educatori validano il valore formativo, OkiDoki garantisce la qualità cinematografica.',
   },
   {
     num: '03',
@@ -77,8 +77,8 @@ const iterSteps = [
   },
   {
     num: '04',
-    title: "L'estate con Oki Doki Film",
-    text: "Nel corso dell'estate, il team di Oki Doki Film realizza il cortometraggio coinvolgendo direttamente gli studenti in ogni fase della produzione.",
+    title: "L'estate con OkiDoki",
+    text: "Nel corso dell'estate, il team di OkiDoki realizza il cortometraggio coinvolgendo direttamente gli studenti in ogni fase della produzione.",
   },
 ]
 
@@ -89,8 +89,8 @@ function IterSection() {
   return (
     <section
       ref={ref}
-      className="w-full py-20 md:py-28"
-      style={{ backgroundColor: '#ffffff' }}
+      className="w-full py-14 md:py-28"
+      style={{ backgroundColor: 'var(--color-white)' }}
     >
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Heading */}
@@ -154,7 +154,7 @@ function IterSection() {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-funnel font-bold text-lg md:text-xl text-blu leading-snug min-h-[3.5rem] md:min-h-[3.5rem]">
+                <h3 className="font-funnel font-bold text-lg md:text-xl text-blu leading-snug min-h-[3.5rem]">
                   {title}
                 </h3>
 
@@ -281,7 +281,7 @@ function CitazioneFinale() {
     <section
       data-header-dark
       ref={ref}
-      className="relative w-full py-28 md:py-40 overflow-hidden"
+      className="relative w-full py-20 md:py-40 overflow-hidden"
       style={{ backgroundColor: 'var(--color-blu)' }}
     >
       {/* Foto di sfondo */}

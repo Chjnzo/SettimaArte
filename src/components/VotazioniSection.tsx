@@ -53,15 +53,15 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
           className="fixed inset-0 z-[80] flex items-center justify-center bg-black/85 backdrop-blur-md"
-          style={{ padding: '0 clamp(6px, 2.5vw, 40px)' }}
+          style={{ padding: '0 clamp(0px, 2.5vw, 40px)' }}
           onClick={onClose}
         >
-          {/* Freccia prev */}
+          {/* Freccia prev — solo desktop */}
           <button
             onClick={(e) => { e.stopPropagation(); if (hasPrev) onNav(index! - 1) }}
             disabled={!hasPrev}
             aria-label="Corto precedente"
-            className="shrink-0 w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 hover:border-white/40 disabled:opacity-15 disabled:cursor-not-allowed"
+            className="shrink-0 w-11 h-11 rounded-full border border-white/20 hidden md:flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 hover:border-white/40 disabled:opacity-15 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             style={{ marginRight: 'clamp(6px, 1.5vw, 20px)' }}
           >
             <ChevronLeft size={20} />
@@ -71,19 +71,15 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
           <AnimatePresence mode="wait">
             <motion.div
               key={corto.id}
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
+              exit={{ opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex flex-col md:flex-row w-full overflow-hidden shadow-2xl"
-              style={{
-                borderRadius: 28,
-                backgroundColor: 'var(--color-blu)',
-                height: 'clamp(360px, 78dvh, 620px)',
-              }}
+              className="relative flex flex-col md:flex-row w-full mx-3 md:mx-0 overflow-hidden shadow-2xl h-[88svh] md:h-[clamp(360px,78dvh,620px)]"
+              style={{ borderRadius: 28, backgroundColor: 'var(--color-blu)' }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Colonna sinistra — video quadrato */}
+              {/* Colonna sinistra — video quadrato (desktop only) */}
               <div
                 className="shrink-0 bg-black overflow-hidden hidden md:block"
                 style={{ aspectRatio: '1 / 1', height: '100%' }}
@@ -107,7 +103,7 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
 
               {/* Video mobile — 16:9 sopra */}
               {embedSrc && (
-                <div className="block md:hidden aspect-video w-full bg-black shrink-0">
+                <div className="block md:hidden w-full bg-black shrink-0" style={{ aspectRatio: '16 / 9' }}>
                   <iframe
                     src={embedSrc}
                     title={corto.nome_progetto}
@@ -121,29 +117,29 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
               {/* Colonna destra — info */}
               <div
                 className="flex flex-col flex-1 min-w-0 min-h-0"
-                style={{ background: 'oklch(21% 0.06 258)' }}
+                style={{ background: 'var(--color-blu-dark)' }}
               >
                 {/* Close */}
                 <button
                   onClick={onClose}
                   aria-label="Chiudi"
-                  className="absolute top-5 right-5 z-10 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                  className="absolute top-4 right-4 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                 >
                   <X size={16} />
                 </button>
 
-                <div className="flex flex-col flex-1 min-h-0 p-7 md:p-9 gap-5">
+                <div className="flex flex-col flex-1 min-h-0 p-6 md:p-9 gap-4 md:gap-5">
                   {/* Header */}
                   <div className="pr-10 shrink-0">
                     <p
-                      className="text-[11px] font-funnel font-semibold tracking-[0.16em] uppercase mb-2.5"
+                      className="text-[11px] font-funnel font-semibold tracking-[0.16em] uppercase mb-2"
                       style={{ color: 'var(--color-fucsia)' }}
                     >
                       Classe {corto.classe}
                     </p>
                     <h3
                       className="font-funnel font-bold text-white leading-[1.1]"
-                      style={{ fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)' }}
+                      style={{ fontSize: 'clamp(1.25rem, 2.8vw, 2.2rem)' }}
                     >
                       {corto.nome_progetto}
                     </h3>
@@ -155,7 +151,7 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
                       className="flex-1 min-h-0 overflow-y-auto"
                       style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.12) transparent' }}
                     >
-                      <p className="text-white/55 text-sm md:text-base leading-[1.8] font-funnel break-words pr-1">
+                      <p className="text-white/55 text-sm leading-[1.75] font-funnel break-words pr-1">
                         {corto.trama}
                       </p>
                     </div>
@@ -176,16 +172,44 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
                     </a>
                   )}
                 </div>
+
+                {/* Navigazione mobile — prev / next dentro la card */}
+                <div
+                  className="md:hidden flex items-center justify-between px-5 py-3 shrink-0 border-t"
+                  style={{ borderColor: 'rgba(255,255,255,0.1)' }}
+                >
+                  <button
+                    onClick={(e) => { e.stopPropagation(); if (hasPrev) onNav(index! - 1) }}
+                    disabled={!hasPrev}
+                    aria-label="Corto precedente"
+                    className="flex items-center gap-1 text-sm font-funnel font-semibold text-white/70 disabled:text-white/20 disabled:cursor-not-allowed min-h-[44px] px-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                  >
+                    <ChevronLeft size={16} />
+                    Prec.
+                  </button>
+                  <span className="text-white/30 text-xs font-funnel tabular-nums">
+                    {(index ?? 0) + 1} / {corti.length}
+                  </span>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); if (hasNext) onNav(index! + 1) }}
+                    disabled={!hasNext}
+                    aria-label="Corto successivo"
+                    className="flex items-center gap-1 text-sm font-funnel font-semibold text-white/70 disabled:text-white/20 disabled:cursor-not-allowed min-h-[44px] px-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                  >
+                    Succ.
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Freccia next */}
+          {/* Freccia next — solo desktop */}
           <button
             onClick={(e) => { e.stopPropagation(); if (hasNext) onNav(index! + 1) }}
             disabled={!hasNext}
             aria-label="Corto successivo"
-            className="shrink-0 w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 hover:border-white/40 disabled:opacity-15 disabled:cursor-not-allowed"
+            className="shrink-0 w-11 h-11 rounded-full border border-white/20 hidden md:flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 hover:border-white/40 disabled:opacity-15 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             style={{ marginLeft: 'clamp(6px, 1.5vw, 20px)' }}
           >
             <ChevronRight size={20} />
@@ -210,7 +234,7 @@ function PosterCard({ corto, onClick }: { corto: CortoCorrente; onClick: () => v
           <img
             src={corto.locandina_url}
             alt={`Locandina ${corto.nome_progetto}`}
-            loading="eager"
+            loading="lazy"
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -283,7 +307,7 @@ export default function VotazioniSection() {
     <section
       data-header-dark
       ref={ref}
-      className="w-full py-20 md:py-28"
+      className="w-full py-14 md:py-28"
       style={{ backgroundColor: 'var(--color-blu)' }}
     >
       <div className="container mx-auto px-4 max-w-6xl">
@@ -313,7 +337,7 @@ export default function VotazioniSection() {
                 onClick={() => scroll('prev')}
                 disabled={!canPrev}
                 aria-label="Precedente"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 <ChevronLeft size={20} />
               </button>
@@ -321,7 +345,7 @@ export default function VotazioniSection() {
                 onClick={() => scroll('next')}
                 disabled={!canNext}
                 aria-label="Successivo"
-                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 <ChevronRight size={20} />
               </button>
@@ -358,6 +382,13 @@ export default function VotazioniSection() {
               ))}
             </div>
           </div>
+          {/* Gradiente fade-right — indica contenuto scrollabile */}
+          {canNext && (
+            <div
+              className="absolute top-0 right-0 bottom-4 w-16 pointer-events-none"
+              style={{ background: 'linear-gradient(to left, var(--color-blu), transparent)' }}
+            />
+          )}
         </motion.div>
       </div>
 

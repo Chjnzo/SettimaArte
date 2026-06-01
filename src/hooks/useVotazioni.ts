@@ -12,12 +12,12 @@ export interface CortoCorrente {
   attivo: boolean
 }
 
+// Solo in dev locale — in produzione il worker usa GSHEET_URL come secret server-side
 function parseCSV(text: string): CortoCorrente[] {
   const lines = text.trim().split('\n')
   if (lines.length < 2) return []
 
   return lines.slice(1).map((line) => {
-    // Parse CSV with quoted fields
     const fields: string[] = []
     let cur = ''
     let inQuotes = false
@@ -36,7 +36,6 @@ function parseCSV(text: string): CortoCorrente[] {
     fields.push(cur.trim())
 
     const [id, edizione, classe, nome_progetto, trama, locandina_url, video_url, link_voto, attivo] = fields
-
     return {
       id: Number(id) || 0,
       edizione: edizione ?? '',
@@ -52,40 +51,26 @@ function parseCSV(text: string): CortoCorrente[] {
 }
 
 async function fetchCorti(): Promise<CortoCorrente[]> {
-  const sheetId = import.meta.env.VITE_GSHEET_ID
-  if (import.meta.env.DEV) console.log('[useVotazioni] VITE_GSHEET_ID:', sheetId)
-  if (!sheetId) {
-    if (import.meta.env.DEV) console.warn('[useVotazioni] VITE_GSHEET_ID non definito nel .env')
-    return []
+  // Produzione: il worker Cloudflare nasconde l'URL del foglio
+  if (!import.meta.env.DEV) {
+    const res = await fetch('/api/corti')
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    return res.json() as Promise<CortoCorrente[]>
   }
+
+  // Dev locale: usa VITE_GSHEET_ID dall'env (non entra nel bundle di produzione)
+  const sheetId = import.meta.env.VITE_GSHEET_ID as string | undefined
+  if (!sheetId) return []
 
   const base = sheetId.startsWith('https://')
     ? sheetId
     : `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`
 
-  // Cache-busting per bypassare la cache di Google Sheets (può durare fino a 1h)
   const sep = base.includes('?') ? '&' : '?'
-  const url = `${base}${sep}t=${Math.floor(Date.now() / 60000)}`
+  const res = await fetch(`${base}${sep}t=${Math.floor(Date.now() / 60000)}`)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
-  if (import.meta.env.DEV) console.log('[useVotazioni] fetch URL:', url)
-
-  try {
-    const res = await fetch(url)
-    if (!res.ok) {
-      if (import.meta.env.DEV) console.error('[useVotazioni] fetch fallito:', res.status, res.statusText)
-      throw new Error(`HTTP ${res.status}`)
-    }
-    const text = await res.text()
-    const result = parseCSV(text)
-    if (import.meta.env.DEV) {
-      console.log('[useVotazioni] raw CSV (first 500 chars):', text.slice(0, 500))
-      console.log('[useVotazioni] parsed corti:', result)
-    }
-    return result
-  } catch (err) {
-    if (import.meta.env.DEV) console.error('[useVotazioni] errore fetch:', err)
-    throw err
-  }
+  return parseCSV(await res.text())
 }
 
 export function useVotazioni() {

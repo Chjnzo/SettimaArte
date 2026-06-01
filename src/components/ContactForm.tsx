@@ -81,11 +81,11 @@ export default function ContactForm() {
 
               {/* Nome */}
               <div>
-                <label htmlFor="nome" className="sr-only">Nome</label>
+                <label htmlFor="nome" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Nome *</label>
                 <input
                   id="nome"
                   {...register('nome')}
-                  placeholder="Nome *"
+                  placeholder="Il tuo nome"
                   autoComplete="given-name"
                   className={inputCls}
                 />
@@ -94,11 +94,11 @@ export default function ContactForm() {
 
               {/* Cognome */}
               <div>
-                <label htmlFor="cognome" className="sr-only">Cognome</label>
+                <label htmlFor="cognome" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Cognome *</label>
                 <input
                   id="cognome"
                   {...register('cognome')}
-                  placeholder="Cognome *"
+                  placeholder="Il tuo cognome"
                   autoComplete="family-name"
                   className={inputCls}
                 />
@@ -107,14 +107,14 @@ export default function ContactForm() {
 
               {/* Sono uno */}
               <div>
-                <label htmlFor="sono_uno" className="sr-only">Sono uno</label>
+                <label htmlFor="sono_uno" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Sono uno *</label>
                 <select
                   id="sono_uno"
                   {...register('sono_uno')}
                   defaultValue=""
                   className={`${inputCls} appearance-none`}
                 >
-                  <option value="" disabled>Sono uno... *</option>
+                  <option value="" disabled>Seleziona...</option>
                   <option value="studente">Studente</option>
                   <option value="genitore">Genitore</option>
                   <option value="docente">Docente</option>
@@ -125,12 +125,12 @@ export default function ContactForm() {
 
               {/* Email */}
               <div>
-                <label htmlFor="email" className="sr-only">Email</label>
+                <label htmlFor="email" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Email *</label>
                 <input
                   id="email"
                   {...register('email')}
                   type="email"
-                  placeholder="Email *"
+                  placeholder="La tua email"
                   autoComplete="email"
                   className={inputCls}
                 />
@@ -139,12 +139,12 @@ export default function ContactForm() {
 
               {/* Cellulare */}
               <div>
-                <label htmlFor="cellulare" className="sr-only">Cellulare</label>
+                <label htmlFor="cellulare" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Cellulare</label>
                 <input
                   id="cellulare"
                   {...register('cellulare')}
                   type="tel"
-                  placeholder="Cellulare"
+                  placeholder="+39 000 000 0000"
                   autoComplete="tel"
                   className={inputCls}
                 />
@@ -152,11 +152,11 @@ export default function ContactForm() {
 
               {/* Provincia */}
               <div>
-                <label htmlFor="provincia" className="sr-only">Provincia</label>
+                <label htmlFor="provincia" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Provincia *</label>
                 <input
                   id="provincia"
                   {...register('provincia')}
-                  placeholder="Provincia *"
+                  placeholder="Es. Bergamo"
                   className={inputCls}
                 />
                 <FieldError message={errors.provincia?.message} />
@@ -164,11 +164,11 @@ export default function ContactForm() {
 
               {/* Messaggio full width */}
               <div className="md:col-span-2">
-                <label htmlFor="messaggio" className="sr-only">Messaggio</label>
+                <label htmlFor="messaggio" className="block text-xs font-funnel font-semibold tracking-wider uppercase text-white/50 mb-1.5">Messaggio</label>
                 <textarea
                   id="messaggio"
                   {...register('messaggio')}
-                  placeholder="Messaggio"
+                  placeholder="Scrivi il tuo messaggio..."
                   rows={5}
                   className={`${inputCls} resize-none`}
                 />

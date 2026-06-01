@@ -38,8 +38,8 @@ function CopyEvento() {
     <>Al termine delle settimane di Formazione Scuola-Lavoro, <strong>Oriocenter</strong> celebra il lavoro degli studenti con una vera e propria giornata-evento aperta al pubblico: genitori, insegnanti, amici e visitatori diventano parte di un momento collettivo, pensato per dare visibilità e riconoscimento ai progetti realizzati.</>,
     <>L'esperienza inizia già nelle settimane precedenti: le locandine e i cortometraggi vengono pubblicati online e si aprono le <strong>votazioni da casa</strong>. Il pubblico può guardare, scegliere e sostenere i lavori preferiti. In questa fase, i ragazzi sono chiamati ad un ruolo attivo, mobilitando la propria rete e promuovendo il proprio progetto attraverso tutti i canali possibili per raccogliere voti e visibilità. Si crea così attesa, confronto e partecipazione.</>,
     <>Due volte l'anno, a <strong>Dicembre e a Giugno</strong>, le classi si ritrovano nella <strong>sala 14 di UCI Orio</strong> a Oriocenter. I cortometraggi vengono proiettati sul grande schermo, trasformando il lavoro svolto in un'esperienza cinematografica completa, condivisa con gli altri partecipanti e con il pubblico.</>,
-    <>Ma non è solo una proiezione: è un <strong>vero format</strong>. Durante la mattinata, gli studenti tornano a mettersi in gioco con nuove sfide dal vivo, mentre una giuria d'eccezione osserva, valuta e assegna i premi. Tra gli ospiti delle diverse edizioni ci sono stati volti noti come <strong>Frank Matano</strong> e <strong>i Pampers</strong>, affiancati da registi e professionisti della casa di produzione <strong>Oki Doki Film</strong>, partner del progetto. La giuria assegna riconoscimenti come miglior attore, miglior locandina e miglior storia. Ma il premio più importante resta nelle mani del pubblico: è il voto da casa a decretare il vincitore assoluto di ogni edizione.</>,
-    <>E per alcuni ragazzi, questo non è il punto di arrivo. Nel corso dell'anno, infatti, vengono selezionati gli studenti che avranno l'opportunità di prendere parte a una <strong>produzione cinematografica estiva</strong> realizzata insieme a Oki Doki Film. Un'esperienza ancora più avanzata, che porta i ragazzi a confrontarsi con un set professionale reale. Un percorso che continua, cresce e si evolve.</>,
+    <>Ma non è solo una proiezione: è un <strong>vero format</strong>. Durante la mattinata, gli studenti tornano a mettersi in gioco con nuove sfide dal vivo, mentre una giuria d'eccezione osserva, valuta e assegna i premi. Tra gli ospiti delle diverse edizioni ci sono stati volti noti come <strong>Frank Matano</strong> e <strong>i Pampers</strong>, affiancati da registi e professionisti della casa di produzione <strong>OkiDoki</strong>, partner del progetto. La giuria assegna riconoscimenti come miglior attore, miglior locandina e miglior storia. Ma il premio più importante resta nelle mani del pubblico: è il voto da casa a decretare il vincitore assoluto di ogni edizione.</>,
+    <>E per alcuni ragazzi, questo non è il punto di arrivo. Nel corso dell'anno, infatti, vengono selezionati gli studenti che avranno l'opportunità di prendere parte a una <strong>produzione cinematografica estiva</strong> realizzata insieme a OkiDoki. Un'esperienza ancora più avanzata, che porta i ragazzi a confrontarsi con un set professionale reale. Un percorso che continua, cresce e si evolve.</>,
   ]
 
   return (
@@ -74,7 +74,7 @@ function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-20 md:py-28 bg-white overflow-x-clip">
+    <section ref={ref} className="w-full py-14 md:py-28 bg-white overflow-x-clip">
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

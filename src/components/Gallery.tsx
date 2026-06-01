@@ -221,7 +221,7 @@ function GalleryOverlay({
             <button
               onClick={() => setMode('grid')}
               aria-label="Vista griglia"
-              className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+              className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
               <LayoutGrid size={18} />
             </button>
@@ -229,7 +229,7 @@ function GalleryOverlay({
           <button
             onClick={onClose}
             aria-label="Chiudi galleria"
-            className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+            className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           >
             <X size={20} />
           </button>
@@ -280,7 +280,7 @@ function GalleryOverlay({
             <button
               onClick={prev}
               aria-label="Precedente"
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-colors z-10"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-colors z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
               <ChevronLeft size={26} />
             </button>
@@ -290,7 +290,7 @@ function GalleryOverlay({
             <button
               onClick={next}
               aria-label="Successivo"
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-colors z-10"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-colors z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
               <ChevronRight size={26} />
             </button>

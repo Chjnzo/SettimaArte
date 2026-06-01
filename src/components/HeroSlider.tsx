@@ -265,7 +265,7 @@ function HeroText({
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-white font-funnel font-bold text-4xl md:text-5xl lg:text-6xl max-w-4xl leading-tight mb-8"
+          className="text-white font-funnel font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-[32ch] leading-tight mb-8"
         >
           {title}
         </motion.h1>

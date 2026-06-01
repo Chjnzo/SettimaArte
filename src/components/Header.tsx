@@ -93,7 +93,7 @@ export default function Header() {
                         className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full ${
                           lightText ? 'bg-fucsia' : 'bg-fucsia'
                         }`}
-                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       />
                     )}
                   </span>
@@ -104,7 +104,7 @@ export default function Header() {
 
           <button
             onClick={handleContattaci}
-            className={`hidden md:inline-flex items-center text-[15px] font-funnel font-semibold px-5 py-2 rounded-full border transition-all duration-300 shrink-0 cursor-pointer ${
+            className={`hidden md:inline-flex items-center text-[15px] font-funnel font-semibold px-5 py-2 rounded-full border transition-all duration-300 shrink-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
               lightText
                 ? 'border-white text-white hover:bg-white hover:text-blu'
                 : 'border-azzurro text-azzurro hover:bg-azzurro hover:text-white'
@@ -114,7 +114,7 @@ export default function Header() {
           </button>
 
           <button
-            className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
+            className={`md:hidden p-3 rounded-lg transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
               lightText ? 'text-white' : 'text-blu hover:bg-azzurro-light/60'
             }`}
             onClick={() => setMobileOpen(true)}
@@ -147,7 +147,7 @@ export default function Header() {
               <button
                 onClick={() => setMobileOpen(false)}
                 aria-label="Chiudi menu"
-                className="p-2 text-white/60 hover:text-white transition-colors rounded-lg"
+                className="p-2 text-white/60 hover:text-white transition-colors rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
                 <X size={22} />
               </button>

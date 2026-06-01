@@ -42,7 +42,7 @@ function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section data-header-dark ref={ref} className="w-full py-20 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
+    <section data-header-dark ref={ref} className="w-full py-14 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
 
@@ -261,7 +261,7 @@ function VideoModal({ corto, onClose }: VideoModalProps) {
                 <button
                   onClick={onClose}
                   aria-label="Chiudi"
-                  className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+                  className="bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                 >
                   <X size={20} />
                 </button>
@@ -363,7 +363,7 @@ function LocandineSection() {
   return (
     <section
       ref={ref}
-      className="w-full py-20 md:py-28 border-t border-azzurro-light"
+      className="w-full py-14 md:py-28 border-t border-azzurro-light"
       style={{ backgroundColor: 'var(--color-azzurro-light)' }}
     >
       <div className="container mx-auto px-4 max-w-6xl">
@@ -388,7 +388,7 @@ function LocandineSection() {
             <button
               key={anno}
               onClick={() => setAnnoAttivo(anno)}
-              className={`px-5 py-2 rounded-squircle font-funnel font-semibold text-sm transition-colors ${
+              className={`px-5 py-2 rounded-squircle font-funnel font-semibold text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-azzurro ${
                 anno === annoAttivo
                   ? 'bg-azzurro text-white'
                   : 'border border-azzurro text-azzurro bg-white hover:bg-azzurro/10'
@@ -400,25 +400,32 @@ function LocandineSection() {
         </motion.div>
 
         {/* Scroll orizzontale — tutte le locandine dell'anno */}
-        <motion.div
-          key={annoAttivo}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.35 }}
-          className="overflow-x-auto pb-4 -mx-4 px-4"
-          style={{ scrollbarWidth: 'thin', scrollbarColor: '#0597de transparent' }}
-        >
-          <div className="flex gap-4 w-max">
-            {cortiAttivi.map((corto) => (
-              <div key={corto.titolo} className="w-36 md:w-44 shrink-0">
-                <CortoLocandina
-                  corto={corto}
-                  onClick={() => setSelectedCorto(corto)}
-                />
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <div className="relative">
+          <motion.div
+            key={annoAttivo}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.35 }}
+            className="overflow-x-auto pb-4 -mx-4 px-4"
+            style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--color-azzurro) transparent' }}
+          >
+            <div className="flex gap-4 w-max">
+              {cortiAttivi.map((corto) => (
+                <div key={corto.titolo} className="w-36 md:w-44 shrink-0">
+                  <CortoLocandina
+                    corto={corto}
+                    onClick={() => setSelectedCorto(corto)}
+                  />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          {/* Gradiente fade-right — indica contenuto scrollabile su mobile */}
+          <div
+            className="absolute top-0 right-0 bottom-4 w-14 pointer-events-none md:hidden"
+            style={{ background: 'linear-gradient(to left, var(--color-azzurro-light), transparent)' }}
+          />
+        </div>
       </div>
 
       <VideoModal corto={selectedCorto} onClose={() => setSelectedCorto(null)} />

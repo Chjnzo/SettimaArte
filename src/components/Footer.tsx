@@ -26,7 +26,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 pt-16 pb-8 max-w-6xl">
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 pb-10 md:pb-12 border-b border-white/10">
 
           {/* Col 1 — Brand */}
           <div className="flex flex-col gap-5">

@@ -30,7 +30,7 @@ export default function ProjectCard({
   const imgOrder = imagePosition === 'right' ? 'md:order-last' : 'md:order-first'
 
   return (
-    <section ref={ref} className="w-full py-16 md:py-24">
+    <section ref={ref} className="w-full py-12 md:py-24">
       <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}

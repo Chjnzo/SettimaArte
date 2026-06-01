@@ -17,7 +17,7 @@ function IntroSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-20 md:py-28 bg-white">
+    <section ref={ref} className="w-full py-14 md:py-28 bg-white">
       <div className="container mx-auto px-6 md:px-16 max-w-4xl text-center">
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
@@ -56,11 +56,8 @@ function CanudoBridge() {
           </div>
 
           <p className="text-base md:text-lg leading-relaxed font-funnel text-blu/65">
-            Ricciotto Canudo riconobbe nel cinema una nuova forma d'arte capace di fondere
-            le arti dello spazio con quelle del tempo. Oggi <strong className="text-blu font-semibold">SettimaArte</strong> porta
-            questa visione dentro i corridoi di <strong className="text-blu font-semibold">Oriocenter</strong>,
-            trasformando un centro commerciale in un set cinematografico vivo dove gli studenti
-            diventano i protagonisti.
+            Nel 1911 Ricciotto Canudo introdusse il concetto di settima arte, riconoscendo nel cinema
+            una nuova forma d'arte in grado di fondere le arti dello spazio con quelle del tempo.
           </p>
 
           {/* Freccia verso il basso — invita a scoprire le sezioni */}
@@ -172,7 +169,7 @@ export default function Home() {
         {/* 1. Hero */}
         <HeroSlider
           slides={heroHomeSlides}
-          tagline="Settima Arte è il progetto educational di Oriocenter per sperimentare il mondo del lavoro attraverso il linguaggio video."
+          tagline="Settima Arte è il progetto educational Oriocenter per sperimentare il lavoro attraverso il linguaggio video."
         />
 
         {/* 2. Intro */}
@@ -207,7 +204,7 @@ export default function Home() {
         <ProjectCard
           label="Cortometraggio Professionale"
           title="Un set vero, una troupe vera, un'esperienza unica"
-          description="Nelle ultime due edizioni il progetto ha fatto un passo in più. Al termine delle settimane di FSL, una decina di ragazzi tra i più meritevoli viene selezionata per vivere un'esperienza speciale: affiancare una vera troupe cinematografica nella realizzazione di un cortometraggio professionale. È un'occasione unica per gli studenti di lavorare fianco a fianco con figure come runner, costumisti, registi, camera trainee e tecnici di set."
+          description="Nelle ultime due edizioni il progetto ha fatto un passo in più. Al termine delle settimane di FSL, infatti, una decina di ragazzi tra i più meritevoli viene selezionata per vivere un'esperienza speciale: affiancare una vera troupe cinematografica nella realizzazione di un cortometraggio professionale. È un'occasione unica per gli studenti di lavorare fianco a fianco con figure come runner, costumisti, registi, camera trainee e tecnici di set."
           image={homeSezioniImages.cortometraggio.src}
           ctaLabel="Scopri di più"
           ctaHref="/cortometraggio"

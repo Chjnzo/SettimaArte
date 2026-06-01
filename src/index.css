@@ -54,6 +54,7 @@
   --color-blu: #20244c;
   --color-fucsia: #e50576;
   --color-azzurro-light: #dbdbdb;
+  --color-blu-dark: oklch(21% 0.06 258);
   --color-white: #ffffff;
   --color-black: #000000;
   --radius: 0.625rem;

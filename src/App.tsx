@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { MotionConfig } from 'framer-motion'
 import ScrollToTop from '@/components/ScrollToTop'
 import Home from '@/pages/Home'
 import FSL from '@/pages/FSL'
@@ -10,6 +11,7 @@ import NotFound from '@/pages/NotFound'
 
 function App() {
   return (
+    <MotionConfig reducedMotion="user">
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
@@ -23,6 +25,7 @@ function App() {
         <Route path="*"               element={<NotFound />} />
       </Routes>
     </BrowserRouter>
+    </MotionConfig>
   )
 }
 
