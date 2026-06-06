@@ -9,9 +9,9 @@ import HeroSlider from '@/components/HeroSlider'
 import EdizioneCortometraggio from '@/components/EdizioneCortometraggio'
 import { edizioniData, cortoBackstageStudenti, cortoCitazioneBg } from '@/data/cortometraggio'
 
-function SectionLabel({ children, white = false }: { children: React.ReactNode; white?: boolean }) {
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className={`text-xs font-funnel font-semibold tracking-widest uppercase mb-3 ${white ? 'text-azzurro' : 'text-azzurro'}`}>
+    <p className="text-xs font-funnel font-semibold tracking-widest uppercase mb-3 text-azzurro">
       {children}
     </p>
   )
@@ -372,8 +372,8 @@ export default function Cortometraggio() {
 
         {/* 6–7. Edizioni */}
         <div className="divide-y divide-azzurro-light">
-          {edizioniData.map((edizione, i) => (
-            <EdizioneCortometraggio key={edizione.anno} edizione={edizione} index={i} />
+          {edizioniData.map((edizione) => (
+            <EdizioneCortometraggio key={edizione.anno} edizione={edizione} />
           ))}
         </div>
 

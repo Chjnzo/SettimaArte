@@ -318,7 +318,7 @@ function GalleryOverlay({
                   i === current ? 'ring-2 ring-white opacity-100' : 'opacity-35 hover:opacity-60'
                 }`}
               >
-                <img src={item.src} alt="" loading="eager" decoding="async" className="w-full h-full object-cover" />
+                <img src={item.src} alt={item.alt} loading="lazy" decoding="async" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>

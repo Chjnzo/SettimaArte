@@ -105,6 +105,14 @@ export default function Footer() {
           <p className="text-center sm:text-left">© {new Date().getFullYear()} SettimaArte. Tutti i diritti riservati.</p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
             <p className="text-center">Un progetto <span className="text-white/60">Oriocenter</span> realizzato da <span className="text-white/60">Skillherz</span></p>
+            <a
+              href="https://drive.google.com/file/d/1emqaFFBUK-GNDwBRA1Ti6QTY0AxrQ1iS/view"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/40 hover:text-white/70 transition-colors duration-200"
+            >
+              Privacy Policy
+            </a>
             <Link
               to="/admin"
               aria-label="Area riservata"

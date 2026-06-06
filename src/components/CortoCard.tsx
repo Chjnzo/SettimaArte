@@ -7,7 +7,6 @@ import type { EdizioneCorto } from '@/data/cortometraggio'
 
 interface CortoCardProps {
   edizione: EdizioneCorto
-  index: number
 }
 
 export default function CortoCard({ edizione }: CortoCardProps) {

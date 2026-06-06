@@ -35,7 +35,7 @@
 }
 @font-face {
   font-family: 'Funnel Display';
-  src: url('/fonts/FunnelDisplay-Bold.ttf') format('truetype');
+  src: url('/src/assets/fonts/FunnelDisplay/FunnelDisplay-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
