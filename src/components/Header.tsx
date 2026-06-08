@@ -52,8 +52,8 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           atTop
-            ? 'border-b border-transparent'
-            : 'bg-blu/90 backdrop-blur-md border-b border-white/10'
+            ? ''
+            : 'bg-blu/90 backdrop-blur-md'
         }`}
         style={atTop ? { background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 100%)' } : undefined}
       >

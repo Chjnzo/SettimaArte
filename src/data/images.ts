@@ -11,6 +11,7 @@ export interface HeroSlide {
   platform?: 'youtube' | 'vimeo'
   cta?: { label: string; href: string }
   slideTitle?: string
+  slideLabel?: string
 }
 
 export interface CortoEdizione {
@@ -32,21 +33,24 @@ export const heroHomeSlides: HeroSlide[] = [
     type: 'image',
     src: '/images/Home/Hero/ragazzo-ciack-camera-set-riprese.jpg',
     alt: 'Ragazzo con ciack su set di riprese',
-    slideTitle: "Un'esperienza di Formazione Scuola-Lavoro unica nel suo genere",
+    slideLabel: 'FSL — Formazione Scuola-Lavoro',
+    slideTitle: "Un'esperienza unica nel suo genere",
     cta: { label: 'Scopri di più', href: '/fsl' },
   },
   {
     type: 'image',
     src: '/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg',
     alt: 'Ragazzi in esultanza alla premiazione',
-    slideTitle: 'I corti degli studenti sul maxischermo di UCI Orio a Oriocenter',
+    slideLabel: 'Il Settima Arte Festival',
+    slideTitle: 'I corti degli studenti sul grande schermo di UCI Orio',
     cta: { label: 'Scopri di più', href: '/festival' },
   },
   {
     type: 'image',
     src: '/images/Home/Hero/studentessa-take-fsl.JPG',
     alt: 'Studentessa durante il take FSL',
-    slideTitle: 'Produzione cinematografica professionale estiva con una troupe vera',
+    slideLabel: 'Cortometraggio Professionale',
+    slideTitle: 'Produzione estiva con una troupe vera',
     cta: { label: 'Scopri di più', href: '/cortometraggio' },
   },
 ]

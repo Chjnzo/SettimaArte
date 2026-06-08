@@ -75,7 +75,6 @@ export default function HeroSlider({
 
       {isHomeLayout ? (
         <HomeHeroContent
-          tagline={tagline}
           slide={slide}
           current={current}
           total={slides.length}
@@ -108,92 +107,87 @@ export default function HeroSlider({
 }
 
 function HomeHeroContent({
-  tagline,
   slide,
   current,
   total,
   onDotClick,
 }: {
-  tagline: string
   slide: HeroSlide
   current: number
   total: number
   onDotClick: (i: number) => void
 }) {
   return (
-    <div className="absolute inset-0 flex flex-col justify-center z-10 pt-16">
-      <div className="px-6 md:px-16 py-8 w-full max-w-6xl mx-auto">
+    <>
+      {/* Contenuto — bottom-left, stesso schema delle altre pagine */}
+      <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-16 pb-16 md:pb-24 pt-24 z-10">
+        <div className="max-w-6xl mx-auto w-full">
 
-        {/* Titolo animato — altezza FISSA così CTA e dots non si spostano mai */}
-        <div className="h-28 md:h-32 flex items-end overflow-hidden mb-5 md:mb-6">
+          {/* Label animata per slide */}
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`label-${current}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="font-funnel font-semibold text-sm md:text-base mb-3 tracking-widest uppercase"
+              style={{ color: 'var(--color-fucsia)' }}
+            >
+              {slide.slideLabel}
+            </motion.p>
+          </AnimatePresence>
+
+          {/* Titolo animato */}
           <AnimatePresence mode="wait">
             <motion.h1
-              key={current}
-              initial={{ opacity: 0, y: 16 }}
+              key={`title-${current}`}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.38, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="font-funnel font-bold text-white leading-[1.1] max-w-[30ch] text-2xl md:text-3xl lg:text-4xl"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.45, delay: 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="text-white font-funnel font-bold leading-tight mb-6"
+              style={{ fontSize: 'clamp(1.9rem, 4.5vw, 3.5rem)', maxWidth: '20ch' }}
             >
               {slide.slideTitle}
             </motion.h1>
           </AnimatePresence>
-        </div>
 
-        {/* Fucsia separator */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="w-10 h-[2px] mb-5 md:mb-6"
-          style={{ backgroundColor: 'var(--color-fucsia)', transformOrigin: 'left' }}
-        />
-
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="font-funnel font-normal text-white/90 text-base md:text-lg leading-relaxed max-w-lg mb-8 md:mb-10"
-          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
-        >
-          {tagline}
-        </motion.p>
-
-        {/* CTA + navigazione — sempre montati */}
-        <div className="flex items-center gap-6">
-          <Link
-            to={slide.cta?.href ?? '#'}
-            className="inline-flex items-center gap-2.5 font-funnel font-semibold text-sm md:text-base px-7 py-3 md:px-8 md:py-3.5 rounded-full text-blu bg-white hover:bg-white/90 active:scale-[0.98] transition-all duration-200 shrink-0"
-          >
-            Scopri di più
-            <span aria-hidden style={{ color: 'var(--color-fucsia)' }}>→</span>
-          </Link>
-
-          {total > 1 && (
-            <div className="flex items-center gap-3">
-              {Array.from({ length: total }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => onDotClick(i)}
-                  aria-label={`Slide ${i + 1}`}
-                  aria-pressed={i === current}
-                  className="p-1.5 cursor-pointer group focus:outline-none"
-                >
-                  <span
-                    className={`block w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                      i === current
-                        ? 'bg-white scale-110'
-                        : 'bg-white/35 group-hover:bg-white/65'
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
+          {/* CTA */}
+          {slide.cta && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+            >
+              <Link
+                to={slide.cta.href}
+                className="inline-flex items-center font-funnel font-semibold text-sm px-5 py-2.5 rounded-full border border-white/60 text-white hover:bg-white hover:text-blu transition-all duration-200 backdrop-blur-sm bg-white/10"
+              >
+                {slide.cta.label}
+              </Link>
+            </motion.div>
           )}
         </div>
       </div>
-    </div>
+
+      {/* Dots — bottom-center separati */}
+      {total > 1 && (
+        <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 z-10">
+          {Array.from({ length: total }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => onDotClick(i)}
+              aria-label={`Slide ${i + 1}`}
+              aria-pressed={i === current}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === current ? 'bg-white w-6' : 'bg-white/50 w-2 hover:bg-white/70'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </>
   )
 }
 

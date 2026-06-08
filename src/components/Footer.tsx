@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, Lock, Instagram, Youtube } from 'lucide-react'
+import { Mail, Instagram, Youtube } from 'lucide-react'
 
 const navLinks = [
   { label: 'FSL', to: '/fsl' },
@@ -113,13 +113,6 @@ export default function Footer() {
             >
               Privacy Policy
             </a>
-            <Link
-              to="/admin"
-              aria-label="Area riservata"
-              className="text-white/15 hover:text-white/40 transition-colors duration-300"
-            >
-              <Lock size={12} />
-            </Link>
           </div>
         </div>
       </div>
