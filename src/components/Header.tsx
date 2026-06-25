@@ -82,20 +82,12 @@ export default function Header() {
                     <span
                       className={`text-base font-funnel font-semibold whitespace-nowrap transition-colors duration-200 ${
                         lightText
-                          ? isActive ? 'text-white' : 'text-white/65 hover:text-fucsia'
+                          ? isActive ? 'text-fucsia' : 'text-white/65 hover:text-fucsia'
                           : isActive ? 'text-fucsia' : 'text-blu/55 hover:text-fucsia'
                       }`}
                     >
                       {label}
                     </span>
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-indicator"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] rounded-full bg-fucsia"
-                        style={{ width: '1.5rem' }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                    )}
                   </span>
                 )}
               </NavLink>
@@ -169,11 +161,11 @@ export default function Header() {
                   >
                     {({ isActive }) => (
                       <span
-                        className={`group flex items-baseline gap-4 py-5 border-b transition-colors ${
+                        className={`group flex items-center gap-4 py-5 border-b transition-colors ${
                           isActive ? 'border-fucsia/40' : 'border-white/8 hover:border-white/20'
                         }`}
                       >
-                        <span className="text-xs font-funnel font-bold text-fucsia tabular-nums w-5 shrink-0 leading-none mt-1">
+                        <span className="text-xs font-funnel font-bold text-fucsia tabular-nums w-5 shrink-0 leading-none">
                           {num ?? ''}
                         </span>
                         <span

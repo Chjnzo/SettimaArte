@@ -34,12 +34,11 @@ function CopyEvento() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const paragraphs: ReactNode[] = [
-    <>Operare su un set cinematografico è un'esperienza intensa, coinvolgente, capace di mettere davvero alla prova ogni competenza. Ed è proprio per questo che il percorso non si conclude semplicemente con la fine delle attività. <strong>Si trasforma in un evento.</strong></>,
-    <>Al termine delle settimane di Formazione Scuola-Lavoro, <strong>Oriocenter</strong> celebra il lavoro degli studenti con una vera e propria giornata-evento aperta al pubblico: genitori, insegnanti, amici e visitatori diventano parte di un momento collettivo, pensato per dare visibilità e riconoscimento ai progetti realizzati.</>,
-    <>L'esperienza inizia già nelle settimane precedenti: le locandine e i cortometraggi vengono pubblicati online e si aprono le <strong>votazioni da casa</strong>. Il pubblico può guardare, scegliere e sostenere i lavori preferiti. In questa fase, i ragazzi sono chiamati ad un ruolo attivo, mobilitando la propria rete e promuovendo il proprio progetto attraverso tutti i canali possibili per raccogliere voti e visibilità. Si crea così attesa, confronto e partecipazione.</>,
-    <>Due volte l'anno, a <strong>Dicembre e a Giugno</strong>, le classi si ritrovano nella <strong>sala 14 di UCI Orio</strong> a Oriocenter. I cortometraggi vengono proiettati sul grande schermo, trasformando il lavoro svolto in un'esperienza cinematografica completa, condivisa con gli altri partecipanti e con il pubblico.</>,
-    <>Ma non è solo una proiezione: è un <strong>vero format</strong>. Durante la mattinata, gli studenti tornano a mettersi in gioco con nuove sfide dal vivo, mentre una giuria d'eccezione osserva, valuta e assegna i premi. Tra gli ospiti delle diverse edizioni ci sono stati volti noti come <strong>Frank Matano</strong> e <strong>i Pampers</strong>, affiancati da registi e professionisti della casa di produzione <strong>OkiDoki</strong>, partner del progetto. La giuria assegna riconoscimenti come miglior attore, miglior locandina e miglior storia. Ma il premio più importante resta nelle mani del pubblico: è il voto da casa a decretare il vincitore assoluto di ogni edizione.</>,
-    <>E per alcuni ragazzi, questo non è il punto di arrivo. Nel corso dell'anno, infatti, vengono selezionati gli studenti che avranno l'opportunità di prendere parte a una <strong>produzione cinematografica estiva</strong> realizzata insieme a OkiDoki. Un'esperienza ancora più avanzata, che porta i ragazzi a confrontarsi con un set professionale reale. Un percorso che continua, cresce e si evolve.</>,
+    <><strong>Operare su un set cinematografico è un'esperienza intensa</strong>, coinvolgente, capace di mettere davvero alla prova ogni competenza. Ed è proprio per questo che il percorso non si conclude semplicemente con la fine delle attività. Si trasforma in un <strong>evento</strong>.</>,
+    <>Al termine delle settimane di Formazione Scuola-Lavoro, Oriocenter celebra il lavoro degli studenti con una vera e propria giornata-evento aperta al pubblico: <strong>genitori, insegnanti, amici e visitatori diventano parte di un momento collettivo</strong>, pensato per dare visibilità e riconoscimento ai progetti realizzati.</>,
+    <>L'esperienza inizia già nelle settimane precedenti: le locandine e i cortometraggi vengono pubblicati online e si aprono le <strong>votazioni da casa</strong>. Il pubblico può guardare, scegliere e sostenere i lavori preferiti. In questa fase, i ragazzi sono chiamati ad un ruolo attivo, mobilitando la propria rete e promuovendo il proprio progetto attraverso tutti i canali possibili per raccogliere voti e visibilità. Si crea così attesa, confronto e partecipazione. Due volte l'anno, a Dicembre e a Giugno, le classi si ritrovano nella sala 14 di UCI Orio a Oriocenter. I <strong>cortometraggi vengono proiettati sul grande schermo</strong>, trasformando il lavoro svolto in un'esperienza cinematografica completa, condivisa con gli altri partecipanti e con il pubblico.</>,
+    <>Ma non è solo una proiezione: è un vero format. Durante la mattinata, gli studenti tornano a mettersi in gioco con nuove sfide dal vivo, mentre una <strong>giuria d'eccezione</strong> osserva, valuta e assegna i premi. Tra gli ospiti delle diverse edizioni ci sono stati volti noti come <strong>Frank Matano e i Pampers</strong>, affiancati da <strong>registi e professionisti della casa di produzione Oki Doki Film</strong>, partner del progetto. La giuria assegna riconoscimenti come miglior attore, miglior locandina e miglior storia. Ma il premio più importante resta nelle mani del pubblico: è il voto da casa a decretare il vincitore assoluto di ogni edizione.</>,
+    <>E per alcuni ragazzi, questo non è il punto di arrivo. Nel corso dell'anno, infatti, vengono selezionati gli <strong>studenti che avranno l'opportunità di prendere parte a una produzione cinematografica estiva realizzata insieme a Oki Doki Film.</strong> Un'esperienza ancora più avanzata, che porta i ragazzi a confrontarsi con un set professionale reale. Un percorso che continua, cresce e si evolve.</>,
   ]
 
   return (
@@ -167,9 +166,10 @@ interface GalleryBlockProps {
   items: import('@/components/Gallery').GalleryItem[]
   columns?: 2 | 3 | 4
   bg?: string
+  initialVisible?: number
 }
 
-function GalleryBlock({ label, title, items, columns = 3, bg = 'bg-white' }: GalleryBlockProps) {
+function GalleryBlock({ label, title, items, columns = 3, bg = 'bg-white', initialVisible }: GalleryBlockProps) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
@@ -190,7 +190,7 @@ function GalleryBlock({ label, title, items, columns = 3, bg = 'bg-white' }: Gal
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Gallery items={items} columns={columns} showPlaceholders={items.length === 0} />
+          <Gallery items={items} columns={columns} showPlaceholders={items.length === 0} initialVisible={initialVisible} />
         </motion.div>
       </div>
     </section>
@@ -218,7 +218,7 @@ export default function Festival() {
         <HeroSlider
           slides={[heroFestivalImage]}
           subtitle="Il Settima Arte Festival"
-          title="I corti degli studenti sul grande schermo di UCI Orio"
+          title="Evento conclusivo con proiezione dei corti degli studenti dentro UCI Orio a Oriocenter"
         />
 
         {/* 2. Copy evento + come funziona */}
@@ -249,6 +249,7 @@ export default function Festival() {
           items={festivalGalleryBackstage}
           columns={3}
           bg="bg-white border-t border-azzurro-light"
+          initialVisible={0}
         />
       </main>
 

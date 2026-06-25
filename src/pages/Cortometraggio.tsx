@@ -32,11 +32,12 @@ function CopyIntro() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   const paragraphs: ReactNode[] = [
-    <>Il progetto Settima Arte nasce con un obiettivo chiaro: permettere agli studenti di sperimentare <strong>ruoli, tempi e responsabilità</strong> simili a quelli di un vero contesto professionale.</>,
+    <>Il progetto Settima Arte nasce con un obiettivo chiaro: permettere agli studenti di <strong>sperimentare ruoli, tempi e responsabilità</strong> simili a quelli di un <strong>vero contesto professionale</strong>.</>,
     <>Nel tempo, osservando i ragazzi lavorare sui set, costruire storie, confrontarsi con vincoli e imprevisti, è emersa una domanda naturale: cosa succede quando questo potenziale viene portato ancora oltre?</>,
-    <>Da questa domanda nasce l'evoluzione del progetto. Alcuni studenti selezionati tra i partecipanti alle diverse edizioni hanno l'opportunità di vivere un'esperienza unica: affiancare una <strong>troupe cinematografica professionale</strong> durante la produzione di un cortometraggio estivo. Non più simulazione, ma produzione reale. Non più esercizio creativo, ma responsabilità condivisa con professionisti del settore.</>,
-    <>È qui che il percorso cambia scala. Gli studenti entrano in un <strong>set vero</strong>, con ritmi, standard e aspettative autentiche, contribuendo attivamente alla realizzazione di un'opera cinematografica.</>,
-    <>Un passaggio che dimostra come il cinema, oltre a raccontare storie, possa diventare uno <strong>strumento educativo potente</strong>. È in questo incontro tra formazione e creatività che la "settima arte" rivela il suo valore più profondo: non solo per chi guarda, ma per chi la vive in prima persona.</>,
+    <>Da questa domanda nasce l'evoluzione del progetto.</>,
+    <>Alcuni studenti selezionati tra i partecipanti alle diverse edizioni hanno l'opportunità di vivere un'esperienza unica: <strong>affiancare una troupe cinematografica professionale</strong> durante la produzione di un <strong>cortometraggio estivo</strong>. Non più simulazione, ma produzione reale. Non più esercizio creativo, ma responsabilità condivisa con professionisti del settore.</>,
+    <>È qui che il <strong>percorso cambia scala</strong>. Gli studenti entrano in un set vero, con ritmi, standard e aspettative autentiche, contribuendo attivamente alla realizzazione di un'opera cinematografica.</>,
+    <>Un passaggio che dimostra come il <strong>cinema</strong>, oltre a raccontare storie, possa diventare uno <strong>strumento educativo potente</strong>. È in questo incontro tra formazione e creatività che la <strong>"settima arte" rivela il suo valore più profondo: non solo per chi guarda, ma per chi la vive in prima persona</strong>.</>,
   ]
 
   return (
@@ -58,28 +59,28 @@ function CopyIntro() {
   )
 }
 
-// ─── L'iter — visual horizontal timeline ──────────────────────────────────────
+// ─── L'iter ───────────────────────────────────────────────────────────────────
 
 const iterSteps = [
   {
     num: '01',
-    title: 'Il tema e la commissione',
-    text: 'Una commissione multidisciplinare definisce ogni anno il tema del cortometraggio e lo affida a una casa di produzione cinematografica.',
+    title: 'Il tema e la produzione',
+    text: 'Ogni anno, il progetto prende forma a partire da un lavoro condiviso. Una commissione composta da professionisti di ambiti diversi definisce il tema del cortometraggio, affidandone lo sviluppo a una casa di produzione cinematografica.',
   },
   {
     num: '02',
     title: "L'ecosistema di competenze",
-    text: 'Oriocenter coordina il progetto: Delta Index contribuisce alla base scientifica, educatori validano il valore formativo, OkiDoki garantisce la qualità cinematografica.',
+    text: "Oriocenter è il promotore dell'iniziativa e coordina un ecosistema di competenze: l'Osservatorio Delta Index contribuisce alla definizione della base scientifica, educatori e psicologi validano il valore formativo del percorso, mentre la casa di produzione Oki Doki Film ne garantisce la qualità e la fattibilità cinematografica.",
   },
   {
     num: '03',
-    title: 'Selezione dei 10 studenti',
-    text: 'Durante le settimane FSL vengono selezionati 10 studenti per affidabilità, capacità di lavoro in squadra e attitudine a contribuire concretamente.',
+    title: 'La selezione degli studenti',
+    text: "Durante le settimane di Formazione Scuola-Lavoro vengono selezionati 10 studenti che si distinguono per affidabilità, capacità di lavorare in squadra e attitudine a contribuire in modo concreto al progetto. Sono loro i protagonisti dell'esperienza estiva.",
   },
   {
     num: '04',
-    title: "L'estate con OkiDoki",
-    text: "Nel corso dell'estate, il team di OkiDoki realizza il cortometraggio coinvolgendo direttamente gli studenti in ogni fase della produzione.",
+    title: 'Il cortometraggio',
+    text: "Nel corso dell'estate, il team di Oki Doki Film realizza il cortometraggio coinvolgendo direttamente gli studenti nelle diverse fasi della produzione. Un'esperienza immersiva, intensa e altamente formativa, che lascia un segno profondo: non solo competenze, ma consapevolezza, metodo e memoria.",
   },
 ]
 
@@ -88,75 +89,48 @@ function IterSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section
-      ref={ref}
-      className="w-full py-14 md:py-28"
-      style={{ backgroundColor: 'var(--color-white)' }}
-    >
-      <div className="container mx-auto px-4 max-w-6xl">
-        {/* Heading */}
+    <section ref={ref} className="w-full py-14 md:py-28 bg-white">
+      <div className="container mx-auto px-4 max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16 md:mb-20"
+          className="mb-14"
         >
-          <SectionLabel>L'iter</SectionLabel>
-          <SectionHeading>Come funziona</SectionHeading>
+          <SectionHeading>L'iter</SectionHeading>
         </motion.div>
-
-        {/* Timeline steps */}
-        <div className="relative">
-          {/* Connector line — desktop only */}
-          <div
-            className="hidden md:block absolute top-[2.2rem] left-0 right-0 h-px"
-            style={{ backgroundColor: 'var(--color-azzurro-light)', zIndex: 0 }}
-          />
-          {/* Animated fill */}
-          <motion.div
-            className="hidden md:block absolute top-[2.2rem] left-0 h-px origin-left"
-            style={{ backgroundColor: 'var(--color-fucsia)', zIndex: 1, right: 0 }}
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 relative">
-            {iterSteps.map(({ num, title, text }, i) => (
-              <motion.div
-                key={num}
-                initial={{ opacity: 0, y: 32 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.55, delay: 0.1 + i * 0.12, ease: 'easeOut' }}
-                className="flex flex-col gap-4 md:gap-5"
-              >
-                {/* Step dot + number */}
-                <div className="flex items-center gap-3 md:flex-col md:items-start md:gap-4">
-                  <div
-                    className="relative z-10 w-[4.5rem] h-[4.5rem] rounded-2xl flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: 'var(--color-fucsia)' }}
-                  >
-                    <span
-                      className="font-funnel font-bold text-white leading-none select-none"
-                      style={{ fontSize: '1.75rem' }}
-                    >
-                      {num}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="font-funnel font-bold text-lg md:text-xl text-blu leading-snug">
-                  {title}
-                </h3>
-
-                {/* Description */}
-                <p className="font-funnel text-blu/65 text-sm md:text-base leading-relaxed">
-                  {text}
+        <div className="space-y-0">
+          {iterSteps.map((step, i) => (
+            <motion.div
+              key={step.num}
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.55, delay: i * 0.1 }}
+              className="flex gap-8 md:gap-12 pb-12 md:pb-14"
+            >
+              {/* Numero + linea verticale */}
+              <div className="flex flex-col items-center shrink-0">
+                <span
+                  className="font-funnel font-bold text-3xl md:text-4xl leading-none"
+                  style={{ color: 'var(--color-fucsia)' }}
+                >
+                  {step.num}
+                </span>
+                {i < iterSteps.length - 1 && (
+                  <div className="mt-4 w-px flex-1" style={{ backgroundColor: 'var(--color-azzurro-light)' }} />
+                )}
+              </div>
+              {/* Testo */}
+              <div className="pb-2 flex flex-col gap-2">
+                <p className="font-funnel font-bold text-xl md:text-2xl text-blu leading-snug">
+                  {step.title}
                 </p>
-              </motion.div>
-            ))}
-          </div>
+                <p className="text-blu/70 leading-relaxed text-base md:text-lg font-funnel">
+                  {step.text}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -168,7 +142,7 @@ function IterSection() {
 const aspetti = [
   { icon: Users,        title: 'Selezione di 10 studenti',       desc: 'I più meritevoli tra tutti i partecipanti FSL, scelti per affidabilità e attitudine al lavoro di squadra.' },
   { icon: Microscope,   title: 'Supporto contenutistico Delta Index', desc: 'Base scientifica e validazione del valore formativo di ogni edizione del progetto.' },
-  { icon: Clapperboard, title: 'Produzione professionale OkiDoki', desc: 'Una casa di produzione cinematografica vera, con ritmi, standard e aspettative autentiche.' },
+  { icon: Clapperboard, title: 'Produzione professionale', desc: 'Una casa di produzione cinematografica vera, con ritmi, standard e aspettative autentiche.' },
   { icon: Award,        title: 'Candidatura ai festival nazionali', desc: 'Il cortometraggio partecipa ai principali festival italiani, con risultati concreti di rilievo.' },
 ]
 
@@ -307,27 +281,14 @@ function CitazioneFinale() {
             "
           </span>
 
-          {/* Citazione principale — bold italic */}
-          <p className="font-funnel font-bold italic text-2xl md:text-3xl lg:text-[2.1rem] text-white leading-[1.45] mb-6">
+          <p className="font-funnel font-bold italic text-2xl md:text-3xl lg:text-[2.1rem] text-white leading-[1.45] mb-10">
             Investire sui giovani non dovrebbe essere un gesto simbolico, ma una scelta strategica
-            capace di generare valore nel tempo.
+            capace di generare valore nel tempo. Le esperienze sviluppate per Oriocenter attorno
+            al linguaggio cinematografico mostrano come, quando l'incontro tra impresa e nuove
+            generazioni è progettato con cura, possa dare vita a risultati inattesi — e talvolta
+            straordinari.
           </p>
 
-          {/* Seconda frase */}
-          <p className="font-funnel font-medium italic text-white/75 text-lg md:text-xl leading-relaxed mb-10">
-            Le esperienze sviluppate attorno al linguaggio cinematografico mostrano come, quando
-            l'incontro tra impresa e nuove generazioni è progettato con cura, possa dare vita
-            a risultati inattesi, e talvolta straordinari.
-          </p>
-
-          {/* Attributo */}
-          <div className="flex items-center justify-center gap-3">
-            <span className="h-px w-8 bg-fucsia/60" />
-            <p className="font-funnel font-semibold text-white/50 text-sm tracking-widest uppercase">
-              Settima Arte — Oriocenter
-            </p>
-            <span className="h-px w-8 bg-fucsia/60" />
-          </div>
         </motion.blockquote>
       </div>
     </section>
@@ -355,13 +316,13 @@ export default function Cortometraggio() {
         <HeroSlider
           slides={[{ type: 'video', src: '', videoId: 'l9zSUCoaUw4', alt: 'BTS cortometraggio Oriocenter' }]}
           subtitle="Cortometraggio Professionale"
-          title="Produzione estiva con una troupe vera"
+          title="Produzione cinematografica estiva professionale per gli studenti di Settima Arte"
         />
 
         {/* 2. Copy introduttivo */}
         <CopyIntro />
 
-        {/* 3. L'iter — visual timeline */}
+        {/* 3. L'iter */}
         <IterSection />
 
         {/* 4. Aspetti chiave */}

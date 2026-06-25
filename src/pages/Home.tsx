@@ -18,52 +18,32 @@ function IntroSection() {
 
   return (
     <section ref={ref} className="w-full py-14 md:py-28 bg-white">
-      <div className="container mx-auto px-6 md:px-16 max-w-4xl text-center">
+      <div className="container mx-auto px-6 md:px-16 max-w-5xl">
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="font-funnel font-bold text-2xl md:text-3xl lg:text-4xl text-blu leading-snug"
+          className="font-funnel font-bold text-3xl md:text-4xl lg:text-5xl text-blu leading-snug mb-10"
         >
-          Settima Arte è il progetto educational di Oriocenter, un'occasione educativa per
-          sperimentare il mondo del lavoro utilizzando il linguaggio a loro più noto: il video.
+          Settima Arte è il progetto educational Oriocenter per sperimentare il lavoro attraverso il linguaggio video
         </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-base md:text-lg leading-relaxed font-funnel text-blu/60 max-w-2xl"
+        >
+          Nel 1911 Ricciotto Canudo introdusse il concetto di settima arte,
+          riconoscendo nel cinema una nuova forma d'arte in grado di fondere le arti dello spazio
+          con quelle del tempo.
+        </motion.p>
       </div>
     </section>
   )
 }
 
 function CanudoBridge() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-
-  return (
-    <section ref={ref} className="w-full py-16 md:py-24" style={{ backgroundColor: 'var(--color-azzurro-light)' }}>
-      <div className="container mx-auto px-6 max-w-2xl text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-6"
-        >
-          {/* Anno come ancora visiva */}
-          <div className="flex items-center gap-3">
-            <span className="h-px w-10 inline-block" style={{ backgroundColor: 'var(--color-fucsia)' }} />
-            <span className="font-funnel font-bold text-sm tracking-[0.2em]" style={{ color: 'var(--color-fucsia)' }}>
-              1911
-            </span>
-            <span className="h-px w-10 inline-block" style={{ backgroundColor: 'var(--color-fucsia)' }} />
-          </div>
-
-          <p className="text-lg md:text-xl leading-relaxed font-funnel font-medium text-blu/80">
-            Nel 1911 <strong className="text-blu font-bold">Ricciotto Canudo</strong> introdusse il concetto di settima arte,
-            riconoscendo nel cinema una nuova forma d'arte in grado di fondere le arti dello spazio
-            con quelle del tempo.
-          </p>
-        </motion.div>
-      </div>
-    </section>
-  )
+  return null
 }
 
 function GeoSection() {
@@ -121,9 +101,10 @@ function GeoSection() {
             </p>
             <p className="text-blu text-xl md:text-2xl leading-relaxed font-funnel font-medium">
               La partecipazione a questo progetto educational di Oriocenter è aperto a tutte le scuole
-              secondarie di II° grado della provincia di Bergamo e non solo! L'ultima edizione ha visto
-              infatti partecipare istituti delle province di{' '}
-              <strong className="font-bold">Brescia, Lecco, Como e Monza Brianza</strong>.
+              secondarie di II° grado della provincia di Bergamo e non solo!
+            </p>
+            <p className="text-blu text-xl md:text-2xl leading-relaxed font-funnel font-medium">
+              L'ultima edizione ha visto infatti partecipare istituti delle province di Brescia, Lecco, Como e Monza Brianza.
             </p>
           </div>
         </motion.div>
@@ -177,7 +158,10 @@ export default function Home() {
         <ProjectCard
           label="Progetto FSL"
           title="Formazione Scuola-Lavoro attraverso il cinema"
-          description="In un mondo in cui i giovani sfruttano sempre più supporti audio-visivi per esprimere chi sono, Oriocenter ha pensato dunque di rendere il cinema protagonista del suo progetto di Formazione Scuola-Lavoro. In collaborazione con Skillherz nel 2018 è nato il progetto Settima Arte, in cui gli studenti coinvolti raccontano le storie che vivono, osservano e immaginano, trasformando vetrine, negozi e corridoi in veri e propri set cinematografici."
+          description={<>
+            <p>In un mondo in cui i giovani sfruttano sempre più supporti audio-visivi per esprimere chi sono, Oriocenter ha pensato dunque di rendere il <strong>cinema protagonista del suo progetto di Formazione Scuola-Lavoro</strong>.</p>
+            <p>In collaborazione con Skillherz nel 2018 è nato il progetto <strong>Settima Arte</strong>, in cui gli studenti coinvolti raccontano le storie che vivono, osservano e immaginano, trasformando vetrine, negozi e corridoi in veri e propri set cinematografici.</p>
+          </>}
           image={homeSezioniImages.fsl.src}
           ctaLabel="Scopri di più"
           ctaHref="/fsl"
@@ -188,7 +172,10 @@ export default function Home() {
         <ProjectCard
           label="Settima Arte Festival"
           title="I corti degli studenti sul grande schermo"
-          description="L'apprezzamento di studenti, genitori e scuole ha portato il progetto a svilupparsi in due edizioni annuali, una invernale e una primaverile, che si concludono con un evento finale — il Settima Arte Festival, nel quale i cortometraggi realizzati dalle scuole partecipanti vengono proiettati sul grande schermo della sala 14 di UCI Orio a Oriocenter. La partecipazione a questo evento è aperta a chiunque sia curioso di vedere i talenti del domani all'opera."
+          description={<>
+            <p>L'apprezzamento di studenti, genitori e scuole ha portato il progetto a svilupparsi in <strong>due edizioni annuali,</strong> una invernale e una primaverile, che si concludono con un <strong>evento finale</strong> - il Settima Arte Festival, nel quale i <strong>cortometraggi</strong> realizzati dalle scuole partecipanti vengono <strong>proiettati</strong> sul grande schermo della sala 14 di <strong>UCI Orio a Oriocenter</strong>.</p>
+            <p>La partecipazione a questo evento è aperta a chiunque sia curioso di vedere i talenti del domani all'opera.</p>
+          </>}
           image={homeSezioniImages.festival.src}
           ctaLabel="Scopri di più"
           ctaHref="/festival"
@@ -199,7 +186,9 @@ export default function Home() {
         <ProjectCard
           label="Cortometraggio Professionale"
           title="Un set vero, una troupe vera, un'esperienza unica"
-          description="Nelle ultime due edizioni il progetto ha fatto un passo in più. Al termine delle settimane di FSL, infatti, una decina di ragazzi tra i più meritevoli viene selezionata per vivere un'esperienza speciale: affiancare una vera troupe cinematografica nella realizzazione di un cortometraggio professionale. È un'occasione unica per gli studenti di lavorare fianco a fianco con figure come runner, costumisti, registi, camera trainee e tecnici di set."
+          description={<>
+            <p>Nelle ultime due edizioni il progetto ha fatto un passo in più. Al termine delle settimane di FSL, infatti, una decina di ragazzi tra i più meritevoli viene selezionata per vivere un'esperienza speciale: <strong>affiancare una vera troupe cinematografica nella realizzazione di un cortometraggio professionale</strong>. È un'occasione unica per gli studenti di lavorare fianco a fianco con figure come runner, costumisti, registi, camera trainee e tecnici di set.</p>
+          </>}
           image={homeSezioniImages.cortometraggio.src}
           ctaLabel="Scopri di più"
           ctaHref="/cortometraggio"

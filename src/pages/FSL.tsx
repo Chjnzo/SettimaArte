@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { X, ExternalLink, Trophy } from 'lucide-react'
+import { X, ExternalLink, Trophy, ChevronLeft, ChevronRight } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Gallery from '@/components/Gallery'
@@ -44,49 +44,66 @@ function StatsSection() {
   return (
     <section data-header-dark ref={ref} className="w-full py-14 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
 
-          {/* Sinistra: Certificate of Merit — grande e prominente */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="border border-yellow-400/40 rounded-squircle p-8 md:p-10 flex flex-col gap-6 bg-yellow-400/5"
-          >
-            <div className="w-20 h-20 rounded-2xl bg-yellow-400/15 flex items-center justify-center">
+        {/* Titolo */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-16 text-center"
+        >
+          <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-3">
+            I numeri del progetto
+          </p>
+          <h2 className="font-funnel font-bold text-4xl md:text-5xl text-white leading-tight">
+            Risultati raggiunti
+          </h2>
+        </motion.div>
+
+        {/* Certificate of Merit — card prominente */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-16 rounded-squircle p-8 md:p-12"
+          style={{ background: 'linear-gradient(135deg, rgba(234,179,8,0.18) 0%, rgba(234,179,8,0.06) 100%)', border: '1px solid rgba(234,179,8,0.35)' }}
+        >
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
+            <div className="shrink-0 w-20 h-20 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(234,179,8,0.2)' }}>
               <Trophy size={40} className="text-yellow-400" />
             </div>
-            <div>
-              <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-yellow-400/80 mb-2">
-                Riconoscimento
+            <div className="flex-1">
+              <p className="text-xs font-funnel font-semibold tracking-widest uppercase mb-3" style={{ color: 'rgba(234,179,8,0.8)' }}>
+                Riconoscimento nazionale
               </p>
-              <p className="font-funnel font-bold text-2xl md:text-3xl text-white leading-tight mb-3">
+              <p className="font-funnel font-bold text-3xl md:text-4xl text-white leading-tight mb-3">
                 Certificate of Merit — CNCC 2023
               </p>
-              <p className="text-white/50 text-base font-funnel leading-relaxed">
+              <p className="text-white/55 text-base md:text-lg font-funnel leading-relaxed">
                 Consiglio Nazionale dei Centri Commerciali — premio per l'eccellenza nei progetti educational
               </p>
             </div>
-          </motion.div>
-
-          {/* Destra: 4 numeri in griglia 2×2, centrati */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 place-items-center">
-            {stats.map(({ value, label }, i) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, x: 24 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
-              >
-                <p className="font-funnel font-bold text-5xl md:text-6xl text-white leading-none">
-                  {value}
-                </p>
-                <p className="mt-2 text-white/60 text-base font-funnel">{label}</p>
-              </motion.div>
-            ))}
           </div>
+        </motion.div>
 
+        {/* 4 numeri in riga */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+          {stats.map(({ value, label }, i) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.25 + i * 0.08 }}
+              className="text-center"
+            >
+              <p className="font-funnel font-bold text-5xl md:text-6xl lg:text-7xl text-white leading-none">
+                {value}
+              </p>
+              <p className="mt-3 text-white/50 text-sm md:text-base font-funnel">{label}</p>
+            </motion.div>
+          ))}
         </div>
+
       </div>
     </section>
   )
@@ -102,10 +119,10 @@ function CopySection() {
     <section ref={ref} className="w-full py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 max-w-3xl space-y-8">
         {[
-          <>Negli ultimi anni, i percorsi di <strong>Formazione Scuola-Lavoro</strong> sono diventati un passaggio obbligato per gli studenti delle scuole superiori. Spesso, però, docenti e ragazzi temono che queste esperienze si traducano in attività ripetitive e poco formative, come fare fotocopie o gestire semplici pratiche amministrative.</>,
-          <>Oriocenter ha scelto un approccio diverso: investire in un <strong>progetto educational</strong> pensato per valorizzare davvero il potenziale degli studenti. All'interno degli spazi del mall, i partecipanti sono coinvolti in un'esperienza creativa che li sfida a raccontare un tema attraverso il <strong>linguaggio cinematografico</strong>. I ragazzi portano prospettive nuove, capacità di lettura del presente e una sensibilità comunicativa che spesso anticipa i cambiamenti.</>,
-          <>Nel concreto, gli studenti vivono un percorso immersivo che riproduce dinamiche, tempi e responsabilità di un vero contesto professionale. Affiancati da <strong>videomaker ed educatori</strong>, sperimentano tutte le fasi di realizzazione di un cortometraggio, assumendo ruoli diversi — dalla regia alla produzione, fino alla recitazione — mettendo in gioco la propria creatività.</>,
-          <>L'obiettivo non è formarli come registi o attori, ma offrire loro l'opportunità di far emergere <strong>competenze trasversali</strong> spesso invisibili finché non vengono messe alla prova. Collaborazione, gestione dello stress, capacità decisionale e ascolto reciproco diventano elementi concreti, che prendono forma attraverso l'esperienza diretta.</>,
+          <>Negli ultimi anni, i percorsi di Formazione Scuola-Lavoro sono diventati un passaggio obbligato per gli studenti delle scuole superiori. Spesso, però, docenti e ragazzi temono che queste esperienze si traducano in attività ripetitive e poco formative, come fare fotocopie o gestire semplici pratiche amministrative.</>,
+          <>Oriocenter ha scelto un approccio diverso: investire in un <strong>progetto educational pensato per valorizzare davvero il potenziale degli studenti</strong>. All'interno degli spazi del mall, i partecipanti sono coinvolti in un'esperienza creativa che li sfida a raccontare un tema attraverso il linguaggio cinematografico. I ragazzi portano prospettive nuove, capacità di lettura del presente e una sensibilità comunicativa che spesso anticipa i cambiamenti.</>,
+          <>Nel concreto, gli studenti vivono un <strong>percorso immersivo che riproduce dinamiche, tempi e responsabilità di un vero contesto professionale</strong>. <strong>Affiancati da videomaker ed educatori</strong>, sperimentano tutte le fasi di <strong>realizzazione di un cortometraggio</strong>, assumendo ruoli diversi – dalla regia alla produzione, fino alla recitazione - mettendo in gioco la propria creatività.</>,
+          <>L'obiettivo non è formarli come registi o attori, ma offrire loro l'<strong>opportunità di far emergere competenze trasversali spesso invisibili finché non vengono messe alla prova</strong>. Collaborazione, gestione dello stress, capacità decisionale e ascolto reciproco diventano elementi concreti, che prendono forma attraverso l'esperienza diretta.</>,
         ].map((content, i) => (
           <motion.p
             key={i}
@@ -130,8 +147,8 @@ function CopyMidSection() {
     <section ref={ref} className="w-full py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4 max-w-3xl space-y-8">
         {[
-          <>Queste esperienze raccontano qualcosa di più ampio del cinema. Raccontano cosa accade quando le aziende decidono di <strong>aprire spazi reali ai giovani</strong>, permettendo loro di osservare, provare, sbagliare e contribuire. Non si tratta di offrire opportunità a parole, ma di creare contesti in cui il valore dei ragazzi si vede davvero — e spesso sorprende sia chi li osserva, sia chi lo conosce in circostanze differenti.</>,
-          <>Per molte imprese, lavorare con la <strong>Generazione Z</strong> può sembrare complesso: linguaggi diversi, aspettative nuove, modalità relazionali in evoluzione. Ma proprio per questo diventa strategico costruire esperienze concrete e guidate, dove l'incontro avviene in modo strutturato e significativo. <strong>Oriocenter</strong> ha permesso che questo accadesse, rendendo il risultato non solo educativo ma culturale.</>,
+          <>Queste esperienze raccontano qualcosa di più ampio del cinema. Raccontano <strong>cosa accade quando le aziende decidono di aprire spazi reali ai giovani</strong>, permettendo loro di osservare, provare, sbagliare e contribuire. Non si tratta di offrire opportunità a parole, ma di creare contesti in cui il valore dei ragazzi si vede davvero - e spesso sorprende sia chi li osserva, sia chi lo conosce in circostanze differenti.</>,
+          <>Per molte imprese, lavorare con la Generazione Z può sembrare complesso: linguaggi diversi, aspettative nuove, modalità relazionali in evoluzione. Ma proprio per questo diventa <strong>strategico costruire esperienze concrete e guidate</strong>, dove l'incontro avviene in modo strutturato e significativo. Oriocenter ha permesso che questo accadesse, rendendo il <strong>risultato non solo educativo ma culturale</strong>.</>,
         ].map((content, i) => (
           <motion.p
             key={i}
@@ -350,23 +367,36 @@ function CortoLocandina({ corto, onClick }: { corto: CortoEdizione; onClick: () 
   )
 }
 
+const VISIBLE = 5
+const PRELOAD = 2
+
 function LocandineSection() {
   const anni = Object.keys(locandinePerEdizione).reverse()
   const [annoAttivo, setAnnoAttivo] = useState(anni[0])
   const [selectedCorto, setSelectedCorto] = useState<CortoEdizione | null>(null)
+  const [startIndex, setStartIndex] = useState(0)
+  const [dir, setDir] = useState<1 | -1>(1)
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  // Appiattisce tutte le edizioni dell'anno selezionato in un unico array
   const cortiAttivi = locandinePerEdizione[annoAttivo].flatMap((ed) => ed.corti)
 
+  useEffect(() => { setStartIndex(0) }, [annoAttivo])
+
+  const canPrev = startIndex > 0
+  const canNext = startIndex + VISIBLE < cortiAttivi.length
+
+  const goNext = () => { if (!canNext) return; setDir(1);  setStartIndex(i => i + 1) }
+  const goPrev = () => { if (!canPrev) return; setDir(-1); setStartIndex(i => i - 1) }
+
+  const visibleItems = cortiAttivi.slice(startIndex, startIndex + VISIBLE)
+  const preloadItems = cortiAttivi.slice(startIndex + VISIBLE, startIndex + VISIBLE + PRELOAD)
+  const cols = Math.min(VISIBLE, Math.max(visibleItems.length, 1))
+
   return (
-    <section
-      ref={ref}
-      className="w-full py-14 md:py-28 border-t border-azzurro-light"
-      style={{ backgroundColor: 'var(--color-azzurro-light)' }}
-    >
+    <section ref={ref} className="w-full py-14 md:py-28 bg-white border-t border-azzurro-light">
       <div className="container mx-auto px-4 max-w-6xl">
+
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -382,16 +412,14 @@ function LocandineSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap gap-2 mb-10"
+          className="flex flex-wrap gap-2 mb-12"
         >
           {anni.map((anno) => (
             <button
               key={anno}
               onClick={() => setAnnoAttivo(anno)}
               className={`px-5 py-2 rounded-squircle font-funnel font-semibold text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-azzurro ${
-                anno === annoAttivo
-                  ? 'bg-azzurro text-white'
-                  : 'border border-azzurro text-azzurro bg-white hover:bg-azzurro/10'
+                anno === annoAttivo ? 'bg-azzurro text-white' : 'border border-azzurro text-azzurro bg-white hover:bg-azzurro/10'
               }`}
             >
               {anno}
@@ -399,31 +427,81 @@ function LocandineSection() {
           ))}
         </motion.div>
 
-        {/* Grid / scroll — tutte le locandine dell'anno */}
-        <motion.div
-          key={annoAttivo}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.35 }}
-        >
-          {cortiAttivi.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
-              {cortiAttivi.map((corto) => (
-                <CortoLocandina
-                  key={corto.titolo}
-                  corto={corto}
-                  onClick={() => setSelectedCorto(corto)}
-                />
-              ))}
+        {/* Slider row */}
+        <div className="flex gap-4 md:gap-6">
+
+          {/* Arrow sx */}
+          <button
+            onClick={goPrev}
+            disabled={!canPrev}
+            aria-label="Precedente"
+            className="shrink-0 self-start p-1 transition-opacity duration-200 focus:outline-none disabled:opacity-20 disabled:cursor-not-allowed opacity-70 hover:opacity-100"
+            style={{ color: 'var(--color-fucsia)', marginTop: '13%' }}
+          >
+            <ChevronLeft size={28} strokeWidth={2} />
+          </button>
+
+          {/* Cards */}
+          <div className="flex-1">
+            <div
+              className="grid gap-4 md:gap-5"
+              style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+            >
+              {visibleItems.length > 0
+                ? visibleItems.map((corto, i) => {
+                    const globalIdx = startIndex + i
+                    return (
+                      <motion.div
+                        key={`${annoAttivo}-${globalIdx}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <CortoLocandina corto={corto} onClick={() => setSelectedCorto(corto)} />
+                      </motion.div>
+                    )
+                  })
+                : Array.from({ length: VISIBLE }).map((_, i) => (
+                    <div key={i} className="aspect-[2/3] rounded-squircle bg-azzurro-light animate-pulse" />
+                  ))}
             </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="aspect-[2/3] rounded-squircle bg-white/40 animate-pulse" />
-              ))}
+
+            {/* Preloaded items nascosti */}
+            <div className="hidden" aria-hidden="true">
+              {preloadItems.map((corto) =>
+                corto.locandina ? <img key={corto.titolo} src={corto.locandina} loading="eager" decoding="async" alt="" /> : null
+              )}
             </div>
-          )}
-        </motion.div>
+          </div>
+
+          {/* Arrow dx */}
+          <button
+            onClick={goNext}
+            disabled={!canNext}
+            aria-label="Successivo"
+            className="shrink-0 self-start p-1 transition-opacity duration-200 focus:outline-none disabled:opacity-20 disabled:cursor-not-allowed opacity-70 hover:opacity-100"
+            style={{ color: 'var(--color-fucsia)', marginTop: '13%' }}
+          >
+            <ChevronRight size={28} strokeWidth={2} />
+          </button>
+        </div>
+
+        {/* Dot indicators */}
+        {cortiAttivi.length > VISIBLE && (
+          <div className="flex justify-center gap-1.5 mt-6">
+            {Array.from({ length: cortiAttivi.length - VISIBLE + 1 }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { setDir(i > startIndex ? 1 : -1); setStartIndex(i) }}
+                aria-label={`Vai alla posizione ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === startIndex ? 'w-5' : 'w-1.5 hover:opacity-60'
+                }`}
+                style={{ backgroundColor: i === startIndex ? 'var(--color-fucsia)' : 'rgba(229,5,118,0.25)' }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <VideoModal corto={selectedCorto} onClose={() => setSelectedCorto(null)} />
@@ -452,7 +530,7 @@ export default function FSL() {
         <HeroSlider
           slides={[heroFSLImage]}
           subtitle="FSL — Formazione Scuola-Lavoro"
-          title="Un'esperienza unica nel suo genere"
+          title="Un'esperienza di Formazione Scuola-Lavoro unica nel suo genere"
         />
 
         {/* 2. Copy descrittivo */}
@@ -475,6 +553,32 @@ export default function FSL() {
 
         {/* 6. Locandine per anno/edizione */}
         <LocandineSection />
+
+        {/* 7. YouTube CTA */}
+        <section className="w-full py-16 md:py-20 bg-white">
+          <div className="container mx-auto px-4 max-w-3xl text-center flex flex-col items-center gap-6">
+            <p className="font-funnel font-bold text-2xl md:text-3xl text-blu leading-snug">
+              Vuoi vedere tutti i cortometraggi realizzati dagli studenti?
+            </p>
+            <p className="text-blu/60 font-funnel text-base md:text-lg">
+              Sul canale YouTube di Oriocenter trovi tutte le edizioni del progetto FSL.
+            </p>
+            <a
+              href="https://www.youtube.com/@OriocenterSelectedStores/featured"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 font-funnel font-semibold text-base px-8 py-4 rounded-squircle transition-all duration-200"
+              style={{ backgroundColor: 'var(--color-blu)', color: '#fff' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 shrink-0">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+              Vai al canale YouTube
+            </a>
+          </div>
+        </section>
       </main>
 
       <Footer />

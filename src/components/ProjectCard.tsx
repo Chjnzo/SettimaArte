@@ -1,11 +1,11 @@
-import { useRef } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 
 interface ProjectCardProps {
   label: string
   title: string
-  description: string
+  description: ReactNode
   image?: string
   imagePlaceholderClass?: string
   ctaLabel: string
@@ -62,7 +62,7 @@ export default function ProjectCard({
             <h2 className="font-funnel font-bold text-3xl md:text-4xl text-blu leading-tight">
               {title}
             </h2>
-            <p className="text-blu/80 leading-relaxed text-lg">{description}</p>
+            <div className="text-blu/80 leading-relaxed text-lg flex flex-col gap-4">{description}</div>
             <div>
               <Link
                 to={ctaHref}

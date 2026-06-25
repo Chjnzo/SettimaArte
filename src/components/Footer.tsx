@@ -14,7 +14,7 @@ const socialLinks = [
     icon: Instagram,
   },
   {
-    label: 'YouTube Oriocenter',
+    label: 'YouTube',
     href: 'https://www.youtube.com/@oriocenter',
     icon: Youtube,
   },
@@ -37,12 +37,8 @@ export default function Footer() {
               className="h-11 w-auto object-contain self-start"
             />
             <p className="text-sm text-white/60 leading-relaxed max-w-xs font-funnel">
-              Il progetto educational di Oriocenter che porta il linguaggio
-              cinematografico nelle scuole superiori della provincia di Bergamo
-              e delle province limitrofe.
-            </p>
-            <p className="text-xs text-white/40 font-funnel">
-              In collaborazione con Skillherz
+              Il progetto educational di Oriocenter fa sperimentare il mondo
+              del lavoro attraverso il cinema
             </p>
           </div>
 
@@ -92,11 +88,6 @@ export default function Footer() {
               ))}
             </div>
 
-            <div className="mt-2 flex flex-col gap-1">
-              <p className="text-xs text-white/40 font-funnel">Oriocenter</p>
-              <p className="text-sm text-white/60 font-funnel">Via Portico, 75</p>
-              <p className="text-sm text-white/60 font-funnel">24050 Orio al Serio (BG)</p>
-            </div>
           </div>
         </div>
 
@@ -104,7 +95,6 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40 font-funnel">
           <p className="text-center sm:text-left">© {new Date().getFullYear()} SettimaArte. Tutti i diritti riservati.</p>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-            <p className="text-center">Un progetto <span className="text-white/60">Oriocenter</span> realizzato da <span className="text-white/60">Skillherz</span></p>
             <a
               href="https://drive.google.com/file/d/1emqaFFBUK-GNDwBRA1Ti6QTY0AxrQ1iS/view"
               target="_blank"

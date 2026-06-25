@@ -16,60 +16,28 @@ export default function CortoCard({ edizione }: CortoCardProps) {
     <article ref={ref} className="w-full py-16 md:py-24">
       <div className="container mx-auto px-4 max-w-6xl">
 
-        {/* ── Header edizione ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
-            Edizione {edizione.anno}
-          </p>
-          <h2 className="font-funnel font-bold text-4xl md:text-5xl text-blu leading-tight">
-            {edizione.titolo}
-          </h2>
-        </motion.div>
-
-        {/* ── Descrizione edizione ── */}
-        {edizione.descrizione && (
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.55, delay: 0.08 }}
-            className="text-blu/80 leading-relaxed text-lg mb-10 max-w-3xl"
-          >
-            {edizione.descrizione}
-          </motion.p>
-        )}
-
         {edizione.compact ? (
-          /* ── Edizione compact (2025): trama + badge "in distribuzione" ── */
-          <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start mb-12">
-            {/* Placeholder locandina */}
+          /* ── Edizione compact (2025) ── */
+          <>
             <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full max-w-[180px] mx-auto md:mx-0 shrink-0"
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
             >
-              <div
-                className="w-full aspect-[2/3] rounded-squircle flex flex-col items-center justify-center gap-3"
-                style={{ backgroundColor: 'var(--color-azzurro-light)' }}
-              >
-                <Film size={36} className="text-blu/25" />
-                <span className="text-[11px] font-funnel font-semibold text-blu/40 text-center px-2 leading-snug">
-                  In distribuzione nei festival
-                </span>
-              </div>
+              <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
+                Edizione {edizione.anno}
+              </p>
+              <h2 className="font-funnel font-bold text-4xl md:text-5xl text-blu leading-tight">
+                {edizione.titolo}
+              </h2>
             </motion.div>
-
-            {/* Info compact */}
+            <div className="mb-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex-1 space-y-5"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="space-y-5 max-w-3xl"
             >
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-sm text-blu/70">
@@ -96,53 +64,82 @@ export default function CortoCard({ edizione }: CortoCardProps) {
               </div>
             </motion.div>
           </div>
+          </>
         ) : (
-          /* ── Edizione completa: locandina + info ── */
-          <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start mb-12">
-            <motion.div
-              initial={{ opacity: 0, x: -32 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full max-w-[220px] mx-auto md:mx-0 md:max-w-none md:w-72 shrink-0"
-            >
-              {edizione.locandina ? (
-                <img
-                  src={edizione.locandina}
-                  alt={`Locandina ${edizione.titolo}`}
-                  loading="lazy"
-                  className="w-full rounded-squircle shadow-xl object-cover"
-                />
-              ) : (
-                <div className="w-full aspect-[2/3] rounded-squircle bg-azzurro-light flex items-center justify-center">
-                  <Film size={48} className="text-blu/20" />
-                </div>
-              )}
-            </motion.div>
+          /* ── Edizione completa ── */
+          <div className="mb-12 space-y-10">
 
+            {/* Riga 1: [label + titolo + descrizione] sx | locandina dx */}
+            <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-end">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5 }}
+                className="flex-1 flex flex-col gap-6"
+              >
+                <div>
+                  <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
+                    Edizione {edizione.anno}
+                  </p>
+                  <h2 className="font-funnel font-bold text-4xl md:text-5xl text-blu leading-tight">
+                    {edizione.titolo}
+                  </h2>
+                </div>
+                {edizione.descrizione && (
+                  <div className="text-blu/80 leading-relaxed text-lg space-y-4">
+                    {edizione.descrizione}
+                  </div>
+                )}
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 32 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="w-full max-w-[260px] mx-auto md:mx-0 shrink-0"
+              >
+                {edizione.locandina ? (
+                  <img
+                    src={edizione.locandina}
+                    alt={`Locandina ${edizione.titolo}`}
+                    loading="lazy"
+                    className="w-full rounded-squircle shadow-xl object-cover"
+                  />
+                ) : (
+                  <div className="w-full aspect-[2/3] rounded-squircle bg-azzurro-light flex items-center justify-center">
+                    <Film size={48} className="text-blu/20" />
+                  </div>
+                )}
+              </motion.div>
+            </div>
+
+            {/* Riga 2: regia/attori/trama (sx) | riconoscimenti (dx) */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex-1 space-y-6"
+              className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 pt-12"
             >
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 text-sm text-blu/70">
-                  <Clapperboard size={15} className="text-azzurro shrink-0" />
-                  <span>Regia: <strong className="text-blu">{edizione.regia}</strong></span>
+              {/* Col sinistra: regia, attori, trama */}
+              <div className="space-y-6">
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2 text-sm text-blu/70">
+                    <Clapperboard size={15} className="text-azzurro shrink-0" />
+                    <span>Regia: <strong className="text-blu">{edizione.regia}</strong></span>
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-blu/70">
+                    <Users size={15} className="text-azzurro shrink-0 mt-0.5" />
+                    <span>Con: <strong className="text-blu">{edizione.attori.join(', ')}</strong></span>
+                  </div>
                 </div>
-                <div className="flex items-start gap-2 text-sm text-blu/70">
-                  <Users size={15} className="text-azzurro shrink-0 mt-0.5" />
-                  <span>Con: <strong className="text-blu">{edizione.attori.join(', ')}</strong></span>
+                <div>
+                  <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
+                    Trama
+                  </p>
+                  <p className="text-blu/80 leading-relaxed text-lg">{edizione.trama}</p>
                 </div>
               </div>
 
-              <div>
-                <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-2">
-                  Trama
-                </p>
-                <p className="text-blu/80 leading-relaxed text-lg">{edizione.trama}</p>
-              </div>
-
+              {/* Col destra: riconoscimenti */}
               {edizione.premi && edizione.premi.length > 0 && (
                 <div>
                   <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-3">
