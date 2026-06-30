@@ -9,7 +9,7 @@
     "build:dev": "tsc -b && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite build && wrangler dev",
-    "deploy": "vite build && wrangler deploy",
+    "deploy": "vite build && printf '_worker.js\\n*.mp4\\n*.mov\\n*.avi\\n*.mkv' > dist/.assetsignore && wrangler deploy",
     "optimize-images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {

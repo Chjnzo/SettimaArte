@@ -263,43 +263,14 @@ function PosterCard({ corto, onClick }: { corto: CortoCorrente; onClick: () => v
 
 // ── Section ────────────────────────────────────────────────────────────────────
 
-const CARD_W = 260   // px — card width
-const GAP = 24       // px — gap between cards
-
 export default function VotazioniSection() {
   const ref = useRef(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
-  const [canPrev, setCanPrev] = useState(false)
-  const [canNext, setCanNext] = useState(false)
 
   const { data: corti, isLoading, isError, refetch } = useVotazioni()
 
   const handleClose = useCallback(() => setSelectedIndex(null), [])
-
-  const updateArrows = useCallback(() => {
-    const el = scrollRef.current
-    if (!el) return
-    setCanPrev(el.scrollLeft > 8)
-    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 8)
-  }, [])
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    updateArrows()
-    el.addEventListener('scroll', updateArrows, { passive: true })
-    const ro = new ResizeObserver(updateArrows)
-    ro.observe(el)
-    return () => { el.removeEventListener('scroll', updateArrows); ro.disconnect() }
-  }, [corti, updateArrows])
-
-  const scroll = (dir: 'prev' | 'next') => {
-    const el = scrollRef.current
-    if (!el) return
-    el.scrollBy({ left: (CARD_W + GAP) * (dir === 'next' ? 1 : -1), behavior: 'smooth' })
-  }
 
   if (isLoading) return null
   if (isError) return (
@@ -330,72 +301,29 @@ export default function VotazioniSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10"
+          className="mb-10"
         >
-          <div>
-            <p className="text-xs font-funnel font-semibold tracking-widest uppercase mb-3" style={{ color: 'var(--color-fucsia)' }}>
-              È il momento di votare
-            </p>
-            <h2 className="font-funnel font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
-              Vota il tuo cortometraggio preferito
-            </h2>
-            <p className="mt-3 text-white/55 font-funnel text-base max-w-lg leading-relaxed">
-              Clicca su una locandina per scoprire la trama, guardare il corto e votare.
-            </p>
-          </div>
-
-          {/* Arrow controls */}
-          {(canPrev || canNext) && (
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => scroll('prev')}
-                disabled={!canPrev}
-                aria-label="Precedente"
-                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                onClick={() => scroll('next')}
-                disabled={!canNext}
-                aria-label="Successivo"
-                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-25 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
-          )}
+          <p className="text-xs font-funnel font-semibold tracking-widest uppercase mb-3" style={{ color: 'var(--color-fucsia)' }}>
+            È il momento di votare
+          </p>
+          <h2 className="font-funnel font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
+            Vota il tuo cortometraggio preferito
+          </h2>
+          <p className="mt-3 text-white/55 font-funnel text-base max-w-lg leading-relaxed">
+            Clicca su una locandina per scoprire la trama, guardare il corto e votare.
+          </p>
         </motion.div>
 
-        {/* Slider */}
+        {/* CSS grid — 2 cols mobile, 4 cols desktop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="relative"
+          className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6"
         >
-          <div
-            ref={scrollRef}
-            className="overflow-x-auto -mx-4 px-4 pb-4"
-            style={{
-              scrollbarWidth: 'none',
-              scrollSnapType: 'x mandatory',
-            }}
-          >
-            <div
-              className="flex"
-              style={{ gap: GAP, width: 'max-content' }}
-            >
-              {corti.map((corto, i) => (
-                <div
-                  key={corto.id}
-                  style={{ width: CARD_W, scrollSnapAlign: 'start', flexShrink: 0 }}
-                >
-                  <PosterCard corto={corto} onClick={() => setSelectedIndex(i)} />
-                </div>
-              ))}
-            </div>
-          </div>
+          {corti.map((corto, i) => (
+            <PosterCard key={corto.id} corto={corto} onClick={() => setSelectedIndex(i)} />
+          ))}
         </motion.div>
       </div>
 

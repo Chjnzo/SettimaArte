@@ -375,7 +375,7 @@ function LocandineSection() {
   const [annoAttivo, setAnnoAttivo] = useState(anni[0])
   const [selectedCorto, setSelectedCorto] = useState<CortoEdizione | null>(null)
   const [startIndex, setStartIndex] = useState(0)
-  const [dir, setDir] = useState<1 | -1>(1)
+  const [_dir, setDir] = useState<1 | -1>(1)
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
