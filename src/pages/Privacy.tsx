@@ -91,12 +91,7 @@ export default function Privacy() {
               cloudflare.com/privacypolicy
             </a>
           </li>
-          <li>
-            <strong>Supabase</strong> — gestione del sistema di votazioni del Festival. Privacy policy:{' '}
-            <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">
-              supabase.com/privacy
-            </a>
-          </li>
+
         </ul>
 
         <h2>6. Cookie</h2>

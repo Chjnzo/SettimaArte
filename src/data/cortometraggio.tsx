@@ -44,6 +44,7 @@ export const edizioniData: EdizioneCorto[] = [
       'Miglior Attore + Miglior Attrice — Movievalley Festival, Bologna',
       'Shortlist David di Donatello',
       "Shortlist Nastri d'Argento",
+      'Miglior Film Internazionale — London Vaporetto Short 2026',
     ],
     locandina:
       '/images/Cortometraggio/Gallery locandine, foto premi ecc/Locandina-Le-Faremo-Sapere.jpg',

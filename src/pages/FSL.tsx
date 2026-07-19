@@ -31,10 +31,10 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 // ─── Stats ────────────────────────────────────────────────────────────────────
 
 const stats = [
-  { value: '1.450', label: 'Studenti coinvolti' },
-  { value: '58', label: 'Settimane di FSL' },
-  { value: '16', label: 'Eventi pubblici' },
-  { value: '4.480', label: 'Persone coinvolte' },
+  { value: '1.500', label: 'Studenti coinvolti' },
+  { value: '60', label: 'Settimane di FSL' },
+  { value: '14', label: 'Eventi organizzati' },
+  { value: '76', label: 'Cortometraggi realizzati' },
 ]
 
 function StatsSection() {
@@ -77,10 +77,10 @@ function StatsSection() {
                 Riconoscimento nazionale
               </p>
               <p className="font-funnel font-bold text-3xl md:text-4xl text-white leading-tight mb-3">
-                Certificate of Merit — CNCC 2023
+                CNCC Awards 2023 — Certificate of Merit
               </p>
               <p className="text-white/55 text-base md:text-lg font-funnel leading-relaxed">
-                Consiglio Nazionale dei Centri Commerciali — premio per l'eccellenza nei progetti educational
+                Consiglio Nazionale dei Centri Commerciali — categoria Corporate Social Responsibility
               </p>
             </div>
           </div>

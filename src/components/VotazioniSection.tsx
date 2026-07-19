@@ -1,8 +1,9 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useState, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { X, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useVotazioni } from '@/hooks/useVotazioni'
 import type { CortoCorrente } from '@/hooks/useVotazioni'
+import { driveImageUrl } from '@/lib/utils'
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -232,7 +233,7 @@ function PosterCard({ corto, onClick }: { corto: CortoCorrente; onClick: () => v
       <div className="relative overflow-hidden rounded-squircle aspect-[2/3] bg-white/10 w-full">
         {corto.locandina_url ? (
           <img
-            src={corto.locandina_url}
+            src={driveImageUrl(corto.locandina_url) ?? corto.locandina_url}
             alt={`Locandina ${corto.nome_progetto}`}
             loading="lazy"
             decoding="async"
@@ -264,12 +265,8 @@ function PosterCard({ corto, onClick }: { corto: CortoCorrente; onClick: () => v
 // ── Section ────────────────────────────────────────────────────────────────────
 
 export default function VotazioniSection() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
-
   const { data: corti, isLoading, isError, refetch } = useVotazioni()
-
   const handleClose = useCallback(() => setSelectedIndex(null), [])
 
   if (isLoading) return null
@@ -291,7 +288,6 @@ export default function VotazioniSection() {
   return (
     <section
       data-header-dark
-      ref={ref}
       className="w-full py-14 md:py-28"
       style={{ backgroundColor: 'var(--color-blu)' }}
     >
@@ -299,7 +295,8 @@ export default function VotazioniSection() {
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
@@ -317,7 +314,8 @@ export default function VotazioniSection() {
         {/* CSS grid — 2 cols mobile, 4 cols desktop */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5, delay: 0.15 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6"
         >

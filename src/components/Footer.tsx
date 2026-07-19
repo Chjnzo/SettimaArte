@@ -30,12 +30,22 @@ export default function Footer() {
 
           {/* Col 1 — Brand */}
           <div className="flex flex-col gap-5">
-            <img
-              src="/logo/7arte-oriocenter_logo_2024_negativo.png"
-              alt="SettimaArte"
-              loading="lazy"
-              className="h-11 w-auto object-contain self-start"
-            />
+            <div className="flex items-center gap-4">
+              <img
+                src="/logo/7arte-oriocenter_logo_2024_negativo.png"
+                alt="SettimaArte"
+                loading="lazy"
+                className="h-11 w-auto object-contain"
+              />
+              <div className="w-px h-8 bg-white/20" />
+              <img
+                src="/logo/oriocenter_logo.png"
+                alt="Oriocenter"
+                loading="lazy"
+                className="h-7 w-auto object-contain"
+                style={{ filter: 'brightness(0) invert(1)', opacity: 0.75 }}
+              />
+            </div>
             <p className="text-sm text-white/60 leading-relaxed max-w-xs font-funnel">
               Il progetto educational di Oriocenter fa sperimentare il mondo
               del lavoro attraverso il cinema
