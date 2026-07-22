@@ -266,24 +266,10 @@ function PosterCard({ corto, onClick }: { corto: CortoCorrente; onClick: () => v
 
 export default function VotazioniSection() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
-  const { data: corti, isLoading, isError, refetch } = useVotazioni()
+  const { data: corti, isLoading, isError } = useVotazioni()
   const handleClose = useCallback(() => setSelectedIndex(null), [])
 
-  if (isLoading) return null
-  if (isError) return (
-    <section data-header-dark className="w-full py-14 md:py-28" style={{ backgroundColor: 'var(--color-blu)' }}>
-      <div className="container mx-auto px-4 max-w-6xl text-center">
-        <p className="text-white/60 font-funnel mb-4">Impossibile caricare i cortometraggi.</p>
-        <button
-          onClick={() => refetch()}
-          className="font-funnel font-semibold text-white px-6 py-2 rounded-full border border-white/30 hover:bg-white/10 transition-colors"
-        >
-          Riprova
-        </button>
-      </div>
-    </section>
-  )
-  if (!corti?.length) return null
+  if (isLoading || isError || !corti?.length) return null
 
   return (
     <section

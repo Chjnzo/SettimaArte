@@ -66,6 +66,7 @@ const stats = [
   { value: '~500', label: 'Studenti coinvolti per edizione' },
   { value: '16', label: 'Cortometraggi per evento' },
   { value: '5.000', label: 'Voti online per evento' },
+  { value: '4.000+', label: 'Partecipanti coinvolti' },
 ]
 
 function StatsSection() {
@@ -98,7 +99,7 @@ function StatsSection() {
             <path d="M8 4 L32 4 L32 116 L8 116" stroke="var(--color-fucsia)" strokeWidth="6" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
           </svg>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center py-6 md:py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center py-6 md:py-8">
             {stats.map(({ value, label }, i) => (
               <motion.div
                 key={label}

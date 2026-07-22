@@ -31,10 +31,10 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 // ─── Stats ────────────────────────────────────────────────────────────────────
 
 const stats = [
-  { value: '1.500', label: 'Studenti coinvolti' },
-  { value: '60', label: 'Settimane di FSL' },
-  { value: '14', label: 'Eventi organizzati' },
-  { value: '76', label: 'Cortometraggi realizzati' },
+  { value: '1.600+', label: 'Studenti coinvolti' },
+  { value: '64', label: 'Settimane di FSL' },
+  { value: '15', label: 'Eventi organizzati' },
+  { value: '90+', label: 'Cortometraggi realizzati' },
 ]
 
 function StatsSection() {
