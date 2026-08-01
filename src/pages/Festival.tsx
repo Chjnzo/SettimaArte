@@ -65,7 +65,7 @@ function CopyEvento() {
 const stats = [
   { value: '~500', label: 'Studenti coinvolti per edizione' },
   { value: '16', label: 'Cortometraggi per evento' },
-  { value: '5.000', label: 'Voti online per evento' },
+  { value: '5.000', label: 'Voti online per evento', accent: true },
   { value: '4.000+', label: 'Partecipanti coinvolti' },
 ]
 
@@ -74,13 +74,13 @@ function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="w-full py-14 md:py-28 bg-white overflow-x-clip">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section ref={ref} className="w-full py-16 md:py-28 bg-white overflow-x-clip">
+      <div className="container mx-auto px-4 max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
+          className="mb-14 md:mb-20 text-center"
         >
           <p className="text-xs font-funnel font-semibold tracking-widest uppercase text-azzurro mb-3">
             I numeri del Festival
@@ -91,26 +91,39 @@ function StatsSection() {
         </motion.div>
 
         {/* Parentesi fucsia */}
-        <div className="relative px-10 md:px-16">
-          <svg aria-hidden viewBox="0 0 40 120" className="absolute -left-2 md:left-0 top-0 bottom-0 w-6 md:w-9 h-full" preserveAspectRatio="none" fill="none">
-            <path d="M32 4 L8 4 L8 116 L32 116" stroke="var(--color-fucsia)" strokeWidth="6" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+        <div className="relative px-6 md:px-10">
+          <svg aria-hidden viewBox="0 0 40 120" className="absolute left-0 top-0 bottom-0 w-5 md:w-7 h-full" preserveAspectRatio="none" fill="none">
+            <path d="M30 4 L10 4 L10 116 L30 116" stroke="var(--color-fucsia)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
-          <svg aria-hidden viewBox="0 0 40 120" className="absolute -right-2 md:right-0 top-0 bottom-0 w-6 md:w-9 h-full" preserveAspectRatio="none" fill="none">
-            <path d="M8 4 L32 4 L32 116 L8 116" stroke="var(--color-fucsia)" strokeWidth="6" strokeLinecap="square" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+          <svg aria-hidden viewBox="0 0 40 120" className="absolute right-0 top-0 bottom-0 w-5 md:w-7 h-full" preserveAspectRatio="none" fill="none">
+            <path d="M10 4 L30 4 L30 116 L10 116" stroke="var(--color-fucsia)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
           </svg>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center py-6 md:py-8">
-            {stats.map(({ value, label }, i) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-14 md:gap-x-6 py-8 md:py-10">
+            {stats.map(({ value, label, accent }, i) => (
               <motion.div
                 key={label}
                 initial={{ opacity: 0, y: 32 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.55, delay: i * 0.12 }}
+                className="text-center px-1"
               >
-                <p className="font-funnel font-bold text-6xl md:text-7xl text-blu leading-none">
+                <p
+                  className={`font-funnel font-bold tabular-nums leading-none whitespace-nowrap text-4xl sm:text-5xl md:text-6xl ${
+                    accent ? 'text-azzurro' : 'text-blu'
+                  }`}
+                >
                   {value}
                 </p>
-                <p className="mt-3 text-blu/75 font-funnel text-base">{label}</p>
+                <motion.span
+                  initial={{ scaleX: 0 }}
+                  animate={inView ? { scaleX: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 0.3 + i * 0.12 }}
+                  className="mx-auto mt-4 block h-[3px] w-8 rounded-full bg-fucsia origin-center"
+                />
+                <p className="mt-4 text-blu/70 font-funnel text-sm md:text-base leading-snug max-w-[11rem] mx-auto">
+                  {label}
+                </p>
               </motion.div>
             ))}
           </div>
