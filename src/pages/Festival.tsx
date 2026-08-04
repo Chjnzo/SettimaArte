@@ -65,7 +65,7 @@ function CopyEvento() {
 const stats = [
   { value: '~500', label: 'Studenti coinvolti per edizione' },
   { value: '16', label: 'Cortometraggi per evento' },
-  { value: '5.000', label: 'Voti online per evento', accent: true },
+  { value: '5.000', label: 'Voti online per evento' },
   { value: '4.000+', label: 'Partecipanti coinvolti' },
 ]
 
