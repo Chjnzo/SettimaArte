@@ -1,6 +1,7 @@
 {
   // Cloudflare Workers config for SettimaArte
   "name": "settima-arte",
+  "account_id": "4bda0fe46ebd950357a6695e56be88a7",
   "compatibility_date": "2024-09-23",
   "main": "./worker.ts",
   "assets": {
