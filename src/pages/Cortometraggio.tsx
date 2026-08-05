@@ -311,10 +311,19 @@ export default function Cortometraggio() {
       <Helmet>
         <title>Cortometraggio Professionale | SettimaArte</title>
         <link rel="canonical" href="https://www.settimaartefestival.it/cortometraggio" />
-        <meta
-          name="description"
-          content="10 studenti selezionati affiancano una troupe professionale per produrre un cortometraggio estivo candidato ai principali festival nazionali italiani."
-        />
+        <meta name="description" content="10 studenti selezionati affiancano una troupe professionale per produrre un cortometraggio estivo candidato ai principali festival nazionali italiani." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.settimaartefestival.it/cortometraggio" />
+        <meta property="og:site_name" content="SettimaArte" />
+        <meta property="og:locale" content="it_IT" />
+        <meta property="og:title" content="Cortometraggio Professionale | SettimaArte" />
+        <meta property="og:description" content="10 studenti selezionati affiancano una troupe professionale per produrre un cortometraggio estivo candidato ai principali festival nazionali italiani." />
+        <meta property="og:image" content="https://www.settimaartefestival.it/images/Home/Hero/studentessa-take-fsl.JPG" />
+        <meta property="og:image:alt" content="Studentessa durante le riprese del cortometraggio professionale Settima Arte" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Cortometraggio Professionale | SettimaArte" />
+        <meta name="twitter:description" content="10 studenti selezionati affiancano una troupe professionale per produrre un cortometraggio estivo candidato ai principali festival nazionali italiani." />
+        <meta name="twitter:image" content="https://www.settimaartefestival.it/images/Home/Hero/studentessa-take-fsl.JPG" />
       </Helmet>
 
       <Header />

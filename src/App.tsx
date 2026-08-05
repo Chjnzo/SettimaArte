@@ -8,6 +8,7 @@ const FSL           = lazy(() => import('@/pages/FSL'))
 const Festival      = lazy(() => import('@/pages/Festival'))
 const Cortometraggio = lazy(() => import('@/pages/Cortometraggio'))
 const Admin         = lazy(() => import('@/pages/Admin'))
+const Privacy       = lazy(() => import('@/pages/Privacy'))
 const NotFound      = lazy(() => import('@/pages/NotFound'))
 
 function PageTracker() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/cortometraggio" element={<Cortometraggio />} />
           <Route path="/contattaci"     element={<Navigate to="/?scroll=contattaci" replace />} />
           <Route path="/admin"          element={<Admin />} />
+          <Route path="/privacy"        element={<Privacy />} />
           <Route path="*"               element={<NotFound />} />
         </Routes>
       </Suspense>
