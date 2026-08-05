@@ -165,6 +165,7 @@ function RegolamentoCTA() {
             href={REGOLAMENTO_PDF_URL}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => window.gtag?.('event', 'cta_click', { cta_label: 'regolamento_pdf', page: 'festival' })}
             className="shrink-0 inline-flex items-center gap-2 bg-fucsia hover:bg-fucsia/90 text-white font-funnel font-semibold px-6 py-3 rounded-squircle transition-colors duration-200"
           >
             <FileText size={16} />

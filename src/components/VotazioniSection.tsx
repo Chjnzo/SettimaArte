@@ -164,6 +164,7 @@ function CortoModal({ corti, index, onClose, onNav }: CortoModalProps) {
                       href={corto.link_voto}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => window.gtag?.('event', 'cta_click', { cta_label: 'vota_qui', nome_progetto: corto.nome_progetto })}
                       className="shrink-0 flex items-center justify-center gap-2.5 font-funnel font-semibold py-4 rounded-2xl text-white text-base transition-opacity duration-200 hover:opacity-90"
                       style={{ backgroundColor: 'var(--color-fucsia)' }}
                     >

@@ -16,6 +16,16 @@
     <link rel="prefetch" href="https://img.youtube.com/vi/l9zSUCoaUw4/maxresdefault.jpg" as="image" />
     <!-- NOTA: l'URL del foglio Google Sheets NON viene incluso qui. Vive solo in GSHEET_URL (secret Cloudflare) -->
     <title>SettimaArte | Il Progetto Educational di Oriocenter</title>
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHMSJ30X01"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JHMSJ30X01', {
+        page_path: window.location.pathname,
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

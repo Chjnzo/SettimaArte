@@ -42,6 +42,7 @@ export default function ContactForm() {
     try {
       await submitHubSpotForm(data)
       toast.success('Messaggio inviato! Ti ricontatteremo presto.')
+      window.gtag?.('event', 'cta_click', { cta_label: 'form_contatti_inviato', sono_uno: data.sono_uno })
       reset()
     } catch {
       toast.error('Errore durante l\'invio. Riprova o scrivici via email.')

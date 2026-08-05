@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, KeyboardEvent, ChangeEvent } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, LayoutGrid, Film } from 'lucide-react'
+import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, LayoutGrid, Film, BarChart2, ExternalLink } from 'lucide-react'
 import { galleryFestival, galleryFSLBackstage, galleryCortoBackstage, galleryCortoLocandine, locandinePerEdizione } from '@/data/images'
 import { festivalGalleryBackstage } from '@/data/festival'
 import type { GalleryItem } from '@/components/Gallery'
@@ -26,7 +26,7 @@ interface VotazioniData {
 }
 
 type Phase = 'pin' | 'dashboard'
-type AdminTab = 'votazioni' | 'gallery' | 'fsl-edizioni'
+type AdminTab = 'votazioni' | 'gallery' | 'fsl-edizioni' | 'analytics'
 type GallerySection = 'festival-evento' | 'festival-backstage' | 'fsl-backstage' | 'corto-backstage' | 'corto-locandine'
 
 interface GalleryItemAdmin {
@@ -719,6 +719,105 @@ function FSLEdizioniTab({ pin }: { pin: string }) {
   )
 }
 
+// ── Analytics tab ─────────────────────────────────────────────────────────────
+
+// Sostituisci LOOKER_STUDIO_URL con il link del report Looker Studio una volta creato
+const LOOKER_STUDIO_URL = ''
+const GA4_URL = 'https://analytics.google.com/analytics/web/#/p{PROPERTY_ID}/reports/reportinghub'
+
+function AnalyticsTab() {
+  if (LOOKER_STUDIO_URL) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-funnel font-bold text-xl" style={{ color: 'var(--color-blu)' }}>Analytics</h2>
+            <p className="text-sm font-funnel mt-0.5" style={{ color: 'rgba(32,36,76,0.45)' }}>Dashboard Looker Studio — dati aggiornati ogni 24h</p>
+          </div>
+          <a href={LOOKER_STUDIO_URL} target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-funnel font-semibold text-sm transition-colors hover:opacity-80"
+            style={{ backgroundColor: 'var(--color-azzurro)', color: 'white' }}>
+            <ExternalLink size={14} /> Apri in piena schermata
+          </a>
+        </div>
+        <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.1), 0 0 0 1px rgba(32,36,76,0.07)', height: '80vh' }}>
+          <iframe src={LOOKER_STUDIO_URL} className="w-full h-full border-0" title="Analytics Dashboard" allowFullScreen />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <h2 className="font-funnel font-bold text-xl" style={{ color: 'var(--color-blu)' }}>Analytics</h2>
+        <p className="text-sm font-funnel mt-0.5" style={{ color: 'rgba(32,36,76,0.45)' }}>Google Analytics 4 è attivo sul sito — configura Looker Studio per vedere i dati qui</p>
+      </div>
+
+      {/* Status GA4 */}
+      <div className="bg-white rounded-2xl p-5 space-y-4" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          <p className="font-funnel font-bold text-base" style={{ color: 'var(--color-blu)' }}>GA4 attivo — raccolta dati in corso</p>
+        </div>
+        <p className="text-sm font-funnel leading-relaxed" style={{ color: 'rgba(32,36,76,0.55)' }}>
+          Il tracking è installato sul sito e raccoglie: sessioni, pagine visitate, dispositivi, scroll depth per pagina e click sulle CTA principali (Scopri di più, Vota qui, Regolamento PDF, invio form contatti).
+        </p>
+        <a href={GA4_URL} target="_blank" rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-funnel font-semibold text-sm text-white transition-opacity hover:opacity-85"
+          style={{ backgroundColor: 'var(--color-azzurro)' }}>
+          <ExternalLink size={14} /> Apri Google Analytics 4
+        </a>
+      </div>
+
+      {/* Steps Looker Studio */}
+      <div className="bg-white rounded-2xl p-5 space-y-5" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <p className="font-funnel font-bold text-base" style={{ color: 'var(--color-blu)' }}>Come integrare la dashboard qui</p>
+        {[
+          { n: '1', title: 'Crea il report su Looker Studio', desc: 'Vai su lookerstudio.google.com → Crea → Report → Aggiungi dati → Google Analytics. Seleziona la proprietà SettimaArte.' },
+          { n: '2', title: 'Aggiungi i grafici che ti servono', desc: 'Sessioni, bounce rate, tempo medio, top pagine, CTA clicks (filtra evento cta_click), scroll depth (filtra evento scroll_depth).' },
+          { n: '3', title: 'Condividi il report', desc: 'File → Condividi → Incorpora report → Attiva incorporamento → Copia il link.' },
+          { n: '4', title: 'Incolla il link qui', desc: 'Modifica la costante LOOKER_STUDIO_URL in Admin.tsx con il link copiato e fai il deploy.' },
+        ].map(({ n, title, desc }) => (
+          <div key={n} className="flex gap-4">
+            <span className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-funnel font-bold text-sm text-white" style={{ backgroundColor: 'var(--color-fucsia)' }}>{n}</span>
+            <div className="space-y-0.5 pt-0.5">
+              <p className="font-funnel font-semibold text-sm" style={{ color: 'var(--color-blu)' }}>{title}</p>
+              <p className="font-funnel text-sm leading-relaxed" style={{ color: 'rgba(32,36,76,0.5)' }}>{desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Metriche tracciate */}
+      <div className="bg-white rounded-2xl p-5 space-y-3" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <p className="font-funnel font-bold text-sm" style={{ color: 'var(--color-blu)' }}>Metriche già tracciate</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {[
+            'Sessioni e utenti unici',
+            'Dispositivo (mobile / desktop / tablet)',
+            'Paese e città',
+            'Pagine visitate e flusso di navigazione',
+            'Bounce rate e durata media sessione',
+            'Scroll depth 25 / 50 / 75 / 90% per pagina',
+            'Click CTA "Scopri di più" (FSL / Festival / Corto)',
+            'Click "Vota qui!" (con nome progetto)',
+            'Click "Regolamento PDF"',
+            'Invio form contatti (con tipo utente)',
+          ].map((m) => (
+            <div key={m} className="flex items-center gap-2.5 text-sm font-funnel" style={{ color: 'rgba(32,36,76,0.65)' }}>
+              <Check size={13} style={{ color: 'var(--color-azzurro)', flexShrink: 0 }} /> {m}
+            </div>
+          ))}
+        </div>
+        <p className="text-xs font-funnel mt-2" style={{ color: 'rgba(32,36,76,0.35)' }}>
+          Demografici (età/genere): disponibili in GA4 dopo aver abilitato Google Signals nelle impostazioni proprietà.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // ── Dashboard ──────────────────────────────────────────────────────────────────
 
 function Dashboard({ initialData, pinRef, onLogout }: {
@@ -760,6 +859,7 @@ function Dashboard({ initialData, pinRef, onLogout }: {
     { key: 'votazioni', label: 'Votazioni', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
     { key: 'gallery', label: 'Gallery', icon: <LayoutGrid size={15} /> },
     { key: 'fsl-edizioni', label: 'Edizioni FSL', icon: <Film size={15} /> },
+    { key: 'analytics', label: 'Analytics', icon: <BarChart2 size={15} /> },
   ]
 
   return (
@@ -804,6 +904,7 @@ function Dashboard({ initialData, pinRef, onLogout }: {
         )}
         {activeTab === 'gallery' && <GalleryTab pin={pinRef.current ?? ''} />}
         {activeTab === 'fsl-edizioni' && <FSLEdizioniTab pin={pinRef.current ?? ''} />}
+        {activeTab === 'analytics' && <AnalyticsTab />}
       </main>
     </div>
   )

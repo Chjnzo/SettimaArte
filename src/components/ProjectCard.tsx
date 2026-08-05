@@ -66,6 +66,7 @@ export default function ProjectCard({
             <div>
               <Link
                 to={ctaHref}
+                onClick={() => window.gtag?.('event', 'cta_click', { cta_label: 'scopri_di_piu', destination: ctaHref, card_title: title })}
                 className="inline-block border-2 border-azzurro text-azzurro font-funnel font-semibold px-6 py-3 rounded-squircle hover:bg-azzurro hover:text-white transition-colors duration-200"
               >
                 {ctaLabel}
