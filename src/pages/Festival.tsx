@@ -101,7 +101,7 @@ function StatsSection() {
           </svg>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-14 md:gap-x-6 py-8 md:py-10">
-            {stats.map(({ value, label, accent }, i) => (
+            {stats.map(({ value, label }, i) => (
               <motion.div
                 key={label}
                 initial={{ opacity: 0, y: 32 }}
@@ -110,9 +110,7 @@ function StatsSection() {
                 className="text-center px-1"
               >
                 <p
-                  className={`font-funnel font-bold tabular-nums leading-none whitespace-nowrap text-4xl sm:text-5xl md:text-6xl ${
-                    accent ? 'text-azzurro' : 'text-blu'
-                  }`}
+                  className="font-funnel font-bold tabular-nums leading-none whitespace-nowrap text-4xl sm:text-5xl md:text-6xl text-blu"
                 >
                   {value}
                 </p>
