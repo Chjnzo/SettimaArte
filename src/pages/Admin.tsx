@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, KeyboardEvent, ChangeEvent } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Plus, Trash2, Image, Video, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, LayoutGrid, Film } from 'lucide-react'
 import { galleryFestival, galleryFSLBackstage, galleryCortoBackstage, galleryCortoLocandine, locandinePerEdizione } from '@/data/images'
 import { festivalGalleryBackstage } from '@/data/festival'
 import type { GalleryItem } from '@/components/Gallery'
@@ -51,12 +51,12 @@ interface EdizioneFSLAdmin {
 
 type FSLEdizioniAdmin = Record<string, EdizioneFSLAdmin[]>
 
-const GALLERY_SECTIONS: { key: GallerySection; label: string }[] = [
-  { key: 'festival-evento', label: 'Festival — Serate' },
-  { key: 'festival-backstage', label: 'Festival — Backstage' },
-  { key: 'fsl-backstage', label: 'FSL — Backstage' },
-  { key: 'corto-backstage', label: 'Corto — Set studenti' },
-  { key: 'corto-locandine', label: 'Corto — Locandine e premi' },
+const GALLERY_SECTIONS: { key: GallerySection; label: string; desc: string }[] = [
+  { key: 'festival-evento', label: 'Festival — Serate', desc: 'Foto delle serate del festival' },
+  { key: 'festival-backstage', label: 'Festival — Backstage', desc: 'Video backstage del festival' },
+  { key: 'fsl-backstage', label: 'FSL — Backstage', desc: 'Foto e video backstage FSL' },
+  { key: 'corto-backstage', label: 'Corto — Set studenti', desc: 'Foto degli studenti sul set' },
+  { key: 'corto-locandine', label: 'Corto — Locandine', desc: 'Locandine e foto dei premi' },
 ]
 
 const GALLERY_DEFAULTS: Record<GallerySection, GalleryItem[]> = {
@@ -90,109 +90,81 @@ function toAdminFSL(data: Record<string, EdizioneFSL[]>): FSLEdizioniAdmin {
 
 // ── PIN screen ─────────────────────────────────────────────────────────────────
 
-interface PinScreenProps {
-  onSuccess: (pin: string, data: VotazioniData) => void
-}
-
-function PinScreen({ onSuccess }: PinScreenProps) {
+function PinScreen({ onSuccess }: { onSuccess: (pin: string, data: VotazioniData) => void }) {
   const [digits, setDigits] = useState<string[]>(['', '', '', ''])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-
   const pin = digits.join('')
 
   const submit = useCallback(async (pinValue: string) => {
     if (pinValue.length < 4) return
-    setLoading(true)
-    setError(false)
+    setLoading(true); setError(false)
     try {
-      const res = await fetch('/api/admin/corti', {
-        headers: { Authorization: `Bearer ${pinValue}` },
-      })
-      if (res.status === 401) {
-        setError(true)
-        setDigits(['', '', '', ''])
-        inputRefs.current[0]?.focus()
-        return
-      }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = (await res.json()) as VotazioniData
-      onSuccess(pinValue, data)
-    } catch {
-      setError(true)
-      setDigits(['', '', '', ''])
-      inputRefs.current[0]?.focus()
-    } finally {
-      setLoading(false)
-    }
+      const res = await fetch('/api/admin/corti', { headers: { Authorization: `Bearer ${pinValue}` } })
+      if (res.status === 401) { setError(true); setDigits(['', '', '', '']); inputRefs.current[0]?.focus(); return }
+      if (!res.ok) throw new Error()
+      onSuccess(pinValue, await res.json() as VotazioniData)
+    } catch { setError(true); setDigits(['', '', '', '']); inputRefs.current[0]?.focus()
+    } finally { setLoading(false) }
   }, [onSuccess])
 
-  const handleChange = (index: number, value: string) => {
-    const digit = value.replace(/\D/g, '').slice(-1)
-    const next = [...digits]
-    next[index] = digit
-    setDigits(next)
-    setError(false)
-    if (digit && index < 3) inputRefs.current[index + 1]?.focus()
-    if (digit && index === 3) {
-      const fullPin = next.join('')
-      if (fullPin.length === 4) submit(fullPin)
-    }
+  const handleChange = (i: number, value: string) => {
+    const d = value.replace(/\D/g, '').slice(-1)
+    const next = [...digits]; next[i] = d; setDigits(next); setError(false)
+    if (d && i < 3) inputRefs.current[i + 1]?.focus()
+    if (d && i === 3 && next.join('').length === 4) submit(next.join(''))
   }
 
-  const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (i: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace') {
-      if (digits[index]) {
-        const next = [...digits]; next[index] = ''; setDigits(next)
-      } else if (index > 0) {
-        inputRefs.current[index - 1]?.focus()
-        const next = [...digits]; next[index - 1] = ''; setDigits(next)
-      }
-    } else if (e.key === 'Enter') {
-      submit(pin)
-    }
+      if (digits[i]) { const n = [...digits]; n[i] = ''; setDigits(n) }
+      else if (i > 0) { inputRefs.current[i - 1]?.focus(); const n = [...digits]; n[i - 1] = ''; setDigits(n) }
+    } else if (e.key === 'Enter') submit(pin)
   }
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-azzurro-light)' }}>
-      <div className="w-full max-w-sm bg-white shadow-xl p-8 space-y-8" style={{ borderRadius: 28 }}>
-        <div className="flex justify-center">
-          <img src="/logo/7arte-oriocenter_logo_2024.png" alt="SettimaArte" className="h-9 w-auto" />
-        </div>
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center px-4 gap-6" style={{ background: 'linear-gradient(135deg, var(--color-blu) 0%, #2d3270 100%)' }}>
+      <img src="/logo/7arte-oriocenter_logo_2024_negativo.png" alt="SettimaArte" className="h-10 w-auto opacity-90" />
+
+      <div className="w-full max-w-[340px] bg-white p-8 space-y-7" style={{ borderRadius: 28, boxShadow: '0 24px 64px rgba(0,0,0,0.25)' }}>
         <div className="text-center space-y-1">
           <h1 className="font-funnel font-bold text-2xl" style={{ color: 'var(--color-blu)' }}>Area riservata</h1>
-          <p className="text-sm font-funnel" style={{ color: 'rgba(32,36,76,0.5)' }}>Inserisci il codice per accedere</p>
+          <p className="text-sm font-funnel" style={{ color: 'rgba(32,36,76,0.45)' }}>Inserisci il codice a 4 cifre</p>
         </div>
+
         <div className="flex justify-center gap-3">
           {digits.map((d, i) => (
             <input
               key={i}
               ref={(el) => { inputRefs.current[i] = el }}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={d}
-              autoFocus={i === 0}
+              type="text" inputMode="numeric" maxLength={1} value={d} autoFocus={i === 0}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
               aria-label={`Cifra ${i + 1} del PIN`}
               disabled={loading}
-              className="w-14 h-16 text-center text-2xl font-funnel font-bold border-2 rounded-2xl outline-none transition-colors disabled:opacity-50"
+              className="w-14 h-16 text-center text-2xl font-funnel font-bold border-2 rounded-2xl outline-none transition-all disabled:opacity-50"
               style={{
                 borderColor: error ? '#ef4444' : d ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.15)',
                 color: 'var(--color-blu)',
-                caretColor: 'var(--color-azzurro)',
+                backgroundColor: d ? 'rgba(5,151,222,0.04)' : 'white',
               }}
             />
           ))}
         </div>
-        {error && <p className="text-center text-sm font-funnel font-semibold text-red-500">Codice errato. Riprova.</p>}
+
+        {error && (
+          <div className="flex items-center gap-2 justify-center">
+            <AlertCircle size={14} className="text-red-500 shrink-0" />
+            <p className="text-sm font-funnel font-semibold text-red-500">Codice errato. Riprova.</p>
+          </div>
+        )}
+
         <button
           onClick={() => submit(pin)}
           disabled={pin.length < 4 || loading}
-          className="w-full py-4 rounded-2xl font-funnel font-bold text-base text-white transition-opacity disabled:opacity-40"
-          style={{ backgroundColor: 'var(--color-blu)' }}
+          className="w-full py-4 rounded-2xl font-funnel font-bold text-base text-white transition-all disabled:opacity-40 hover:opacity-90 active:scale-[0.98]"
+          style={{ backgroundColor: 'var(--color-azzurro)' }}
         >
           {loading ? 'Verifica…' : 'Accedi'}
         </button>
@@ -201,207 +173,204 @@ function PinScreen({ onSuccess }: PinScreenProps) {
   )
 }
 
-// ── Toggle ─────────────────────────────────────────────────────────────────────
+// ── Primitives ─────────────────────────────────────────────────────────────────
 
-function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer select-none">
-      <button
-        role="switch"
-        aria-checked={checked}
-        onClick={() => onChange(!checked)}
-        className="relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-azzurro shrink-0"
-        style={{ backgroundColor: checked ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.15)' }}
-      >
-        <span
-          className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200"
-          style={{ transform: checked ? 'translateX(24px)' : 'translateX(0)' }}
-        />
-      </button>
-      <span className="font-funnel font-semibold text-sm" style={{ color: 'var(--color-blu)' }}>{label}</span>
-    </label>
+    <button
+      role="switch" aria-checked={checked} onClick={() => onChange(!checked)}
+      className="relative w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 shrink-0"
+      style={{ backgroundColor: checked ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.15)' }}
+    >
+      <span className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200" style={{ transform: checked ? 'translateX(20px)' : 'none' }} />
+    </button>
   )
 }
 
-// ── Field ──────────────────────────────────────────────────────────────────────
-
-function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: React.ReactNode }) {
+function Field({ label, htmlFor, hint, children }: { label: string; htmlFor: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={htmlFor} className="block text-xs font-funnel font-semibold" style={{ color: 'rgba(32,36,76,0.55)' }}>
-        {label}
-      </label>
+      <div className="flex items-baseline gap-2">
+        <label htmlFor={htmlFor} className="block text-xs font-funnel font-semibold uppercase tracking-wide" style={{ color: 'rgba(32,36,76,0.45)' }}>{label}</label>
+        {hint && <span className="text-[10px] font-funnel" style={{ color: 'rgba(32,36,76,0.3)' }}>{hint}</span>}
+      </div>
       {children}
     </div>
   )
 }
 
-// ── Corto card (Votazioni) ─────────────────────────────────────────────────────
+function SaveBtn({ onClick, saving, saved, disabled, label = 'Salva' }: { onClick: () => void; saving: boolean; saved: boolean; disabled?: boolean; label?: string }) {
+  return (
+    <button
+      onClick={onClick} disabled={saving || disabled}
+      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-funnel font-bold text-sm text-white transition-all disabled:opacity-50 active:scale-[0.97]"
+      style={{ backgroundColor: saved ? '#16a34a' : 'var(--color-fucsia)' }}
+    >
+      {saved ? <><Check size={14} /> Salvato</> : saving ? 'Salvataggio…' : label}
+    </button>
+  )
+}
 
-interface CortoCardProps {
+function Spinner() {
+  return (
+    <div className="flex flex-col items-center gap-3 py-16">
+      <div className="w-6 h-6 rounded-full border-2 border-azzurro border-t-transparent animate-spin" style={{ borderColor: 'var(--color-azzurro)', borderTopColor: 'transparent' }} />
+      <p className="font-funnel text-sm" style={{ color: 'rgba(32,36,76,0.4)' }}>Caricamento…</p>
+    </div>
+  )
+}
+
+function ErrorBanner({ message }: { message: string }) {
+  return (
+    <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-red-50 border border-red-100">
+      <AlertCircle size={15} className="text-red-500 shrink-0" />
+      <p className="font-funnel text-sm text-red-600">{message}</p>
+    </div>
+  )
+}
+
+// ── Votazioni ──────────────────────────────────────────────────────────────────
+
+function CortoCard({ corto, onChange, onRemove }: {
   corto: CortoCorrente
   onChange: (id: number, field: keyof CortoCorrente, value: string | boolean) => void
   onRemove: (id: number) => void
-}
-
-function CortoCard({ corto, onChange, onRemove }: CortoCardProps) {
+}) {
   return (
-    <div className="bg-white border p-6 space-y-4" style={{ borderRadius: 24, borderColor: 'rgba(32,36,76,0.1)' }}>
-      <div className="flex items-center gap-3">
-        <input
-          type="text"
-          value={corto.classe}
-          onChange={(e) => onChange(corto.id, 'classe', e.target.value)}
-          placeholder="Classe (es. 3A)"
-          className="fi font-bold"
-          style={{ width: '120px', flexShrink: 0 }}
-        />
+    <div className="bg-white rounded-2xl p-5 space-y-4" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+      {/* Header */}
+      <div className="flex items-center gap-3 pb-3 border-b" style={{ borderColor: 'rgba(32,36,76,0.07)' }}>
+        <input type="text" value={corto.classe} onChange={(e) => onChange(corto.id, 'classe', e.target.value)}
+          placeholder="Classe" className="fi font-bold text-base w-28 shrink-0" />
         <div className="flex-1" />
-        <Toggle checked={corto.attivo} onChange={(v) => onChange(corto.id, 'attivo', v)} label="Visibile" />
-        <button
-          onClick={() => onRemove(corto.id)}
-          aria-label="Rimuovi corto"
-          className="p-2 rounded-xl hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors focus:outline-none"
-        >
-          <Trash2 size={16} />
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-funnel" style={{ color: 'rgba(32,36,76,0.4)' }}>{corto.attivo ? 'Visibile' : 'Nascosta'}</span>
+          <Toggle checked={corto.attivo} onChange={(v) => onChange(corto.id, 'attivo', v)} />
+        </div>
+        <button onClick={() => onRemove(corto.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-300 hover:text-red-500 transition-colors">
+          <Trash2 size={15} />
         </button>
       </div>
-      <Field label="Nome progetto *" htmlFor={`nome-${corto.id}`}>
+
+      <Field label="Nome progetto" htmlFor={`nome-${corto.id}`} hint="*">
         <input id={`nome-${corto.id}`} type="text" value={corto.nome_progetto} onChange={(e) => onChange(corto.id, 'nome_progetto', e.target.value)} className="fi" />
       </Field>
       <Field label="Trama" htmlFor={`trama-${corto.id}`}>
         <textarea id={`trama-${corto.id}`} rows={3} value={corto.trama ?? ''} onChange={(e) => onChange(corto.id, 'trama', e.target.value)} className="fi resize-none" />
       </Field>
-      <Field label="Locandina URL" htmlFor={`locandina-${corto.id}`}>
-        <input id={`locandina-${corto.id}`} type="text" value={corto.locandina_url ?? ''} onChange={(e) => onChange(corto.id, 'locandina_url', e.target.value)} placeholder="https://…" className="fi" />
-      </Field>
-      <Field label="Video URL (YouTube)" htmlFor={`video-${corto.id}`}>
-        <input id={`video-${corto.id}`} type="text" value={corto.video_url ?? ''} onChange={(e) => onChange(corto.id, 'video_url', e.target.value)} placeholder="https://youtu.be/…" className="fi" />
-      </Field>
-      <Field label="Link voto (Google Form)" htmlFor={`voto-${corto.id}`}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <Field label="Locandina URL" htmlFor={`loc-${corto.id}`}>
+          <input id={`loc-${corto.id}`} type="text" value={corto.locandina_url ?? ''} onChange={(e) => onChange(corto.id, 'locandina_url', e.target.value)} placeholder="https://…" className="fi" />
+        </Field>
+        <Field label="Video YouTube" htmlFor={`vid-${corto.id}`}>
+          <input id={`vid-${corto.id}`} type="text" value={corto.video_url ?? ''} onChange={(e) => onChange(corto.id, 'video_url', e.target.value)} placeholder="https://youtu.be/…" className="fi" />
+        </Field>
+      </div>
+      <Field label="Link voto" htmlFor={`voto-${corto.id}`} hint="Google Form">
         <input id={`voto-${corto.id}`} type="text" value={corto.link_voto ?? ''} onChange={(e) => onChange(corto.id, 'link_voto', e.target.value)} placeholder="https://forms.gle/…" className="fi" />
       </Field>
     </div>
   )
 }
 
-// ── Votazioni tab ──────────────────────────────────────────────────────────────
-
-interface VotazioniTabProps {
-  enabled: boolean
-  setEnabled: (v: boolean) => void
-  corti: CortoCorrente[]
-  setCorti: (c: CortoCorrente[]) => void
-  edizione: string
-  setEdizione: (v: string) => void
-  saving: boolean
-  saved: boolean
-  saveError: string | null
-  onSave: () => void
-}
-
-function VotazioniTab({ enabled, setEnabled, corti, setCorti, edizione, setEdizione, saving, saved, saveError, onSave }: VotazioniTabProps) {
-  const updateCorto = (id: number, field: keyof CortoCorrente, value: string | boolean) => {
+function VotazioniTab({ enabled, setEnabled, corti, setCorti, edizione, setEdizione, saving, saved, saveError, onSave }: {
+  enabled: boolean; setEnabled: (v: boolean) => void
+  corti: CortoCorrente[]; setCorti: (c: CortoCorrente[]) => void
+  edizione: string; setEdizione: (v: string) => void
+  saving: boolean; saved: boolean; saveError: string | null; onSave: () => void
+}) {
+  const updateCorto = (id: number, field: keyof CortoCorrente, value: string | boolean) =>
     setCorti(corti.map((c) => c.id === id ? { ...c, [field]: value === '' ? null : value } : c))
-  }
-
   const addCorto = () => {
-    const newId = corti.length > 0 ? Math.max(...corti.map((c) => c.id)) + 1 : 1
-    setCorti([...corti, { id: newId, edizione, classe: '', nome_progetto: '', trama: null, locandina_url: null, video_url: null, link_voto: null, attivo: true }])
+    const id = corti.length > 0 ? Math.max(...corti.map((c) => c.id)) + 1 : 1
+    setCorti([...corti, { id, edizione, classe: '', nome_progetto: '', trama: null, locandina_url: null, video_url: null, link_voto: null, attivo: true }])
   }
-
-  const removeCorto = (id: number) => setCorti(corti.filter((c) => c.id !== id))
-  const saveLabel = saved ? 'Salvato ✓' : saving ? 'Salvataggio…' : 'Salva tutto'
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-funnel font-bold text-xl" style={{ color: 'var(--color-blu)' }}>Gestione votazioni Festival</h2>
-        <button onClick={onSave} disabled={saving} className="hidden sm:flex items-center gap-2 px-6 py-2.5 rounded-2xl font-funnel font-bold text-sm text-white transition-opacity disabled:opacity-50" style={{ backgroundColor: 'var(--color-fucsia)' }}>
-          {saveLabel}
-        </button>
-      </div>
-
-      <div className="bg-white rounded-2xl p-5 border flex flex-col sm:flex-row sm:items-center gap-4" style={{ borderColor: enabled ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.1)', borderWidth: enabled ? 2 : 1 }}>
-        <div className="flex-1">
-          <p className="font-funnel font-bold text-base" style={{ color: 'var(--color-blu)' }}>Sezione votazioni sul sito</p>
-          <p className="text-sm font-funnel mt-0.5" style={{ color: 'rgba(32,36,76,0.5)' }}>{enabled ? 'La sezione è visibile sul sito' : 'La sezione è nascosta sul sito'}</p>
+    <div className="space-y-5">
+      {/* On/off card */}
+      <div className="bg-white rounded-2xl p-5" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="font-funnel font-bold text-base" style={{ color: 'var(--color-blu)' }}>Sezione votazioni</p>
+            <p className="text-sm font-funnel mt-0.5" style={{ color: 'rgba(32,36,76,0.45)' }}>
+              {enabled ? 'Visibile sul sito pubblico' : 'Nascosta dal sito pubblico'}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="text-sm font-funnel font-semibold" style={{ color: enabled ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.35)' }}>
+              {enabled ? 'Attiva' : 'Disattiva'}
+            </span>
+            <Toggle checked={enabled} onChange={setEnabled} />
+          </div>
         </div>
-        <Toggle checked={enabled} onChange={setEnabled} label={enabled ? 'Attiva' : 'Disattiva'} />
       </div>
 
-      <div className="bg-white rounded-2xl p-5 border" style={{ borderColor: 'rgba(32,36,76,0.1)' }}>
-        <label className="block font-funnel font-semibold text-sm mb-2" style={{ color: 'var(--color-blu)' }} htmlFor="edizione-input">Edizione (si applica a tutti i corti al salvataggio)</label>
-        <input id="edizione-input" type="text" value={edizione} onChange={(e) => setEdizione(e.target.value)} placeholder="es. giu_26" className="fi w-full sm:w-64" />
+      {/* Edizione */}
+      <div className="bg-white rounded-2xl p-5" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <Field label="Edizione corrente" htmlFor="edizione-input" hint="es. giu_26 — si applica a tutti i corti al salvataggio">
+          <input id="edizione-input" type="text" value={edizione} onChange={(e) => setEdizione(e.target.value)} placeholder="giu_26" className="fi w-48" />
+        </Field>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {corti.map((corto) => (
-          <CortoCard key={corto.id} corto={corto} onChange={updateCorto} onRemove={removeCorto} />
-        ))}
+      {/* Corti */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {corti.map((c) => <CortoCard key={c.id} corto={c} onChange={updateCorto} onRemove={(id) => setCorti(corti.filter((x) => x.id !== id))} />)}
       </div>
 
-      <button onClick={addCorto} className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-white" style={{ borderColor: 'rgba(32,36,76,0.2)', color: 'rgba(32,36,76,0.5)' }}>
-        <Plus size={16} />
-        Aggiungi corto
+      <button onClick={addCorto} className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-white/70" style={{ borderColor: 'rgba(32,36,76,0.18)', color: 'rgba(32,36,76,0.45)' }}>
+        <Plus size={15} /> Aggiungi corto
       </button>
 
-      {saveError && <p className="text-sm font-funnel font-semibold text-red-500 text-right">{saveError}</p>}
+      {saveError && <ErrorBanner message={saveError} />}
 
-      <div className="sm:hidden">
-        <button onClick={onSave} disabled={saving} className="w-full py-3 rounded-2xl font-funnel font-bold text-base text-white transition-opacity disabled:opacity-50" style={{ backgroundColor: 'var(--color-fucsia)' }}>
-          {saveLabel}
-        </button>
+      <div className="flex justify-end pt-2">
+        <SaveBtn onClick={onSave} saving={saving} saved={saved} label="Salva votazioni" />
       </div>
     </div>
   )
 }
 
-// ── Gallery item row ───────────────────────────────────────────────────────────
+// ── Gallery ────────────────────────────────────────────────────────────────────
 
 function GalleryItemRow({ item, index, onChange, onRemove }: {
-  item: GalleryItemAdmin
-  index: number
+  item: GalleryItemAdmin; index: number
   onChange: (i: number, field: keyof GalleryItemAdmin, value: string) => void
   onRemove: (i: number) => void
 }) {
   const isVideo = item.type === 'video'
   return (
-    <div className="bg-white border rounded-2xl p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(32,36,76,0.1)' }}>
-      <div className="flex items-center gap-3">
-        <span className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-funnel font-semibold" style={{ backgroundColor: isVideo ? 'rgba(229,5,118,0.1)' : 'rgba(5,151,222,0.1)', color: isVideo ? 'var(--color-fucsia)' : 'var(--color-azzurro)' }}>
-          {isVideo ? <Video size={12} /> : <Image size={12} />}
-          {isVideo ? 'Video' : 'Immagine'}
-        </span>
-        <div className="flex-1" />
-        <button onClick={() => onRemove(index)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors" aria-label="Rimuovi">
-          <Trash2 size={14} />
-        </button>
-      </div>
+    <div className="group flex items-center gap-3 px-4 py-3 bg-white rounded-xl transition-shadow hover:shadow-sm" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.06), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+      {/* Type badge */}
+      <span className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg" style={{ backgroundColor: isVideo ? 'rgba(229,5,118,0.08)' : 'rgba(5,151,222,0.08)' }}>
+        {isVideo
+          ? <Video size={13} style={{ color: 'var(--color-fucsia)' }} />
+          : <ImageIcon size={13} style={{ color: 'var(--color-azzurro)' }} />}
+      </span>
+
+      {/* Fields */}
       {isVideo ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Field label="YouTube Video ID" htmlFor={`vid-id-${index}`}>
-            <input id={`vid-id-${index}`} type="text" value={item.videoId ?? ''} onChange={(e) => onChange(index, 'videoId', e.target.value)} placeholder="es. dQw4w9WgXcQ" className="fi" />
-          </Field>
-          <Field label="Descrizione (alt)" htmlFor={`vid-alt-${index}`}>
-            <input id={`vid-alt-${index}`} type="text" value={item.alt} onChange={(e) => onChange(index, 'alt', e.target.value)} placeholder="Descrizione del video" className="fi" />
-          </Field>
-        </div>
+        <>
+          <input type="text" value={item.videoId ?? ''} onChange={(e) => onChange(index, 'videoId', e.target.value)}
+            placeholder="YouTube ID" className="fi w-36 shrink-0 text-xs" style={{ fontFamily: 'monospace' }} />
+          <input type="text" value={item.alt} onChange={(e) => onChange(index, 'alt', e.target.value)}
+            placeholder="Descrizione" className="fi flex-1 text-xs" />
+        </>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Field label="URL immagine" htmlFor={`img-src-${index}`}>
-            <input id={`img-src-${index}`} type="text" value={item.src} onChange={(e) => onChange(index, 'src', e.target.value)} placeholder="https://…" className="fi" />
-          </Field>
-          <Field label="Descrizione (alt)" htmlFor={`img-alt-${index}`}>
-            <input id={`img-alt-${index}`} type="text" value={item.alt} onChange={(e) => onChange(index, 'alt', e.target.value)} placeholder="Descrizione dell'immagine" className="fi" />
-          </Field>
-        </div>
+        <>
+          <input type="text" value={item.src} onChange={(e) => onChange(index, 'src', e.target.value)}
+            placeholder="URL immagine" className="fi flex-1 text-xs" />
+          <input type="text" value={item.alt} onChange={(e) => onChange(index, 'alt', e.target.value)}
+            placeholder="Alt text" className="fi w-40 shrink-0 text-xs" />
+        </>
       )}
+
+      <button onClick={() => onRemove(index)} className="shrink-0 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-50 text-red-300 hover:text-red-500 transition-all">
+        <Trash2 size={13} />
+      </button>
     </div>
   )
 }
-
-// ── Gallery section editor ─────────────────────────────────────────────────────
 
 function GallerySectionEditor({ section, pin }: { section: GallerySection; pin: string }) {
   const [items, setItems] = useState<GalleryItemAdmin[] | null>(null)
@@ -412,21 +381,12 @@ function GallerySectionEditor({ section, pin }: { section: GallerySection; pin: 
 
   useEffect(() => {
     let cancelled = false
-    setItems(null)
-    setLoading(true)
-    setError(null)
-    setSaved(false)
-
+    setItems(null); setLoading(true); setError(null); setSaved(false)
     fetch(`/api/admin/gallery/${section}`, { headers: { Authorization: `Bearer ${pin}` } })
       .then((r) => r.json())
-      .then((data) => {
-        if (cancelled) return
-        const loaded: GalleryItem[] | null = data
-        setItems(loaded ? toAdminItems(loaded) : toAdminItems(GALLERY_DEFAULTS[section]))
-      })
-      .catch(() => { if (!cancelled) setError('Errore caricamento') })
+      .then((data) => { if (!cancelled) setItems(toAdminItems((data as GalleryItem[] | null) ?? GALLERY_DEFAULTS[section])) })
+      .catch(() => { if (!cancelled) setError('Impossibile caricare i dati') })
       .finally(() => { if (!cancelled) setLoading(false) })
-
     return () => { cancelled = true }
   }, [section, pin])
 
@@ -436,20 +396,9 @@ function GallerySectionEditor({ section, pin }: { section: GallerySection; pin: 
     return () => clearTimeout(t)
   }, [saved])
 
-  const updateItem = (i: number, field: keyof GalleryItemAdmin, value: string) => {
-    setItems((prev) => prev ? prev.map((it, idx) => idx === i ? { ...it, [field]: value } : it) : prev)
-    setSaved(false)
-  }
-
-  const removeItem = (i: number) => setItems((prev) => prev ? prev.filter((_, idx) => idx !== i) : prev)
-
-  const addImage = () => setItems((prev) => [...(prev ?? []), { type: 'image', src: '', alt: '' }])
-  const addVideo = () => setItems((prev) => [...(prev ?? []), { type: 'video', src: '/images/placeholder-video.jpg', alt: '', videoId: '', platform: 'youtube' }])
-
   const handleSave = async () => {
     if (!items) return
-    setSaving(true)
-    setError(null)
+    setSaving(true); setError(null)
     try {
       const payload = items.map((it) => it.type === 'video'
         ? { type: 'video', src: it.src, alt: it.alt, videoId: it.videoId, platform: it.platform ?? 'youtube' }
@@ -460,169 +409,165 @@ function GallerySectionEditor({ section, pin }: { section: GallerySection; pin: 
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${pin}` },
         body: JSON.stringify(payload),
       })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      if (!res.ok) throw new Error()
       setSaved(true)
-    } catch {
-      setError('Errore durante il salvataggio')
-    } finally {
-      setSaving(false)
-    }
+    } catch { setError('Errore durante il salvataggio')
+    } finally { setSaving(false) }
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="font-funnel text-sm" style={{ color: 'rgba(32,36,76,0.4)' }}>Caricamento…</p>
-      </div>
-    )
-  }
+  if (loading) return <Spinner />
 
-  const saveLabel = saved ? 'Salvato ✓' : saving ? 'Salvataggio…' : 'Salva sezione'
+  const images = items?.filter((it) => it.type === 'image').length ?? 0
+  const videos = items?.filter((it) => it.type === 'video').length ?? 0
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="font-funnel text-sm" style={{ color: 'rgba(32,36,76,0.5)' }}>{items?.length ?? 0} elementi</p>
-        <button onClick={handleSave} disabled={saving || !items} className="px-5 py-2 rounded-xl font-funnel font-bold text-sm text-white transition-opacity disabled:opacity-50" style={{ backgroundColor: 'var(--color-fucsia)' }}>
-          {saveLabel}
-        </button>
+      {/* Toolbar */}
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-3">
+          {images > 0 && (
+            <span className="flex items-center gap-1.5 text-xs font-funnel font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: 'rgba(5,151,222,0.08)', color: 'var(--color-azzurro)' }}>
+              <ImageIcon size={11} /> {images} foto
+            </span>
+          )}
+          {videos > 0 && (
+            <span className="flex items-center gap-1.5 text-xs font-funnel font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: 'rgba(229,5,118,0.08)', color: 'var(--color-fucsia)' }}>
+              <Video size={11} /> {videos} video
+            </span>
+          )}
+        </div>
+        <SaveBtn onClick={handleSave} saving={saving} saved={saved} disabled={!items} label="Salva sezione" />
       </div>
 
-      {error && <p className="text-sm font-funnel text-red-500">{error}</p>}
+      {error && <ErrorBanner message={error} />}
 
-      <div className="space-y-3">
+      {/* Items list */}
+      <div className="space-y-1.5">
         {(items ?? []).map((item, i) => (
-          <GalleryItemRow key={i} item={item} index={i} onChange={updateItem} onRemove={removeItem} />
+          <GalleryItemRow key={i} item={item} index={i}
+            onChange={(idx, field, val) => { setItems((p) => p ? p.map((it, j) => j === idx ? { ...it, [field]: val } : it) : p); setSaved(false) }}
+            onRemove={(idx) => { setItems((p) => p ? p.filter((_, j) => j !== idx) : p); setSaved(false) }}
+          />
         ))}
       </div>
 
-      <div className="flex gap-3 pt-2">
-        <button onClick={addImage} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-white" style={{ borderColor: 'rgba(32,36,76,0.2)', color: 'rgba(32,36,76,0.5)' }}>
-          <Image size={14} /> Aggiungi immagine
+      {/* Add buttons */}
+      <div className="flex gap-2 pt-1">
+        <button onClick={() => setItems((p) => [...(p ?? []), { type: 'image', src: '', alt: '' }])}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border-2 border-dashed font-funnel font-semibold text-xs transition-colors hover:bg-white"
+          style={{ borderColor: 'rgba(5,151,222,0.3)', color: 'var(--color-azzurro)' }}>
+          <ImageIcon size={12} /> Aggiungi foto
         </button>
-        <button onClick={addVideo} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-white" style={{ borderColor: 'rgba(229,5,118,0.3)', color: 'var(--color-fucsia)' }}>
-          <Video size={14} /> Aggiungi video
+        <button onClick={() => setItems((p) => [...(p ?? []), { type: 'video', src: '/images/placeholder-video.jpg', alt: '', videoId: '', platform: 'youtube' }])}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border-2 border-dashed font-funnel font-semibold text-xs transition-colors hover:bg-white"
+          style={{ borderColor: 'rgba(229,5,118,0.3)', color: 'var(--color-fucsia)' }}>
+          <Video size={12} /> Aggiungi video
         </button>
       </div>
     </div>
   )
 }
 
-// ── Gallery tab ────────────────────────────────────────────────────────────────
-
 function GalleryTab({ pin }: { pin: string }) {
   const [activeSection, setActiveSection] = useState<GallerySection>('festival-evento')
+  const active = GALLERY_SECTIONS.find((s) => s.key === activeSection)!
 
   return (
-    <div className="space-y-6">
-      <h2 className="font-funnel font-bold text-xl" style={{ color: 'var(--color-blu)' }}>Gestione Gallery</h2>
-
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-5">
+      {/* Section selector */}
+      <div className="bg-white rounded-2xl p-1.5 flex flex-wrap gap-1" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
         {GALLERY_SECTIONS.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setActiveSection(key)}
-            className="px-4 py-2 rounded-squircle font-funnel font-semibold text-sm transition-colors"
+          <button key={key} onClick={() => setActiveSection(key)}
+            className="flex-1 min-w-fit px-4 py-2.5 rounded-xl font-funnel font-semibold text-sm transition-all text-center"
             style={{
-              backgroundColor: activeSection === key ? 'var(--color-azzurro)' : 'white',
-              color: activeSection === key ? 'white' : 'var(--color-blu)',
-              border: `1.5px solid ${activeSection === key ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.15)'}`,
-            }}
-          >
+              backgroundColor: activeSection === key ? 'var(--color-azzurro)' : 'transparent',
+              color: activeSection === key ? 'white' : 'rgba(32,36,76,0.55)',
+            }}>
             {label}
           </button>
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-6 border" style={{ borderColor: 'rgba(32,36,76,0.1)' }}>
+      {/* Section editor */}
+      <div className="bg-white rounded-2xl p-5 space-y-1" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <p className="font-funnel text-xs mb-4" style={{ color: 'rgba(32,36,76,0.4)' }}>{active.desc}</p>
         <GallerySectionEditor key={activeSection} section={activeSection} pin={pin} />
       </div>
     </div>
   )
 }
 
-// ── FSL Edizioni tab ───────────────────────────────────────────────────────────
+// ── FSL Edizioni ───────────────────────────────────────────────────────────────
 
 function CortoFSLCard({ corto, index, onChange, onRemove }: {
-  corto: CortoFSL
-  index: number
+  corto: CortoFSL; index: number
   onChange: (i: number, field: keyof CortoFSL, value: string | string[]) => void
   onRemove: (i: number) => void
 }) {
-  const premiText = corto.premi.join('\n')
-
   return (
-    <div className="bg-white border rounded-2xl p-4 space-y-3" style={{ borderColor: 'rgba(32,36,76,0.1)' }}>
+    <div className="bg-white rounded-xl p-4 space-y-3" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.06), 0 0 0 1px rgba(32,36,76,0.07)' }}>
       <div className="flex items-center justify-between">
-        <span className="font-funnel font-semibold text-sm" style={{ color: 'var(--color-blu)' }}>Corto {index + 1}</span>
-        <button onClick={() => onRemove(index)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors" aria-label="Rimuovi corto">
-          <Trash2 size={14} />
+        <span className="text-xs font-funnel font-bold uppercase tracking-wide" style={{ color: 'rgba(32,36,76,0.35)' }}>Corto {index + 1}</span>
+        <button onClick={() => onRemove(index)} className="p-1 rounded-lg hover:bg-red-50 text-red-300 hover:text-red-500 transition-colors">
+          <Trash2 size={13} />
         </button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Field label="Titolo *" htmlFor={`cfsltitolo-${index}`}>
-          <input id={`cfsltitolo-${index}`} type="text" value={corto.titolo} onChange={(e) => onChange(index, 'titolo', e.target.value)} className="fi" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <Field label="Titolo" htmlFor={`ct-${index}`} hint="*">
+          <input id={`ct-${index}`} type="text" value={corto.titolo} onChange={(e) => onChange(index, 'titolo', e.target.value)} className="fi text-sm" />
         </Field>
-        <Field label="Video YouTube (URL)" htmlFor={`cfslvideo-${index}`}>
-          <input id={`cfslvideo-${index}`} type="text" value={corto.videoYT} onChange={(e) => onChange(index, 'videoYT', e.target.value)} placeholder="https://youtu.be/…" className="fi" />
+        <Field label="YouTube URL" htmlFor={`cv-${index}`}>
+          <input id={`cv-${index}`} type="text" value={corto.videoYT} onChange={(e) => onChange(index, 'videoYT', e.target.value)} placeholder="https://youtu.be/…" className="fi text-sm" />
         </Field>
       </div>
-      <Field label="Locandina URL" htmlFor={`cfslloc-${index}`}>
-        <input id={`cfslloc-${index}`} type="text" value={corto.locandina} onChange={(e) => onChange(index, 'locandina', e.target.value)} placeholder="https://…" className="fi" />
+      <Field label="Locandina URL" htmlFor={`cl-${index}`}>
+        <input id={`cl-${index}`} type="text" value={corto.locandina} onChange={(e) => onChange(index, 'locandina', e.target.value)} placeholder="https://…" className="fi text-sm" />
       </Field>
-      <Field label="Premi (uno per riga)" htmlFor={`cfslpremi-${index}`}>
-        <textarea
-          id={`cfslpremi-${index}`}
-          rows={2}
-          value={premiText}
+      <Field label="Premi" htmlFor={`cp-${index}`} hint="uno per riga">
+        <textarea id={`cp-${index}`} rows={2} value={corto.premi.join('\n')}
           onChange={(e) => onChange(index, 'premi', e.target.value.split('\n').map((s) => s.trim()).filter(Boolean))}
           placeholder={"miglior cortometraggio\npremiazione giuria"}
-          className="fi resize-none"
-        />
+          className="fi resize-none text-sm" />
       </Field>
     </div>
   )
 }
 
-function EdizioneFSLBlock({ edizione, annoIndex, edizioneIndex, onChangeLabel, onChangeCoro, onRemoveCoro, onAddCoro, onRemoveEdizione }: {
-  edizione: EdizioneFSLAdmin
-  annoIndex: string
-  edizioneIndex: number
+function EdizioneFSLBlock({ edizione, annoIndex, eiIdx, onChangeLabel, onChangeCoro, onRemoveCoro, onAddCoro, onRemove }: {
+  edizione: EdizioneFSLAdmin; annoIndex: string; eiIdx: number
   onChangeLabel: (v: string) => void
   onChangeCoro: (ci: number, field: keyof CortoFSL, value: string | string[]) => void
   onRemoveCoro: (ci: number) => void
   onAddCoro: () => void
-  onRemoveEdizione: () => void
+  onRemove: () => void
 }) {
   const [open, setOpen] = useState(true)
 
   return (
-    <div className="border rounded-2xl overflow-hidden" style={{ borderColor: 'rgba(32,36,76,0.12)' }}>
+    <div className="rounded-2xl overflow-hidden" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.07), 0 0 0 1px rgba(32,36,76,0.08)' }}>
+      {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 bg-white">
-        <button onClick={() => setOpen((v) => !v)} className="p-1 rounded-lg hover:bg-gray-50 transition-colors" aria-label={open ? 'Comprimi' : 'Espandi'}>
-          {open ? <ChevronUp size={16} style={{ color: 'var(--color-blu)' }} /> : <ChevronDown size={16} style={{ color: 'var(--color-blu)' }} />}
+        <button onClick={() => setOpen((v) => !v)} className="p-1 rounded-lg hover:bg-gray-50 transition-colors shrink-0">
+          {open ? <ChevronUp size={15} style={{ color: 'var(--color-blu)' }} /> : <ChevronDown size={15} style={{ color: 'var(--color-blu)' }} />}
         </button>
-        <input
-          type="text"
-          value={edizione.label}
-          onChange={(e) => onChangeLabel(e.target.value)}
-          className="fi flex-1 font-semibold"
-          placeholder="es. Edizione invernale"
-          aria-label={`Label edizione ${annoIndex}-${edizioneIndex}`}
-        />
-        <span className="text-xs font-funnel" style={{ color: 'rgba(32,36,76,0.4)' }}>{edizione.corti.length} corti</span>
-        <button onClick={onRemoveEdizione} className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors" aria-label="Elimina edizione">
-          <Trash2 size={14} />
+        <input type="text" value={edizione.label} onChange={(e) => onChangeLabel(e.target.value)}
+          className="fi flex-1 font-semibold" placeholder="Nome edizione" aria-label={`Edizione ${annoIndex}-${eiIdx}`} />
+        <span className="shrink-0 text-xs font-funnel px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(32,36,76,0.06)', color: 'rgba(32,36,76,0.45)' }}>
+          {edizione.corti.length} corti
+        </span>
+        <button onClick={onRemove} className="shrink-0 p-1.5 rounded-lg hover:bg-red-50 text-red-300 hover:text-red-500 transition-colors">
+          <Trash2 size={13} />
         </button>
       </div>
 
       {open && (
-        <div className="px-4 pb-4 pt-2 space-y-3 bg-white border-t" style={{ borderColor: 'rgba(32,36,76,0.06)' }}>
+        <div className="px-4 pb-4 pt-3 space-y-2.5 border-t" style={{ borderColor: 'rgba(32,36,76,0.06)', backgroundColor: '#fafbfc' }}>
           {edizione.corti.map((corto, ci) => (
             <CortoFSLCard key={ci} corto={corto} index={ci} onChange={onChangeCoro} onRemove={onRemoveCoro} />
           ))}
-          <button onClick={onAddCoro} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-gray-50" style={{ borderColor: 'rgba(32,36,76,0.18)', color: 'rgba(32,36,76,0.45)' }}>
-            <Plus size={14} /> Aggiungi corto
+          <button onClick={onAddCoro} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed font-funnel font-semibold text-xs transition-colors hover:bg-white"
+            style={{ borderColor: 'rgba(32,36,76,0.15)', color: 'rgba(32,36,76,0.4)' }}>
+            <Plus size={13} /> Aggiungi corto
           </button>
         </div>
       )}
@@ -637,21 +582,19 @@ function FSLEdizioniTab({ pin }: { pin: string }) {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [activeAnno, setActiveAnno] = useState<string | null>(null)
-  const [newAnnoInput, setNewAnnoInput] = useState('')
+  const [newAnno, setNewAnno] = useState('')
 
   useEffect(() => {
-    setLoading(true)
-    setError(null)
+    setLoading(true); setError(null)
     fetch('/api/admin/fsl-edizioni', { headers: { Authorization: `Bearer ${pin}` } })
       .then((r) => r.json())
       .then((raw) => {
-        const loaded: Record<string, EdizioneFSL[]> | null = raw
-        const normalized = toAdminFSL(loaded ?? locandinePerEdizione)
-        setData(normalized)
-        const anni = Object.keys(normalized)
+        const norm = toAdminFSL((raw as Record<string, EdizioneFSL[]> | null) ?? locandinePerEdizione)
+        setData(norm)
+        const anni = Object.keys(norm)
         if (anni.length > 0) setActiveAnno(anni[anni.length - 1])
       })
-      .catch(() => setError('Errore caricamento'))
+      .catch(() => setError('Impossibile caricare i dati'))
       .finally(() => setLoading(false))
   }, [pin])
 
@@ -661,179 +604,128 @@ function FSLEdizioniTab({ pin }: { pin: string }) {
     return () => clearTimeout(t)
   }, [saved])
 
-  const updateEdizione = (anno: string, eiIdx: number, updater: (ed: EdizioneFSLAdmin) => EdizioneFSLAdmin) => {
-    setData((prev) => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        [anno]: prev[anno].map((ed, i) => i === eiIdx ? updater(ed) : ed),
-      }
-    })
+  const updateEdizione = (anno: string, eiIdx: number, fn: (ed: EdizioneFSLAdmin) => EdizioneFSLAdmin) => {
+    setData((prev) => prev ? { ...prev, [anno]: prev[anno].map((ed, i) => i === eiIdx ? fn(ed) : ed) } : prev)
     setSaved(false)
-  }
-
-  const addEdizione = (anno: string) => {
-    setData((prev) => {
-      if (!prev) return prev
-      return { ...prev, [anno]: [...prev[anno], { label: 'Nuova edizione', corti: [] }] }
-    })
-  }
-
-  const removeEdizione = (anno: string, eiIdx: number) => {
-    setData((prev) => {
-      if (!prev) return prev
-      return { ...prev, [anno]: prev[anno].filter((_, i) => i !== eiIdx) }
-    })
-  }
-
-  const addAnno = () => {
-    const anno = newAnnoInput.trim()
-    if (!anno || !data || data[anno]) return
-    setData((prev) => ({ ...(prev ?? {}), [anno]: [] }))
-    setActiveAnno(anno)
-    setNewAnnoInput('')
-  }
-
-  const removeAnno = (anno: string) => {
-    setData((prev) => {
-      if (!prev) return prev
-      const next = { ...prev }
-      delete next[anno]
-      return next
-    })
-    setActiveAnno((prev) => {
-      if (prev !== anno) return prev
-      const remaining = Object.keys(data ?? {}).filter((a) => a !== anno)
-      return remaining.length > 0 ? remaining[remaining.length - 1] : null
-    })
   }
 
   const handleSave = async () => {
     if (!data) return
-    setSaving(true)
-    setError(null)
+    setSaving(true); setError(null)
     try {
       const res = await fetch('/api/admin/fsl-edizioni', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${pin}` },
         body: JSON.stringify(data),
       })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      if (!res.ok) throw new Error()
       setSaved(true)
-    } catch {
-      setError('Errore durante il salvataggio')
-    } finally {
-      setSaving(false)
-    }
+    } catch { setError('Errore durante il salvataggio')
+    } finally { setSaving(false) }
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="font-funnel text-sm" style={{ color: 'rgba(32,36,76,0.4)' }}>Caricamento…</p>
-      </div>
-    )
+  const addAnno = () => {
+    const a = newAnno.trim()
+    if (!a || !data || data[a]) return
+    setData((prev) => ({ ...(prev ?? {}), [a]: [] }))
+    setActiveAnno(a); setNewAnno('')
   }
+
+  const removeAnno = (anno: string) => {
+    setData((prev) => { if (!prev) return prev; const n = { ...prev }; delete n[anno]; return n })
+    setActiveAnno((prev) => {
+      if (prev !== anno) return prev
+      const rem = Object.keys(data ?? {}).filter((a) => a !== anno)
+      return rem.length > 0 ? rem[rem.length - 1] : null
+    })
+  }
+
+  if (loading) return <Spinner />
 
   const anni = data ? Object.keys(data) : []
-  const saveLabel = saved ? 'Salvato ✓' : saving ? 'Salvataggio…' : 'Salva tutto'
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-funnel font-bold text-xl" style={{ color: 'var(--color-blu)' }}>Edizioni FSL</h2>
-        <button onClick={handleSave} disabled={saving || !data} className="px-5 py-2 rounded-xl font-funnel font-bold text-sm text-white transition-opacity disabled:opacity-50" style={{ backgroundColor: 'var(--color-fucsia)' }}>
-          {saveLabel}
-        </button>
-      </div>
-
-      {error && <p className="text-sm font-funnel text-red-500">{error}</p>}
-
-      {/* Anno tabs */}
-      <div className="flex flex-wrap gap-2 items-center">
-        {anni.map((anno) => (
-          <button
-            key={anno}
-            onClick={() => setActiveAnno(anno)}
-            className="px-4 py-2 rounded-squircle font-funnel font-semibold text-sm transition-colors"
-            style={{
-              backgroundColor: activeAnno === anno ? 'var(--color-blu)' : 'white',
-              color: activeAnno === anno ? 'white' : 'var(--color-blu)',
-              border: `1.5px solid ${activeAnno === anno ? 'var(--color-blu)' : 'rgba(32,36,76,0.15)'}`,
-            }}
-          >
-            {anno}
-          </button>
-        ))}
-
-        {/* Nuovo anno input */}
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={newAnnoInput}
-            onChange={(e) => setNewAnnoInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') addAnno() }}
-            placeholder="es. 2026-2027"
-            className="fi w-32 text-sm"
-            aria-label="Nuovo anno scolastico"
-          />
-          <button onClick={addAnno} disabled={!newAnnoInput.trim()} className="flex items-center gap-1 px-3 py-2 rounded-xl font-funnel font-semibold text-sm transition-opacity disabled:opacity-40" style={{ backgroundColor: 'var(--color-azzurro)', color: 'white' }}>
-            <Plus size={14} /> Aggiungi
-          </button>
+    <div className="space-y-5">
+      {/* Anno selector */}
+      <div className="bg-white rounded-2xl p-4 space-y-3" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <p className="text-xs font-funnel font-bold uppercase tracking-wide" style={{ color: 'rgba(32,36,76,0.4)' }}>Anno scolastico</p>
+        <div className="flex flex-wrap gap-2 items-center">
+          {anni.map((anno) => (
+            <button key={anno} onClick={() => setActiveAnno(anno)}
+              className="px-4 py-2 rounded-xl font-funnel font-semibold text-sm transition-all"
+              style={{
+                backgroundColor: activeAnno === anno ? 'var(--color-blu)' : 'rgba(32,36,76,0.05)',
+                color: activeAnno === anno ? 'white' : 'rgba(32,36,76,0.6)',
+              }}>
+              {anno}
+            </button>
+          ))}
+          <div className="flex items-center gap-2 ml-1">
+            <input type="text" value={newAnno} onChange={(e) => setNewAnno(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') addAnno() }}
+              placeholder="2026-2027" className="fi w-28 text-sm" aria-label="Nuovo anno" />
+            <button onClick={addAnno} disabled={!newAnno.trim()}
+              className="flex items-center gap-1 px-3 py-2 rounded-xl font-funnel font-bold text-xs text-white transition-opacity disabled:opacity-40"
+              style={{ backgroundColor: 'var(--color-azzurro)' }}>
+              <Plus size={12} /> Aggiungi
+            </button>
+          </div>
         </div>
       </div>
 
+      {error && <ErrorBanner message={error} />}
+
       {/* Anno content */}
-      {activeAnno && data && data[activeAnno] && (
-        <div className="bg-white rounded-2xl p-6 border space-y-4" style={{ borderColor: 'rgba(32,36,76,0.1)' }}>
+      {activeAnno && data?.[activeAnno] && (
+        <div className="bg-white rounded-2xl p-5 space-y-4" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
           <div className="flex items-center justify-between">
-            <h3 className="font-funnel font-bold text-lg" style={{ color: 'var(--color-blu)' }}>{activeAnno}</h3>
-            <button onClick={() => removeAnno(activeAnno)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 font-funnel font-semibold text-xs transition-colors">
-              <Trash2 size={13} /> Elimina anno
+            <div>
+              <p className="font-funnel font-bold text-lg" style={{ color: 'var(--color-blu)' }}>{activeAnno}</p>
+              <p className="text-xs font-funnel mt-0.5" style={{ color: 'rgba(32,36,76,0.4)' }}>
+                {data[activeAnno].reduce((s, e) => s + e.corti.length, 0)} corti totali in {data[activeAnno].length} edizioni
+              </p>
+            </div>
+            <button onClick={() => removeAnno(activeAnno)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 font-funnel font-semibold text-xs transition-colors">
+              <Trash2 size={12} /> Elimina anno
             </button>
           </div>
 
-          {data[activeAnno].map((edizione, eiIdx) => (
-            <EdizioneFSLBlock
-              key={eiIdx}
-              edizione={edizione}
-              annoIndex={activeAnno}
-              edizioneIndex={eiIdx}
-              onChangeLabel={(v) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, label: v }))}
-              onChangeCoro={(ci, field, value) => updateEdizione(activeAnno, eiIdx, (ed) => ({
-                ...ed,
-                corti: ed.corti.map((c, i) => i === ci ? { ...c, [field]: value } : c),
-              }))}
-              onRemoveCoro={(ci) => updateEdizione(activeAnno, eiIdx, (ed) => ({
-                ...ed,
-                corti: ed.corti.filter((_, i) => i !== ci),
-              }))}
-              onAddCoro={() => updateEdizione(activeAnno, eiIdx, (ed) => ({
-                ...ed,
-                corti: [...ed.corti, { titolo: '', locandina: '', videoYT: '', premi: [] }],
-              }))}
-              onRemoveEdizione={() => removeEdizione(activeAnno, eiIdx)}
-            />
-          ))}
+          <div className="space-y-3">
+            {data[activeAnno].map((edizione, eiIdx) => (
+              <EdizioneFSLBlock
+                key={eiIdx} edizione={edizione} annoIndex={activeAnno} eiIdx={eiIdx}
+                onChangeLabel={(v) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, label: v }))}
+                onChangeCoro={(ci, field, value) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, corti: ed.corti.map((c, i) => i === ci ? { ...c, [field]: value } : c) }))}
+                onRemoveCoro={(ci) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, corti: ed.corti.filter((_, i) => i !== ci) }))}
+                onAddCoro={() => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, corti: [...ed.corti, { titolo: '', locandina: '', videoYT: '', premi: [] }] }))}
+                onRemove={() => setData((prev) => prev ? { ...prev, [activeAnno]: prev[activeAnno].filter((_, i) => i !== eiIdx) } : prev)}
+              />
+            ))}
+          </div>
 
-          <button onClick={() => addEdizione(activeAnno)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-gray-50" style={{ borderColor: 'rgba(32,36,76,0.18)', color: 'rgba(32,36,76,0.45)' }}>
+          <button onClick={() => setData((prev) => prev ? { ...prev, [activeAnno]: [...prev[activeAnno], { label: 'Nuova edizione', corti: [] }] } : prev)}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-gray-50"
+            style={{ borderColor: 'rgba(32,36,76,0.15)', color: 'rgba(32,36,76,0.4)' }}>
             <Plus size={14} /> Aggiungi edizione
           </button>
         </div>
       )}
+
+      <div className="flex justify-end pt-1">
+        <SaveBtn onClick={handleSave} saving={saving} saved={saved} disabled={!data} label="Salva edizioni FSL" />
+      </div>
     </div>
   )
 }
 
 // ── Dashboard ──────────────────────────────────────────────────────────────────
 
-interface DashboardProps {
+function Dashboard({ initialData, pinRef, onLogout }: {
   initialData: VotazioniData
   pinRef: React.RefObject<string>
   onLogout: () => void
-}
-
-function Dashboard({ initialData, pinRef, onLogout }: DashboardProps) {
+}) {
   const [activeTab, setActiveTab] = useState<AdminTab>('votazioni')
   const [enabled, setEnabled] = useState(initialData.enabled)
   const [corti, setCorti] = useState<CortoCorrente[]>(initialData.corti)
@@ -849,9 +741,7 @@ function Dashboard({ initialData, pinRef, onLogout }: DashboardProps) {
   }, [saved])
 
   const handleSaveVotazioni = useCallback(async () => {
-    setSaving(true)
-    setSaveError(null)
-    setSaved(false)
+    setSaving(true); setSaveError(null); setSaved(false)
     const payload: VotazioniData = { enabled, corti: corti.map((c) => ({ ...c, edizione })) }
     try {
       const res = await fetch('/api/admin/corti', {
@@ -860,81 +750,57 @@ function Dashboard({ initialData, pinRef, onLogout }: DashboardProps) {
         body: JSON.stringify(payload),
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      setCorti(payload.corti)
-      setSaved(true)
+      setCorti(payload.corti); setSaved(true)
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Errore durante il salvataggio')
-    } finally {
-      setSaving(false)
-    }
+    } finally { setSaving(false) }
   }, [enabled, corti, edizione, pinRef])
 
-  const tabs: { key: AdminTab; label: string }[] = [
-    { key: 'votazioni', label: 'Votazioni Festival' },
-    { key: 'gallery', label: 'Gallery' },
-    { key: 'fsl-edizioni', label: 'Edizioni FSL' },
+  const tabs: { key: AdminTab; label: string; icon: React.ReactNode }[] = [
+    { key: 'votazioni', label: 'Votazioni', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
+    { key: 'gallery', label: 'Gallery', icon: <LayoutGrid size={15} /> },
+    { key: 'fsl-edizioni', label: 'Edizioni FSL', icon: <Film size={15} /> },
   ]
 
   return (
-    <div className="min-h-[100dvh]" style={{ backgroundColor: 'var(--color-azzurro-light)' }}>
+    <div className="min-h-[100dvh]" style={{ backgroundColor: '#f0f2f7' }}>
       <style>{`
-        .fi {
-          width: 100%;
-          padding: 0.5rem 0.75rem;
-          border-radius: 0.75rem;
-          border: 1.5px solid rgba(32,36,76,0.12);
-          font-family: inherit;
-          font-size: 0.875rem;
-          color: var(--color-blu);
-          outline: none;
-          transition: border-color 0.15s;
-          background: white;
-        }
-        .fi:focus { border-color: var(--color-azzurro); }
-        .fi::placeholder { color: rgba(32,36,76,0.3); }
+        .fi { width:100%; padding:0.5rem 0.75rem; border-radius:0.625rem; border:1.5px solid rgba(32,36,76,0.12); font-family:inherit; font-size:0.875rem; color:var(--color-blu); outline:none; transition:border-color .15s; background:white; }
+        .fi:focus { border-color:var(--color-azzurro); box-shadow:0 0 0 3px rgba(5,151,222,0.1); }
+        .fi::placeholder { color:rgba(32,36,76,0.28); }
       `}</style>
 
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-white border-b flex items-center justify-between px-5 py-3" style={{ borderColor: 'rgba(32,36,76,0.1)' }}>
-        <img src="/logo/7arte-oriocenter_logo_2024.png" alt="SettimaArte" className="h-7 w-auto" />
-        <button onClick={onLogout} className="font-funnel font-semibold text-sm px-4 py-1.5 rounded-full border transition-colors hover:bg-gray-50" style={{ borderColor: 'rgba(32,36,76,0.2)', color: 'var(--color-blu)' }}>
-          Esci
-        </button>
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-white border-b" style={{ borderColor: 'rgba(32,36,76,0.08)', boxShadow: '0 1px 8px rgba(32,36,76,0.06)' }}>
+        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center gap-4">
+          <img src="/logo/7arte-oriocenter_logo_2024.png" alt="SettimaArte" className="h-7 w-auto shrink-0" />
+
+          {/* Tabs */}
+          <div className="flex-1 flex items-center gap-1 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            {tabs.map(({ key, label, icon }) => (
+              <button key={key} onClick={() => setActiveTab(key)}
+                className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg font-funnel font-semibold text-sm transition-all"
+                style={{
+                  backgroundColor: activeTab === key ? 'rgba(5,151,222,0.1)' : 'transparent',
+                  color: activeTab === key ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.5)',
+                }}>
+                {icon}{label}
+              </button>
+            ))}
+          </div>
+
+          <button onClick={onLogout}
+            className="shrink-0 flex items-center gap-2 px-3 py-2 rounded-lg font-funnel font-semibold text-sm transition-colors hover:bg-gray-50"
+            style={{ color: 'rgba(32,36,76,0.5)' }}>
+            <LogOut size={15} /> Esci
+          </button>
+        </div>
       </header>
 
-      {/* Tab navigation */}
-      <div className="bg-white border-b sticky top-[56px] z-20" style={{ borderColor: 'rgba(32,36,76,0.08)' }}>
-        <div className="max-w-5xl mx-auto px-4 flex gap-0">
-          {tabs.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className="px-5 py-3.5 font-funnel font-semibold text-sm border-b-2 transition-colors"
-              style={{
-                borderColor: activeTab === key ? 'var(--color-azzurro)' : 'transparent',
-                color: activeTab === key ? 'var(--color-azzurro)' : 'rgba(32,36,76,0.5)',
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-6">
         {activeTab === 'votazioni' && (
-          <VotazioniTab
-            enabled={enabled}
-            setEnabled={setEnabled}
-            corti={corti}
-            setCorti={setCorti}
-            edizione={edizione}
-            setEdizione={setEdizione}
-            saving={saving}
-            saved={saved}
-            saveError={saveError}
-            onSave={handleSaveVotazioni}
-          />
+          <VotazioniTab enabled={enabled} setEnabled={setEnabled} corti={corti} setCorti={setCorti}
+            edizione={edizione} setEdizione={setEdizione} saving={saving} saved={saved} saveError={saveError} onSave={handleSaveVotazioni} />
         )}
         {activeTab === 'gallery' && <GalleryTab pin={pinRef.current ?? ''} />}
         {activeTab === 'fsl-edizioni' && <FSLEdizioniTab pin={pinRef.current ?? ''} />}
@@ -951,15 +817,11 @@ export default function Admin() {
   const pinRef = useRef<string>('')
 
   const handleSuccess = useCallback((pin: string, votazioniData: VotazioniData) => {
-    pinRef.current = pin
-    setData(votazioniData)
-    setPhase('dashboard')
+    pinRef.current = pin; setData(votazioniData); setPhase('dashboard')
   }, [])
 
   const handleLogout = useCallback(() => {
-    pinRef.current = ''
-    setData({ enabled: false, corti: [] })
-    setPhase('pin')
+    pinRef.current = ''; setData({ enabled: false, corti: [] }); setPhase('pin')
   }, [])
 
   return (
