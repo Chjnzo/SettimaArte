@@ -18,6 +18,9 @@ jobs:
       - run: npm ci
 
       - run: npm run build
+        env:
+          VITE_HUBSPOT_PORTAL_ID: 141057312
+          VITE_HUBSPOT_FORM_ID: 163c2c30-e98c-4f5a-98fa-d614fd9f1ff9
 
       - uses: cloudflare/wrangler-action@v3
         with:
