@@ -7,8 +7,10 @@ import Footer from '@/components/Footer'
 import Gallery from '@/components/Gallery'
 import HeroSlider from '@/components/HeroSlider'
 import { fslBackstageMisto } from '@/data/fsl'
-import { heroFSLImage, locandinePerEdizione } from '@/data/images'
-import type { CortoEdizione } from '@/data/images'
+import { heroFSLImage } from '@/data/images'
+import type { CortoEdizione, EdizioneFSL } from '@/data/images'
+import { useGallerySection } from '@/hooks/useGallerySection'
+import { useFSLEdizioniPublic } from '@/hooks/useFSLEdizioniPublic'
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -370,8 +372,12 @@ function CortoLocandina({ corto, onClick }: { corto: CortoEdizione; onClick: () 
 const VISIBLE = 5
 const PRELOAD = 2
 
-function LocandineSection() {
-  const anni = Object.keys(locandinePerEdizione).reverse()
+interface LocandineSectionProps {
+  locandineData: Record<string, EdizioneFSL[]>
+}
+
+function LocandineSection({ locandineData }: LocandineSectionProps) {
+  const anni = Object.keys(locandineData).reverse()
   const [annoAttivo, setAnnoAttivo] = useState(anni[0])
   const [selectedCorto, setSelectedCorto] = useState<CortoEdizione | null>(null)
   const [startIndex, setStartIndex] = useState(0)
@@ -379,7 +385,8 @@ function LocandineSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const cortiAttivi = locandinePerEdizione[annoAttivo].flatMap((ed) => ed.corti)
+  const currentAnno = locandineData[annoAttivo]
+  const cortiAttivi = currentAnno ? currentAnno.flatMap((ed) => ed.corti) : []
 
   useEffect(() => { setStartIndex(0) }, [annoAttivo])
 
@@ -512,6 +519,9 @@ function LocandineSection() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function FSL() {
+  const fslGallery = useGallerySection('fsl-backstage', fslBackstageMisto)
+  const locandineData = useFSLEdizioniPublic()
+
   return (
     <>
       <Helmet>
@@ -546,13 +556,13 @@ export default function FSL() {
         <GalleryBlock
           title="Backstage dalle edizioni"
           label="Gallery"
-          items={fslBackstageMisto}
+          items={fslGallery}
           columns={3}
           bg="bg-white"
         />
 
         {/* 6. Locandine per anno/edizione */}
-        <LocandineSection />
+        <LocandineSection locandineData={locandineData} />
 
         {/* 7. YouTube CTA */}
         <section className="w-full py-16 md:py-20 bg-white">

@@ -20,6 +20,9 @@ interface Env {
   ADMIN_PIN: string
 }
 
+type GallerySection = 'festival-evento' | 'festival-backstage' | 'fsl-backstage' | 'corto-backstage' | 'corto-locandine'
+const GALLERY_SECTIONS: readonly string[] = ['festival-evento', 'festival-backstage', 'fsl-backstage', 'corto-backstage', 'corto-locandine']
+
 export interface CortoCorrente {
   id: number
   edizione: string
@@ -106,6 +109,61 @@ export default {
         return json({ error: 'Body must be a VotazioniData object' }, 400)
       }
       await env.CORTI_KV.put('corti_correnti', JSON.stringify(body))
+      return json({ ok: true })
+    }
+
+    // GET /api/gallery/:section — public
+    if (method === 'GET' && pathname.startsWith('/api/gallery/')) {
+      const section = pathname.slice('/api/gallery/'.length)
+      if (!GALLERY_SECTIONS.includes(section)) return json({ error: 'Not found' }, 404)
+      const raw = await env.CORTI_KV.get(`gallery_${section.replace(/-/g, '_')}`)
+      const items = raw ? JSON.parse(raw) : null
+      return json(Array.isArray(items) && items.length > 0 ? items : null)
+    }
+
+    // GET /api/admin/gallery/:section — admin read
+    if (method === 'GET' && pathname.startsWith('/api/admin/gallery/')) {
+      if (!isAuthorized(request, env)) return json({ error: 'Unauthorized' }, 401)
+      const section = pathname.slice('/api/admin/gallery/'.length)
+      if (!GALLERY_SECTIONS.includes(section)) return json({ error: 'Not found' }, 404)
+      const raw = await env.CORTI_KV.get(`gallery_${section.replace(/-/g, '_')}`)
+      return json(raw ? JSON.parse(raw) : null)
+    }
+
+    // POST /api/admin/gallery/:section — admin write
+    if (method === 'POST' && pathname.startsWith('/api/admin/gallery/')) {
+      if (!isAuthorized(request, env)) return json({ error: 'Unauthorized' }, 401)
+      const section = pathname.slice('/api/admin/gallery/'.length)
+      if (!GALLERY_SECTIONS.includes(section)) return json({ error: 'Not found' }, 404)
+      let body: unknown
+      try { body = await request.json() } catch { return json({ error: 'Invalid JSON' }, 400) }
+      if (!Array.isArray(body)) return json({ error: 'Expected array' }, 400)
+      await env.CORTI_KV.put(`gallery_${section.replace(/-/g, '_')}`, JSON.stringify(body))
+      return json({ ok: true })
+    }
+
+    // GET /api/fsl-edizioni — public
+    if (method === 'GET' && pathname === '/api/fsl-edizioni') {
+      const raw = await env.CORTI_KV.get('fsl_edizioni')
+      return json(raw ? JSON.parse(raw) : null)
+    }
+
+    // GET /api/admin/fsl-edizioni — admin read
+    if (method === 'GET' && pathname === '/api/admin/fsl-edizioni') {
+      if (!isAuthorized(request, env)) return json({ error: 'Unauthorized' }, 401)
+      const raw = await env.CORTI_KV.get('fsl_edizioni')
+      return json(raw ? JSON.parse(raw) : null)
+    }
+
+    // POST /api/admin/fsl-edizioni — admin write
+    if (method === 'POST' && pathname === '/api/admin/fsl-edizioni') {
+      if (!isAuthorized(request, env)) return json({ error: 'Unauthorized' }, 401)
+      let body: unknown
+      try { body = await request.json() } catch { return json({ error: 'Invalid JSON' }, 400) }
+      if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+        return json({ error: 'Expected object' }, 400)
+      }
+      await env.CORTI_KV.put('fsl_edizioni', JSON.stringify(body))
       return json({ ok: true })
     }
 

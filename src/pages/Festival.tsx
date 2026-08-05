@@ -2,7 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, FileText } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Gallery from '@/components/Gallery'
@@ -10,6 +10,7 @@ import HeroSlider from '@/components/HeroSlider'
 import VotazioniSection from '@/components/VotazioniSection'
 import { festivalGalleryEvento, festivalGalleryBackstage } from '@/data/festival'
 import { heroFestivalImage } from '@/data/images'
+import { useGallerySection } from '@/hooks/useGallerySection'
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -63,7 +64,7 @@ function CopyEvento() {
 // ─── Stats ────────────────────────────────────────────────────────────────────
 
 const stats = [
-  { value: '~500', label: 'Studenti coinvolti per edizione' },
+  { value: '500', label: 'Studenti coinvolti per edizione' },
   { value: '16', label: 'Cortometraggi per evento' },
   { value: '5.000', label: 'Voti online per evento' },
   { value: '4.000+', label: 'Partecipanti coinvolti' },
@@ -128,6 +129,50 @@ function StatsSection() {
             ))}
           </div>
         </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Regolamento Festival ─────────────────────────────────────────────────────
+
+// TODO: sostituire il percorso con l'URL reale del PDF quando disponibile
+const REGOLAMENTO_PDF_URL = '/regolamento-festival.pdf'
+
+function RegolamentoCTA() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  return (
+    <section ref={ref} className="w-full py-10 md:py-14 bg-white">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 rounded-squircle bg-blu/5 border border-blu/10 px-8 py-6"
+        >
+          <div className="flex items-center gap-4">
+            <FileText size={32} className="shrink-0 text-fucsia" />
+            <div>
+              <p className="font-funnel font-semibold text-blu text-lg leading-tight">
+                Regolamento del Festival
+              </p>
+              <p className="font-funnel text-blu/60 text-sm mt-0.5">
+                Scarica il documento ufficiale con tutte le regole e le modalità di partecipazione
+              </p>
+            </div>
+          </div>
+          <a
+            href={REGOLAMENTO_PDF_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 bg-fucsia hover:bg-fucsia/90 text-white font-funnel font-semibold px-6 py-3 rounded-squircle transition-colors duration-200"
+          >
+            <FileText size={16} />
+            Leggi il regolamento
+          </a>
+        </motion.div>
       </div>
     </section>
   )
@@ -214,6 +259,9 @@ function GalleryBlock({ label, title, items, columns = 3, bg = 'bg-white', initi
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Festival() {
+  const galleryEvento = useGallerySection('festival-evento', festivalGalleryEvento)
+  const galleryBackstage = useGallerySection('festival-backstage', festivalGalleryBackstage)
+
   return (
     <>
       <Helmet>
@@ -241,26 +289,29 @@ export default function Festival() {
         {/* 3. Risultati numerici */}
         <StatsSection />
 
-        {/* 4. Link cortometraggio professionale */}
+        {/* 4. Regolamento Festival */}
+        <RegolamentoCTA />
+
+        {/* 5. Link cortometraggio professionale */}
         <CortoLink />
 
-        {/* 5. Votazioni — visibile solo in dicembre e giugno */}
+        {/* 6. Votazioni — visibile solo in dicembre e giugno */}
         <VotazioniSection />
 
-        {/* 6. Gallery foto evento */}
+        {/* 7. Gallery foto evento */}
         <GalleryBlock
           label="Gallery"
           title="Le serate del Festival"
-          items={festivalGalleryEvento}
+          items={galleryEvento}
           columns={3}
           bg="bg-white border-t border-azzurro-light"
         />
 
-        {/* 7. Gallery video backstage */}
+        {/* 8. Gallery video backstage */}
         <GalleryBlock
           label="Backstage"
           title="Il dietro le quinte"
-          items={festivalGalleryBackstage}
+          items={galleryBackstage}
           columns={3}
           bg="bg-white border-t border-azzurro-light"
           initialVisible={0}

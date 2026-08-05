@@ -8,6 +8,8 @@ import Gallery from '@/components/Gallery'
 import HeroSlider from '@/components/HeroSlider'
 import EdizioneCortometraggio from '@/components/EdizioneCortometraggio'
 import { edizioniData, cortoBackstageStudenti, cortoCitazioneBg } from '@/data/cortometraggio'
+import { galleryCortoLocandine } from '@/data/images'
+import { useGallerySection } from '@/hooks/useGallerySection'
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -202,7 +204,7 @@ function AspettiChiave() {
 
 // ─── Gallery backstage studenti ───────────────────────────────────────────────
 
-function BackstageStudentiGallery() {
+function BackstageStudentiGallery({ items }: { items: import('@/components/Gallery').GalleryItem[] }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
@@ -228,9 +230,9 @@ function BackstageStudentiGallery() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <Gallery
-            items={cortoBackstageStudenti}
+            items={items}
             columns={3}
-            showPlaceholders={cortoBackstageStudenti.length === 0}
+            showPlaceholders={items.length === 0}
             placeholderCount={6}
           />
         </motion.div>
@@ -298,6 +300,12 @@ function CitazioneFinale() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Cortometraggio() {
+  const backstageStudenti = useGallerySection('corto-backstage', cortoBackstageStudenti)
+  const galleryLocandine = useGallerySection('corto-locandine', galleryCortoLocandine)
+  const edizioniDynamic = edizioniData.map((ed) =>
+    ed.anno === '2024' ? { ...ed, backstagePhotos: galleryLocandine } : ed
+  )
+
   return (
     <>
       <Helmet>
@@ -329,11 +337,11 @@ export default function Cortometraggio() {
         <AspettiChiave />
 
         {/* 5. Gallery backstage studenti */}
-        <BackstageStudentiGallery />
+        <BackstageStudentiGallery items={backstageStudenti} />
 
         {/* 6–7. Edizioni */}
         <div className="divide-y divide-azzurro-light">
-          {edizioniData.map((edizione) => (
+          {edizioniDynamic.map((edizione) => (
             <EdizioneCortometraggio key={edizione.anno} edizione={edizione} />
           ))}
         </div>
