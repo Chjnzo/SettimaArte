@@ -241,7 +241,7 @@ function CortoCard({ corto, onChange, onRemove }: {
       {/* Header */}
       <div className="flex items-center gap-3 pb-3 border-b" style={{ borderColor: 'rgba(32,36,76,0.07)' }}>
         <input type="text" value={corto.classe} onChange={(e) => onChange(corto.id, 'classe', e.target.value)}
-          placeholder="Classe" className="fi font-bold text-base w-28 shrink-0" />
+          placeholder="Classe" className="fi font-bold text-base shrink-0" style={{ width: '7rem' }} />
         <div className="flex-1" />
         <div className="flex items-center gap-2">
           <span className="text-xs font-funnel" style={{ color: 'rgba(32,36,76,0.4)' }}>{corto.attivo ? 'Visibile' : 'Nascosta'}</span>
