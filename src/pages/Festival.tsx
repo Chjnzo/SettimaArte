@@ -309,7 +309,7 @@ export default function Festival() {
         {/* 7. Gallery foto evento */}
         <GalleryBlock
           label="Gallery"
-          title="Le serate del Festival"
+          title="Le giornate del festival"
           items={galleryEvento}
           columns={3}
           bg="bg-white border-t border-azzurro-light"
