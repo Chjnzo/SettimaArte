@@ -131,29 +131,29 @@ export default function Home() {
     <>
       <Helmet>
         <title>SettimaArte | Il Progetto Educational di Oriocenter</title>
-        <link rel="canonical" href="https://www.settimaartefestival.it/" />
+        <link rel="canonical" href="https://settimaartefestival.it/" />
         <meta name="description" content="SettimaArte è il progetto educational di Oriocenter che offre agli studenti un'esperienza di Formazione Scuola-Lavoro centrata sul linguaggio cinematografico." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.settimaartefestival.it/" />
+        <meta property="og:url" content="https://settimaartefestival.it/" />
         <meta property="og:site_name" content="SettimaArte" />
         <meta property="og:locale" content="it_IT" />
         <meta property="og:title" content="SettimaArte | Il Progetto Educational di Oriocenter" />
         <meta property="og:description" content="SettimaArte è il progetto educational di Oriocenter che offre agli studenti un'esperienza di Formazione Scuola-Lavoro centrata sul linguaggio cinematografico." />
-        <meta property="og:image" content="https://www.settimaartefestival.it/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg" />
+        <meta property="og:image" content="https://settimaartefestival.it/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="800" />
         <meta property="og:image:alt" content="Ragazzi premiati al Settima Arte Festival" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="SettimaArte | Il Progetto Educational di Oriocenter" />
         <meta name="twitter:description" content="SettimaArte è il progetto educational di Oriocenter che offre agli studenti un'esperienza di Formazione Scuola-Lavoro centrata sul linguaggio cinematografico." />
-        <meta name="twitter:image" content="https://www.settimaartefestival.it/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg" />
+        <meta name="twitter:image" content="https://settimaartefestival.it/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "EducationalOrganization",
           "name": "SettimaArte",
           "description": "Progetto educational di Oriocenter dedicato alla Formazione Scuola-Lavoro attraverso il linguaggio cinematografico.",
-          "url": "https://www.settimaartefestival.it",
-          "logo": "https://www.settimaartefestival.it/logo/7arte-oriocenter_logo_2024.png",
+          "url": "https://settimaartefestival.it",
+          "logo": "https://settimaartefestival.it/logo/7arte-oriocenter_logo_2024.png",
           "sameAs": ["https://www.youtube.com/@OriocenterSelectedStores"],
           "parentOrganization": {
             "@type": "Organization",

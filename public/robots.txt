@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://www.settimaartefestival.it/sitemap.xml
+Sitemap: https://settimaartefestival.it/sitemap.xml

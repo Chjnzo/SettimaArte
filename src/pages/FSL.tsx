@@ -526,20 +526,20 @@ export default function FSL() {
     <>
       <Helmet>
         <title>Formazione Scuola-Lavoro | SettimaArte</title>
-        <link rel="canonical" href="https://www.settimaartefestival.it/fsl" />
+        <link rel="canonical" href="https://settimaartefestival.it/fsl" />
         <meta name="description" content="SettimaArte FSL: un percorso PCTO unico in cui gli studenti girano cortometraggi professionali all'interno di Oriocenter, a Bergamo." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.settimaartefestival.it/fsl" />
+        <meta property="og:url" content="https://settimaartefestival.it/fsl" />
         <meta property="og:site_name" content="SettimaArte" />
         <meta property="og:locale" content="it_IT" />
         <meta property="og:title" content="Formazione Scuola-Lavoro | SettimaArte" />
         <meta property="og:description" content="SettimaArte FSL: un percorso PCTO unico in cui gli studenti girano cortometraggi professionali all'interno di Oriocenter, a Bergamo." />
-        <meta property="og:image" content="https://www.settimaartefestival.it/images/FSL/Hero/ragazzi-riprese-fsl.JPG" />
+        <meta property="og:image" content="https://settimaartefestival.it/images/FSL/Hero/ragazzi-riprese-fsl.JPG" />
         <meta property="og:image:alt" content="Ragazzi durante le riprese del percorso FSL Settima Arte" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Formazione Scuola-Lavoro | SettimaArte" />
         <meta name="twitter:description" content="SettimaArte FSL: un percorso PCTO unico in cui gli studenti girano cortometraggi professionali all'interno di Oriocenter, a Bergamo." />
-        <meta name="twitter:image" content="https://www.settimaartefestival.it/images/FSL/Hero/ragazzi-riprese-fsl.JPG" />
+        <meta name="twitter:image" content="https://settimaartefestival.it/images/FSL/Hero/ragazzi-riprese-fsl.JPG" />
       </Helmet>
 
       <Header />

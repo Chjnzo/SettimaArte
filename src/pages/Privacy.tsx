@@ -7,7 +7,7 @@ export default function Privacy() {
     <>
       <Helmet>
         <title>Privacy Policy | SettimaArte</title>
-        <link rel="canonical" href="https://www.settimaartefestival.it/privacy" />
+        <link rel="canonical" href="https://settimaartefestival.it/privacy" />
         <meta
           name="description"
           content="Informativa sulla privacy del sito SettimaArte — progetto educational di Oriocenter dedicato alla Formazione Scuola-Lavoro attraverso il linguaggio cinematografico."

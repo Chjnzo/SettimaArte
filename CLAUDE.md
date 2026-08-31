@@ -15,7 +15,7 @@ Il progetto si articola in **3 format**:
 
 **Edizioni completate:** 8+ edizioni. Ultimi corti: *Le Faremo Sapere* (2024, regia Beppe Tufarulo) e *Sono Sempre Qui Per Te* (2025, regia Marco Pacchiana).
 
-**URL produzione:** https://www.settimaartefestival.it
+**URL produzione:** https://settimaartefestival.it
 
 ---
 
@@ -424,12 +424,12 @@ I video FSL e backstage Festival sono embed YouTube. I link sono in un file nell
 
 | Pagina | Title Tag | Canonical |
 |--------|-----------|-----------|
-| Home | SettimaArte \| Il Progetto Educational di Oriocenter | https://www.settimaartefestival.it/ |
-| FSL | Formazione Scuola-Lavoro \| SettimaArte | https://www.settimaartefestival.it/fsl |
-| Festival | Festival \| I Cortometraggi degli Studenti \| SettimaArte | https://www.settimaartefestival.it/festival |
-| Cortometraggio | Cortometraggio Professionale \| SettimaArte | https://www.settimaartefestival.it/cortometraggio |
+| Home | SettimaArte \| Il Progetto Educational di Oriocenter | https://settimaartefestival.it/ |
+| FSL | Formazione Scuola-Lavoro \| SettimaArte | https://settimaartefestival.it/fsl |
+| Festival | Festival \| I Cortometraggi degli Studenti \| SettimaArte | https://settimaartefestival.it/festival |
+| Cortometraggio | Cortometraggio Professionale \| SettimaArte | https://settimaartefestival.it/cortometraggio |
 | Admin | Area Admin \| SettimaArte | noindex, nofollow |
-| Privacy | Privacy Policy \| SettimaArte | https://www.settimaartefestival.it/privacy |
+| Privacy | Privacy Policy \| SettimaArte | https://settimaartefestival.it/privacy |
 
 ---
 
@@ -469,5 +469,5 @@ npm run deploy       # build + wrangler deploy (Cloudflare Workers)
 | Promotore | Oriocenter |
 | Organizzatore | Skillherz (ex Edoomark) |
 | Email | info@skillherz.com |
-| URL | https://www.settimaartefestival.it |
+| URL | https://settimaartefestival.it |
 | Area | Bergamo e province limitrofe (Lombardia) |

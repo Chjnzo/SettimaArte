@@ -265,20 +265,20 @@ export default function Festival() {
     <>
       <Helmet>
         <title>Festival | I Cortometraggi degli Studenti | SettimaArte</title>
-        <link rel="canonical" href="https://www.settimaartefestival.it/festival" />
+        <link rel="canonical" href="https://settimaartefestival.it/festival" />
         <meta name="description" content="Il Settima Arte Festival proietta i cortometraggi degli studenti alla sala 14 di UCI Orio a Oriocenter. Due edizioni l'anno, giuria d'eccezione, votazioni online aperte a tutti." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.settimaartefestival.it/festival" />
+        <meta property="og:url" content="https://settimaartefestival.it/festival" />
         <meta property="og:site_name" content="SettimaArte" />
         <meta property="og:locale" content="it_IT" />
         <meta property="og:title" content="Festival | I Cortometraggi degli Studenti | SettimaArte" />
         <meta property="og:description" content="Il Settima Arte Festival proietta i cortometraggi degli studenti alla sala 14 di UCI Orio a Oriocenter. Due edizioni l'anno, giuria d'eccezione, votazioni online aperte a tutti." />
-        <meta property="og:image" content="https://www.settimaartefestival.it/images/Festival/Hero/selfie-evento-ragazzi-felici.jpg" />
+        <meta property="og:image" content="https://settimaartefestival.it/images/Festival/Hero/selfie-evento-ragazzi-felici.jpg" />
         <meta property="og:image:alt" content="Selfie di gruppo dei ragazzi al Settima Arte Festival" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Festival | I Cortometraggi degli Studenti | SettimaArte" />
         <meta name="twitter:description" content="Il Settima Arte Festival proietta i cortometraggi degli studenti alla sala 14 di UCI Orio a Oriocenter. Due edizioni l'anno, giuria d'eccezione, votazioni online aperte a tutti." />
-        <meta name="twitter:image" content="https://www.settimaartefestival.it/images/Festival/Hero/selfie-evento-ragazzi-felici.jpg" />
+        <meta name="twitter:image" content="https://settimaartefestival.it/images/Festival/Hero/selfie-evento-ragazzi-felici.jpg" />
       </Helmet>
 
       <Header />
