@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo, KeyboardEvent, ChangeEvent } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Toaster, toast } from 'sonner'
-import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, Film, BarChart2, ExternalLink, Upload, Home, Vote, Images, Menu, X, ArrowUpRight, ArrowRight } from 'lucide-react'
+import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, Film, BarChart2, ExternalLink, Upload, Home, Vote, Images, Menu, X, ArrowUpRight, ArrowRight, BookOpen, HelpCircle, Lightbulb } from 'lucide-react'
 import { galleryFestival, galleryFSLBackstage, galleryCortoBackstage, galleryCortoLocandine, locandinePerEdizione } from '@/data/images'
 import { festivalGalleryBackstage } from '@/data/festival'
 import type { GalleryItem } from '@/components/Gallery'
@@ -27,7 +27,7 @@ interface VotazioniData {
 }
 
 type Phase = 'pin' | 'dashboard'
-type AdminTab = 'overview' | 'votazioni' | 'gallery' | 'fsl-edizioni' | 'analytics'
+type AdminTab = 'overview' | 'votazioni' | 'gallery' | 'fsl-edizioni' | 'analytics' | 'guide'
 type GallerySection = 'festival-evento' | 'festival-backstage' | 'fsl-backstage' | 'corto-backstage' | 'corto-locandine'
 
 interface GalleryItemAdmin {
@@ -341,6 +341,7 @@ const NAV_ITEMS: { key: AdminTab; label: string; icon: React.ReactNode; group?: 
   { key: 'fsl-edizioni', label: 'Edizioni FSL', icon: <Film size={16} />, group: 'Contenuti' },
   { key: 'gallery', label: 'Gallerie', icon: <Images size={16} />, group: 'Contenuti' },
   { key: 'analytics', label: 'Analytics', icon: <BarChart2 size={16} />, group: 'Dati' },
+  { key: 'guide', label: 'Guida', icon: <BookOpen size={16} />, group: 'Aiuto' },
 ]
 
 function SidebarNav({ active, onSelect, onLogout }: {
@@ -1240,6 +1241,274 @@ function OverviewTab({ pin, enabled, corti, onGo }: {
   )
 }
 
+// ── Guida tab ─────────────────────────────────────────────────────────────────
+
+function GuideAccordionItem({ q, children, defaultOpen = false }: {
+  q: string; children: React.ReactNode; defaultOpen?: boolean
+}) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div style={{ borderColor: 'rgba(32,36,76,0.07)' }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-gray-50"
+      >
+        <span className="font-funnel font-semibold text-sm" style={{ color: 'var(--color-blu)' }}>{q}</span>
+        {open
+          ? <ChevronUp size={16} style={{ color: 'rgba(32,36,76,0.4)' }} />
+          : <ChevronDown size={16} style={{ color: 'rgba(32,36,76,0.4)' }} />}
+      </button>
+      {open && (
+        <div className="px-5 pb-5 pt-0 font-funnel text-sm leading-relaxed" style={{ color: 'rgba(32,36,76,0.7)' }}>
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function GuideTab({ onGo }: { onGo: (tab: AdminTab) => void }) {
+  const mapping: { tab: AdminTab; label: string; where: string; whereUrl?: string; desc: string }[] = [
+    {
+      tab: 'votazioni',
+      label: 'Votazioni Festival',
+      where: 'Pagina Festival, sezione "Vota il tuo preferito!"',
+      whereUrl: '/festival',
+      desc: 'Controlla i 4 corti in gara durante le edizioni di dicembre e giugno. La sezione compare sul sito solo quando la attivi.',
+    },
+    {
+      tab: 'fsl-edizioni',
+      label: 'Edizioni FSL',
+      where: 'Pagina FSL, blocco "I cortometraggi per anno"',
+      whereUrl: '/fsl',
+      desc: 'I corti storici degli studenti raggruppati per anno scolastico. Ogni corto ha titolo, locandina, video YouTube e premi.',
+    },
+    {
+      tab: 'gallery',
+      label: 'Gallerie',
+      where: 'Varie gallerie nelle pagine Festival, FSL, Cortometraggio',
+      desc: 'Foto delle serate, backstage, locandine dei corti professionali. Divise in 5 sezioni, una per contesto.',
+    },
+    {
+      tab: 'overview',
+      label: 'Panoramica',
+      where: 'Nessuna, è solo per te',
+      desc: 'Lo stato attuale del sito a colpo d\'occhio: cosa è attivo, cosa ancora manca, scorciatoie alle azioni frequenti.',
+    },
+  ]
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Aiuto"
+        title="Guida all'uso"
+        description="Come funziona il pannello, dove compaiono le tue modifiche sul sito, e cosa fare nei casi più comuni."
+      />
+
+      {/* 3 principi */}
+      <div className="rounded-2xl p-5 mb-8" style={{ backgroundColor: 'rgba(5,151,222,0.05)', border: '1px solid rgba(5,151,222,0.15)' }}>
+        <div className="flex items-start gap-3">
+          <Lightbulb size={18} className="shrink-0 mt-0.5" style={{ color: 'var(--color-azzurro)' }} />
+          <div className="space-y-1.5">
+            <p className="font-funnel font-semibold text-sm" style={{ color: 'var(--color-blu)' }}>Da sapere prima di iniziare</p>
+            <ul className="font-funnel text-sm leading-relaxed space-y-1" style={{ color: 'rgba(32,36,76,0.7)' }}>
+              <li>• Ogni volta che premi <b>Salva</b> la modifica va <b>subito online</b>: non c'è anteprima.</li>
+              <li>• Dopo il salvataggio aspetta ~30 secondi e ricarica la pagina del sito con <b>Shift+F5</b> per vedere il risultato.</li>
+              <li>• Non devi mai scrivere codice né aspettare uno sviluppatore: fai tutto da qui.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Mappa admin → sito */}
+      <h2 className="font-funnel font-semibold text-sm mb-3" style={{ color: 'rgba(32,36,76,0.65)' }}>
+        Dove compaiono le tue modifiche
+      </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-10">
+        {mapping.map((m) => (
+          <div key={m.tab} className="bg-white rounded-2xl p-5" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.07), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <button
+                onClick={() => onGo(m.tab)}
+                className="font-funnel font-semibold text-sm text-left hover:underline"
+                style={{ color: 'var(--color-blu)' }}
+              >
+                {m.label}
+              </button>
+              <ArrowRight size={14} style={{ color: 'rgba(32,36,76,0.3)' }} />
+            </div>
+            <p className="font-funnel text-sm mb-3" style={{ color: 'rgba(32,36,76,0.65)' }}>{m.desc}</p>
+            <div className="flex items-center gap-1.5 pt-3 border-t" style={{ borderColor: 'rgba(32,36,76,0.07)' }}>
+              <span className="font-funnel text-[11px] font-bold uppercase tracking-wide" style={{ color: 'rgba(32,36,76,0.4)' }}>
+                Sul sito:
+              </span>
+              {m.whereUrl ? (
+                <a href={m.whereUrl} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-funnel text-xs hover:underline"
+                  style={{ color: 'var(--color-azzurro)' }}>
+                  {m.where} <ArrowUpRight size={11} />
+                </a>
+              ) : (
+                <span className="font-funnel text-xs" style={{ color: 'rgba(32,36,76,0.55)' }}>{m.where}</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Come fare per... */}
+      <h2 className="font-funnel font-semibold text-sm mb-3" style={{ color: 'rgba(32,36,76,0.65)' }}>
+        Come fare per…
+      </h2>
+      <div className="bg-white rounded-2xl divide-y mb-10" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.07), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        <GuideAccordionItem q="Attivare le votazioni del Festival (dicembre / giugno)" defaultOpen>
+          <ol className="list-decimal pl-5 space-y-1.5">
+            <li>Vai su <b>Votazioni Festival</b> nel menu a sinistra.</li>
+            <li>Scrivi l'edizione corrente nel campo <i>Edizione corrente</i>, es. <code className="px-1.5 py-0.5 rounded bg-gray-100 text-xs">dic_26</code> o <code className="px-1.5 py-0.5 rounded bg-gray-100 text-xs">giu_26</code>.</li>
+            <li>Per ciascuno dei 4 corti: compila <i>Nome progetto</i>, <i>Trama</i>, carica la <i>Locandina</i>, incolla il <i>Video YouTube</i> e il <i>Link voto</i> (il Google Form).</li>
+            <li>Assicurati che l'interruttore <i>Visibile</i> di ciascun corto sia acceso.</li>
+            <li>In alto, accendi l'interruttore <b>Sezione votazioni attiva</b>.</li>
+            <li>Clicca <b>Salva votazioni</b> in fondo.</li>
+            <li>Vai su <a href="/festival" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: 'var(--color-azzurro)' }}>settimaartefestival.it/festival</a> per vedere la sezione live.</li>
+          </ol>
+        </GuideAccordionItem>
+
+        <GuideAccordionItem q="Aggiungere un nuovo cortometraggio FSL">
+          <ol className="list-decimal pl-5 space-y-1.5">
+            <li>Vai su <b>Edizioni FSL</b>.</li>
+            <li>Seleziona l'anno scolastico giusto in alto (es. <code className="px-1.5 py-0.5 rounded bg-gray-100 text-xs">2025-2026</code>). Se non c'è, scrivilo nel campo e clicca <i>Aggiungi anno</i>.</li>
+            <li>Dentro all'edizione (invernale/estiva) clicca <i>Aggiungi corto</i>.</li>
+            <li>Metti il <i>Titolo</i>, incolla l'<i>URL YouTube</i>, carica la <i>Locandina</i>.</li>
+            <li>Opzionale: nel campo <i>Premi</i> scrivi i premi vinti, uno per riga.</li>
+            <li>Clicca <b>Salva edizioni FSL</b>.</li>
+          </ol>
+        </GuideAccordionItem>
+
+        <GuideAccordionItem q="Cambiare la locandina di un corto">
+          <ol className="list-decimal pl-5 space-y-1.5">
+            <li>Apri la sezione dove sta il corto (<b>Votazioni</b> o <b>Edizioni FSL</b>).</li>
+            <li>Trova il corto giusto.</li>
+            <li>Accanto al campo <i>Locandina URL</i> clicca il pulsante azzurro <b>Carica</b>.</li>
+            <li>Seleziona il file nuovo dal computer (JPG o PNG, max 10 MB).</li>
+            <li>Il campo URL si riempie da solo con un link che inizia per <code className="px-1.5 py-0.5 rounded bg-gray-100 text-xs">https://pub-…</code>.</li>
+            <li>Clicca <b>Salva</b> in fondo.</li>
+          </ol>
+        </GuideAccordionItem>
+
+        <GuideAccordionItem q="Aggiungere foto a una galleria del sito">
+          <ol className="list-decimal pl-5 space-y-1.5">
+            <li>Vai su <b>Gallerie</b>.</li>
+            <li>Scegli la galleria giusta usando le linguette in alto:
+              <ul className="pl-5 mt-1 space-y-0.5 text-xs" style={{ color: 'rgba(32,36,76,0.55)' }}>
+                <li>• <b>Festival — Serate</b>: foto degli eventi al cinema</li>
+                <li>• <b>Festival — Backstage</b>: video dietro le quinte del festival</li>
+                <li>• <b>FSL — Backstage</b>: foto/video degli studenti sul set</li>
+                <li>• <b>Corto — Set studenti</b>: foto backstage del cortometraggio professionale</li>
+                <li>• <b>Corto — Locandine</b>: locandine e foto dei premi vinti</li>
+              </ul>
+            </li>
+            <li>Clicca <i>Aggiungi foto</i> (o <i>Aggiungi video</i> per un embed YouTube).</li>
+            <li>Clicca <b>Carica</b> sulla nuova riga e seleziona il file.</li>
+            <li>Scrivi un breve <i>Alt text</i> descrittivo (es. "Ragazzi che riprendono una scena") — serve per l'accessibilità.</li>
+            <li>Clicca <b>Salva gallery</b>.</li>
+          </ol>
+        </GuideAccordionItem>
+
+        <GuideAccordionItem q="Nascondere un corto senza eliminarlo">
+          <p>
+            Nelle <b>Votazioni Festival</b>, su ogni corto trovi un interruttore <i>Visibile</i>. Spegnilo e salva:
+            il corto scompare dalla pagina Festival ma resta salvato nel pannello e puoi riattivarlo in qualsiasi momento.
+          </p>
+          <p className="mt-2">
+            Per <b>nascondere l'intera sezione votazioni</b> (es. tra un'edizione e l'altra) usa l'interruttore in cima
+            alla pagina <i>Sezione votazioni attiva</i>.
+          </p>
+        </GuideAccordionItem>
+
+        <GuideAccordionItem q="Aggiungere un nuovo anno scolastico in Edizioni FSL">
+          <ol className="list-decimal pl-5 space-y-1.5">
+            <li>Vai su <b>Edizioni FSL</b>.</li>
+            <li>Nel campo in alto scrivi l'anno nel formato <code className="px-1.5 py-0.5 rounded bg-gray-100 text-xs">2026-2027</code> e clicca <i>Aggiungi anno</i>.</li>
+            <li>Dentro all'anno clicca <i>Aggiungi edizione</i> (es. "Edizione invernale", "Edizione estiva").</li>
+            <li>Dentro all'edizione clicca <i>Aggiungi corto</i> per ogni cortometraggio.</li>
+            <li>Salva.</li>
+          </ol>
+        </GuideAccordionItem>
+      </div>
+
+      {/* Problemi comuni */}
+      <h2 className="font-funnel font-semibold text-sm mb-3" style={{ color: 'rgba(32,36,76,0.65)' }}>
+        Problemi comuni
+      </h2>
+      <div className="bg-white rounded-2xl divide-y mb-10" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.07), 0 0 0 1px rgba(32,36,76,0.06)' }}>
+        {[
+          {
+            q: 'Ho salvato ma online non vedo le modifiche',
+            a: 'Aspetta ~30 secondi (il sito ha una piccola cache) e poi ricarica la pagina del sito tenendo premuto Shift mentre clicchi il refresh (o Shift+F5). Se ancora non si vede, prova a chiudere e riaprire il browser.',
+          },
+          {
+            q: 'Un\'immagine appare come un rettangolo grigio con un testo scritto sopra',
+            a: 'Il campo Locandina URL è vuoto o punta a un file che non esiste. Riapri la riga nel pannello, clicca Carica e seleziona di nuovo l\'immagine, poi salva.',
+          },
+          {
+            q: 'Il video YouTube non parte',
+            a: 'Controlla che il link sia nel formato "https://youtu.be/XXXX" oppure "https://www.youtube.com/watch?v=XXXX". I link ai YouTube Shorts a volte non funzionano: usa il link normale del video. Verifica anche che il video sia pubblico (non privato o non in elenco).',
+          },
+          {
+            q: 'Vedo "Errore durante il salvataggio"',
+            a: 'Riprova fra qualche secondo. Se il problema persiste controlla la connessione internet. Se continua, scrivi a Skillherz.',
+          },
+          {
+            q: 'L\'upload del file è bloccato o troppo lento',
+            a: 'Il file potrebbe essere troppo grande. Massimo 10 MB per file. Se la foto pesa di più, comprimila prima (es. su tinypng.com) o riducine le dimensioni.',
+          },
+        ].map(({ q, a }, i) => (
+          <GuideAccordionItem key={i} q={q}>
+            <p>{a}</p>
+          </GuideAccordionItem>
+        ))}
+      </div>
+
+      {/* Specifiche tecniche */}
+      <h2 className="font-funnel font-semibold text-sm mb-3" style={{ color: 'rgba(32,36,76,0.65)' }}>
+        Specifiche file (se vuoi i dettagli)
+      </h2>
+      <div className="bg-white rounded-2xl p-5 mb-10 space-y-3 font-funnel text-sm" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.07), 0 0 0 1px rgba(32,36,76,0.06)', color: 'rgba(32,36,76,0.7)' }}>
+        <div>
+          <p className="font-semibold mb-1" style={{ color: 'var(--color-blu)' }}>Immagini</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>Formati: <b>JPG</b> (foto) o <b>PNG</b> (locandine con trasparenza)</li>
+            <li>Peso massimo: <b>10 MB</b> — ideale sotto i 500 KB per velocità</li>
+            <li>Locandine corti: verticali, rapporto 2:3 (es. 1000×1500 px)</li>
+            <li>Foto backstage: orizzontali, minimo 1600 px sul lato lungo</li>
+          </ul>
+        </div>
+        <div>
+          <p className="font-semibold mb-1" style={{ color: 'var(--color-blu)' }}>Video</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>Non si caricano direttamente: va incollato il link YouTube pubblico</li>
+            <li>Il video deve stare sul canale YouTube di Oriocenter (o uno pubblico accessibile)</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Supporto */}
+      <h2 className="font-funnel font-semibold text-sm mb-3" style={{ color: 'rgba(32,36,76,0.65)' }}>
+        Hai bisogno di aiuto?
+      </h2>
+      <div className="rounded-2xl p-5 flex items-start gap-3" style={{ backgroundColor: 'rgba(229,5,118,0.05)', border: '1px solid rgba(229,5,118,0.15)' }}>
+        <HelpCircle size={18} className="shrink-0 mt-0.5" style={{ color: 'var(--color-fucsia)' }} />
+        <div>
+          <p className="font-funnel font-semibold text-sm" style={{ color: 'var(--color-blu)' }}>Contatta Skillherz</p>
+          <p className="font-funnel text-sm mt-1" style={{ color: 'rgba(32,36,76,0.7)' }}>
+            Scrivici a <a href="mailto:info@skillherz.com" className="underline" style={{ color: 'var(--color-fucsia)' }}>info@skillherz.com</a> per segnalare un problema, chiedere una nuova funzionalità o avere supporto in caso di dubbi.
+          </p>
+        </div>
+      </div>
+    </>
+  )
+}
+
 // ── Dashboard shell ────────────────────────────────────────────────────────────
 
 function Dashboard({ initialData, pinRef, onLogout }: {
@@ -1316,6 +1585,7 @@ function Dashboard({ initialData, pinRef, onLogout }: {
           {activeTab === 'gallery' && <GalleryTab pin={pin} />}
           {activeTab === 'fsl-edizioni' && <FSLEdizioniTab pin={pin} />}
           {activeTab === 'analytics' && <AnalyticsTab />}
+          {activeTab === 'guide' && <GuideTab onGo={setActiveTab} />}
         </main>
       </div>
 
