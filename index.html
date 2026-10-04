@@ -24,15 +24,30 @@
     <meta property="og:locale" content="it_IT" />
     <meta property="og:image" content="https://settimaartefestival.it/images/Home/Hero/esultanza-ragazzi-premio-oscar.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JHMSJ30X01"></script>
-    <script>
+    <!-- Iubenda Cookie Solution (widget unificato) -->
+    <script type="text/javascript" src="https://embeds.iubenda.com/widgets/078764c1-6180-433a-9dd6-562ba19f86a2.js"></script>
+    <!-- Google Analytics 4 — attivato solo dopo consenso Iubenda (purpose 4: measurement) -->
+    <script type="text/plain" class="_iub_cs_activate" data-iub-purposes="4" async src="https://www.googletagmanager.com/gtag/js?id=G-JHMSJ30X01"></script>
+    <script type="text/plain" class="_iub_cs_activate" data-iub-purposes="4">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-JHMSJ30X01', {
         page_path: window.location.pathname,
       });
+    </script>
+    <!-- Meta Pixel — attivato solo dopo consenso Iubenda (purpose 5: marketing) -->
+    <script type="text/plain" class="_iub_cs_activate" data-iub-purposes="5">
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '6446940980007136');
+      fbq('track', 'PageView');
     </script>
   </head>
   <body>
