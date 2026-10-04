@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, KeyboardEvent, ChangeEvent } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, LayoutGrid, Film, BarChart2, ExternalLink } from 'lucide-react'
+import { Plus, Trash2, ImageIcon, Video, ChevronDown, ChevronUp, Check, AlertCircle, LogOut, LayoutGrid, Film, BarChart2, ExternalLink, Upload } from 'lucide-react'
 import { galleryFestival, galleryFSLBackstage, galleryCortoBackstage, galleryCortoLocandine, locandinePerEdizione } from '@/data/images'
 import { festivalGalleryBackstage } from '@/data/festival'
 import type { GalleryItem } from '@/components/Gallery'
@@ -229,12 +229,59 @@ function ErrorBanner({ message }: { message: string }) {
   )
 }
 
+function UploadButton({ pin, folder, onUploaded, accept = 'image/*', label = 'Carica' }: {
+  pin: string; folder: string; onUploaded: (url: string) => void
+  accept?: string; label?: string
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true); setError(null)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('folder', folder)
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${pin}` },
+        body: fd,
+      })
+      const data = await res.json().catch(() => ({})) as { url?: string; error?: string }
+      if (!res.ok || !data.url) throw new Error(data.error ?? 'Upload fallito')
+      onUploaded(data.url)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload fallito')
+      setTimeout(() => setError(null), 4000)
+    } finally {
+      setUploading(false)
+      if (inputRef.current) inputRef.current.value = ''
+    }
+  }
+
+  return (
+    <>
+      <button type="button" onClick={() => inputRef.current?.click()} disabled={uploading}
+        title={error ?? 'Carica un file dal computer'}
+        className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-funnel font-semibold text-xs text-white transition-opacity disabled:opacity-50"
+        style={{ backgroundColor: error ? '#dc2626' : 'var(--color-azzurro)' }}>
+        <Upload size={11} /> {uploading ? '…' : (error ? 'Errore' : label)}
+      </button>
+      <input ref={inputRef} type="file" accept={accept} onChange={handleFile} className="hidden" />
+    </>
+  )
+}
+
 // ── Votazioni ──────────────────────────────────────────────────────────────────
 
-function CortoCard({ corto, onChange, onRemove }: {
+function CortoCard({ corto, onChange, onRemove, pin }: {
   corto: CortoCorrente
   onChange: (id: number, field: keyof CortoCorrente, value: string | boolean) => void
   onRemove: (id: number) => void
+  pin: string
 }) {
   return (
     <div className="bg-white rounded-2xl p-5 space-y-4" style={{ boxShadow: '0 1px 4px rgba(32,36,76,0.08), 0 0 0 1px rgba(32,36,76,0.06)' }}>
@@ -260,7 +307,10 @@ function CortoCard({ corto, onChange, onRemove }: {
       </Field>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Field label="Locandina URL" htmlFor={`loc-${corto.id}`}>
-          <input id={`loc-${corto.id}`} type="text" value={corto.locandina_url ?? ''} onChange={(e) => onChange(corto.id, 'locandina_url', e.target.value)} placeholder="https://…" className="fi" />
+          <div className="flex items-center gap-2">
+            <input id={`loc-${corto.id}`} type="text" value={corto.locandina_url ?? ''} onChange={(e) => onChange(corto.id, 'locandina_url', e.target.value)} placeholder="https://…" className="fi flex-1" />
+            <UploadButton pin={pin} folder="votazioni/locandine" onUploaded={(url) => onChange(corto.id, 'locandina_url', url)} />
+          </div>
         </Field>
         <Field label="Video YouTube" htmlFor={`vid-${corto.id}`}>
           <input id={`vid-${corto.id}`} type="text" value={corto.video_url ?? ''} onChange={(e) => onChange(corto.id, 'video_url', e.target.value)} placeholder="https://youtu.be/…" className="fi" />
@@ -273,11 +323,12 @@ function CortoCard({ corto, onChange, onRemove }: {
   )
 }
 
-function VotazioniTab({ enabled, setEnabled, corti, setCorti, edizione, setEdizione, saving, saved, saveError, onSave }: {
+function VotazioniTab({ enabled, setEnabled, corti, setCorti, edizione, setEdizione, saving, saved, saveError, onSave, pin }: {
   enabled: boolean; setEnabled: (v: boolean) => void
   corti: CortoCorrente[]; setCorti: (c: CortoCorrente[]) => void
   edizione: string; setEdizione: (v: string) => void
   saving: boolean; saved: boolean; saveError: string | null; onSave: () => void
+  pin: string
 }) {
   const updateCorto = (id: number, field: keyof CortoCorrente, value: string | boolean) =>
     setCorti(corti.map((c) => c.id === id ? { ...c, [field]: value === '' ? null : value } : c))
@@ -315,7 +366,7 @@ function VotazioniTab({ enabled, setEnabled, corti, setCorti, edizione, setEdizi
 
       {/* Corti */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {corti.map((c) => <CortoCard key={c.id} corto={c} onChange={updateCorto} onRemove={(id) => setCorti(corti.filter((x) => x.id !== id))} />)}
+        {corti.map((c) => <CortoCard key={c.id} corto={c} onChange={updateCorto} onRemove={(id) => setCorti(corti.filter((x) => x.id !== id))} pin={pin} />)}
       </div>
 
       <button onClick={addCorto} className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 border-dashed font-funnel font-semibold text-sm transition-colors hover:bg-white/70" style={{ borderColor: 'rgba(32,36,76,0.18)', color: 'rgba(32,36,76,0.45)' }}>
@@ -333,10 +384,11 @@ function VotazioniTab({ enabled, setEnabled, corti, setCorti, edizione, setEdizi
 
 // ── Gallery ────────────────────────────────────────────────────────────────────
 
-function GalleryItemRow({ item, index, onChange, onRemove }: {
+function GalleryItemRow({ item, index, onChange, onRemove, pin, section }: {
   item: GalleryItemAdmin; index: number
   onChange: (i: number, field: keyof GalleryItemAdmin, value: string) => void
   onRemove: (i: number) => void
+  pin: string; section: GallerySection
 }) {
   const isVideo = item.type === 'video'
   return (
@@ -362,6 +414,7 @@ function GalleryItemRow({ item, index, onChange, onRemove }: {
             placeholder="URL immagine" className="fi flex-1 text-xs" />
           <input type="text" value={item.alt} onChange={(e) => onChange(index, 'alt', e.target.value)}
             placeholder="Alt text" className="fi w-40 shrink-0 text-xs" />
+          <UploadButton pin={pin} folder={`gallery/${section}`} onUploaded={(url) => onChange(index, 'src', url)} />
         </>
       )}
 
@@ -444,7 +497,7 @@ function GallerySectionEditor({ section, pin }: { section: GallerySection; pin: 
       {/* Items list */}
       <div className="space-y-1.5">
         {(items ?? []).map((item, i) => (
-          <GalleryItemRow key={i} item={item} index={i}
+          <GalleryItemRow key={i} item={item} index={i} pin={pin} section={section}
             onChange={(idx, field, val) => { setItems((p) => p ? p.map((it, j) => j === idx ? { ...it, [field]: val } : it) : p); setSaved(false) }}
             onRemove={(idx) => { setItems((p) => p ? p.filter((_, j) => j !== idx) : p); setSaved(false) }}
           />
@@ -499,10 +552,11 @@ function GalleryTab({ pin }: { pin: string }) {
 
 // ── FSL Edizioni ───────────────────────────────────────────────────────────────
 
-function CortoFSLCard({ corto, index, onChange, onRemove }: {
+function CortoFSLCard({ corto, index, onChange, onRemove, pin, anno }: {
   corto: CortoFSL; index: number
   onChange: (i: number, field: keyof CortoFSL, value: string | string[]) => void
   onRemove: (i: number) => void
+  pin: string; anno: string
 }) {
   return (
     <div className="bg-white rounded-xl p-4 space-y-3" style={{ boxShadow: '0 1px 3px rgba(32,36,76,0.06), 0 0 0 1px rgba(32,36,76,0.07)' }}>
@@ -521,7 +575,10 @@ function CortoFSLCard({ corto, index, onChange, onRemove }: {
         </Field>
       </div>
       <Field label="Locandina URL" htmlFor={`cl-${index}`}>
-        <input id={`cl-${index}`} type="text" value={corto.locandina} onChange={(e) => onChange(index, 'locandina', e.target.value)} placeholder="https://…" className="fi text-sm" />
+        <div className="flex items-center gap-2">
+          <input id={`cl-${index}`} type="text" value={corto.locandina} onChange={(e) => onChange(index, 'locandina', e.target.value)} placeholder="https://…" className="fi flex-1 text-sm" />
+          <UploadButton pin={pin} folder={`fsl/locandine/${anno}`} onUploaded={(url) => onChange(index, 'locandina', url)} />
+        </div>
       </Field>
       <Field label="Premi" htmlFor={`cp-${index}`} hint="uno per riga">
         <textarea id={`cp-${index}`} rows={2} value={corto.premi.join('\n')}
@@ -533,13 +590,14 @@ function CortoFSLCard({ corto, index, onChange, onRemove }: {
   )
 }
 
-function EdizioneFSLBlock({ edizione, annoIndex, eiIdx, onChangeLabel, onChangeCoro, onRemoveCoro, onAddCoro, onRemove }: {
+function EdizioneFSLBlock({ edizione, annoIndex, eiIdx, onChangeLabel, onChangeCoro, onRemoveCoro, onAddCoro, onRemove, pin }: {
   edizione: EdizioneFSLAdmin; annoIndex: string; eiIdx: number
   onChangeLabel: (v: string) => void
   onChangeCoro: (ci: number, field: keyof CortoFSL, value: string | string[]) => void
   onRemoveCoro: (ci: number) => void
   onAddCoro: () => void
   onRemove: () => void
+  pin: string
 }) {
   const [open, setOpen] = useState(true)
 
@@ -563,7 +621,7 @@ function EdizioneFSLBlock({ edizione, annoIndex, eiIdx, onChangeLabel, onChangeC
       {open && (
         <div className="px-4 pb-4 pt-3 space-y-2.5 border-t" style={{ borderColor: 'rgba(32,36,76,0.06)', backgroundColor: '#fafbfc' }}>
           {edizione.corti.map((corto, ci) => (
-            <CortoFSLCard key={ci} corto={corto} index={ci} onChange={onChangeCoro} onRemove={onRemoveCoro} />
+            <CortoFSLCard key={ci} corto={corto} index={ci} onChange={onChangeCoro} onRemove={onRemoveCoro} pin={pin} anno={annoIndex} />
           ))}
           <button onClick={onAddCoro} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed font-funnel font-semibold text-xs transition-colors hover:bg-white"
             style={{ borderColor: 'rgba(32,36,76,0.15)', color: 'rgba(32,36,76,0.4)' }}>
@@ -694,7 +752,7 @@ function FSLEdizioniTab({ pin }: { pin: string }) {
           <div className="space-y-3">
             {data[activeAnno].map((edizione, eiIdx) => (
               <EdizioneFSLBlock
-                key={eiIdx} edizione={edizione} annoIndex={activeAnno} eiIdx={eiIdx}
+                key={eiIdx} edizione={edizione} annoIndex={activeAnno} eiIdx={eiIdx} pin={pin}
                 onChangeLabel={(v) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, label: v }))}
                 onChangeCoro={(ci, field, value) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, corti: ed.corti.map((c, i) => i === ci ? { ...c, [field]: value } : c) }))}
                 onRemoveCoro={(ci) => updateEdizione(activeAnno, eiIdx, (ed) => ({ ...ed, corti: ed.corti.filter((_, i) => i !== ci) }))}
@@ -900,7 +958,8 @@ function Dashboard({ initialData, pinRef, onLogout }: {
       <main className="max-w-5xl mx-auto px-4 py-6">
         {activeTab === 'votazioni' && (
           <VotazioniTab enabled={enabled} setEnabled={setEnabled} corti={corti} setCorti={setCorti}
-            edizione={edizione} setEdizione={setEdizione} saving={saving} saved={saved} saveError={saveError} onSave={handleSaveVotazioni} />
+            edizione={edizione} setEdizione={setEdizione} saving={saving} saved={saved} saveError={saveError} onSave={handleSaveVotazioni}
+            pin={pinRef.current ?? ''} />
         )}
         {activeTab === 'gallery' && <GalleryTab pin={pinRef.current ?? ''} />}
         {activeTab === 'fsl-edizioni' && <FSLEdizioniTab pin={pinRef.current ?? ''} />}

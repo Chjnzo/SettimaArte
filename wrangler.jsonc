@@ -14,5 +14,16 @@
       "id": "4f731333c2f34422887e710929e49041",
       "preview_id": "078977fcde0545329606282c026f91b9"
     }
-  ]
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "settima-arte-media",
+      "preview_bucket_name": "settima-arte-media-preview"
+    }
+  ],
+  "vars": {
+    // URL pubblico del bucket R2 (dev-url .r2.dev). Senza slash finale.
+    "R2_PUBLIC_URL": "https://pub-1f156faa63724c28af3305df307b7e44.r2.dev"
+  }
 }

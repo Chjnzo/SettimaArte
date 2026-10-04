@@ -14,10 +14,20 @@ interface Fetcher {
   fetch(request: Request): Promise<Response>
 }
 
+interface R2Bucket {
+  put(
+    key: string,
+    value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null,
+    options?: { httpMetadata?: { contentType?: string } }
+  ): Promise<unknown>
+}
+
 interface Env {
   CORTI_KV: KVNamespace
   ASSETS: Fetcher
   ADMIN_PIN: string
+  MEDIA_BUCKET: R2Bucket
+  R2_PUBLIC_URL: string
 }
 
 type GallerySection = 'festival-evento' | 'festival-backstage' | 'fsl-backstage' | 'corto-backstage' | 'corto-locandine'
@@ -165,6 +175,45 @@ export default {
       }
       await env.CORTI_KV.put('fsl_edizioni', JSON.stringify(body))
       return json({ ok: true })
+    }
+
+    // POST /api/admin/upload — admin, multipart file upload to R2
+    if (method === 'POST' && pathname === '/api/admin/upload') {
+      if (!isAuthorized(request, env)) return json({ error: 'Unauthorized' }, 401)
+      if (!env.R2_PUBLIC_URL) return json({ error: 'R2_PUBLIC_URL non configurato' }, 500)
+      const ct = request.headers.get('Content-Type') ?? ''
+      if (!ct.toLowerCase().startsWith('multipart/form-data')) {
+        return json({ error: 'Expected multipart/form-data' }, 400)
+      }
+      let form: FormData
+      try { form = await request.formData() } catch { return json({ error: 'Invalid form data' }, 400) }
+      const file = form.get('file')
+      if (!(file instanceof File)) return json({ error: 'Missing file' }, 400)
+      const MAX = 10 * 1024 * 1024
+      if (file.size > MAX) return json({ error: `File troppo grande (max ${MAX / 1024 / 1024}MB)` }, 413)
+      const type = (file.type || '').toLowerCase()
+      if (!type.startsWith('image/') && !type.startsWith('video/')) {
+        return json({ error: 'Solo immagini o video sono ammessi' }, 415)
+      }
+      const folderRaw = String(form.get('folder') ?? 'uploads')
+      const safeFolder = folderRaw
+        .replace(/\\/g, '/')
+        .replace(/[^a-zA-Z0-9/_-]/g, '-')
+        .replace(/^\/+|\/+$/g, '')
+        .replace(/\/{2,}/g, '/') || 'uploads'
+      const extRaw = (file.name.split('.').pop() ?? '').toLowerCase()
+      const ext = extRaw.replace(/[^a-z0-9]/g, '').slice(0, 8) || 'bin'
+      const stem = file.name.replace(/\.[^.]+$/, '').toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'file'
+      const rand = Math.random().toString(36).slice(2, 8)
+      const key = `${safeFolder}/${Date.now()}-${rand}-${stem}.${ext}`
+      try {
+        await env.MEDIA_BUCKET.put(key, file.stream(), {
+          httpMetadata: { contentType: file.type || 'application/octet-stream' },
+        })
+      } catch { return json({ error: 'Upload fallito' }, 500) }
+      const base = env.R2_PUBLIC_URL.replace(/\/+$/, '')
+      return json({ url: `${base}/${key}`, key })
     }
 
     // Fallthrough — serve React SPA (client-side routing)
